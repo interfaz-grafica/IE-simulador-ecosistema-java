@@ -9,6 +9,19 @@
  */
 public abstract class Entidad {
 
+    private String nombre;
+    private double energia;
+    private int edad;
+    private boolean viva;
+    
+    public Entidad(String nombre, double energia, int edad, boolean viva)
+    {
+        this.nombre = nombre;
+        this.energia = energia;
+        this.edad = edad;
+        this.viva = viva; 
+    }
+    
     public String getNombre() {
         return nombre;
     }
@@ -40,22 +53,11 @@ public abstract class Entidad {
     public void setViva(boolean viva) {
         this.viva = viva;
     }
-
-    private String nombre;
-    private double energia;
-    private int edad;
-    private boolean viva;
-    
-    public Entidad(String nombre, double energia, int edad, boolean viva)
-    {
-        this.nombre = nombre;
-        this.energia = energia;
-        this.edad = edad;
-        this.viva = viva; 
-    }
     
     public abstract void actuar(Ecosistema eco); 
+    
     public abstract void mostrarEstado();
+    
     public void envejecer()
     {
         
