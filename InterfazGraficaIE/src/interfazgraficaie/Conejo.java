@@ -23,14 +23,9 @@ public class Conejo extends Animal implements Reproducible {
     public void reproducirse(Ecosistema eco) {
  
     }
-
-    @Override
-    public void intentarReproduccion(Ecosistema eco) {
-        
-    }
     
     @Override
-    public void puedeReproducirse() {
-       
+    public boolean puedeReproducirse() {
+       return false;
     }   
 }

@@ -2,7 +2,7 @@ package interfazgraficaie;
 
 public interface Mortal {
     
-    void estaVivo();
+    boolean estaVivo();
     void morir();
     
     default void verificarMuerte() {

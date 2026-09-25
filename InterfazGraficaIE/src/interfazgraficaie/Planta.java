@@ -20,13 +20,8 @@ public class Planta extends Entidad implements Reproducible {
     }
 
     @Override
-    public void intentarReproduccion(Ecosistema eco) {
-        
-    }
-    
-    @Override
-    public void puedeReproducirse() {
-       
+    public boolean puedeReproducirse() {
+       return false;
     }
 
     @Override

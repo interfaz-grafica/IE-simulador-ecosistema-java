@@ -20,17 +20,12 @@ public abstract class Animal extends Entidad implements Mortal {
     }
     
     @Override
-    public void estaVivo(){
-        
+    public boolean estaVivo() {
+        return false;
     }
 
     @Override
-    public void morir(){
-        
-    }
-
-    @Override //Habría que hacer override o no? Con default es opcional.
-    public void verificarMuerte(){
+    public void morir() {
         
     }
     

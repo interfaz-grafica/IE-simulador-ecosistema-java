@@ -4,10 +4,10 @@ public interface Reproducible {
     
    void reproducirse(Ecosistema eco);
    
-   void puedeReproducirse();
+   boolean puedeReproducirse();
    
    default void intentarReproduccion(Ecosistema eco) {
-       
+
    }
     
 }
