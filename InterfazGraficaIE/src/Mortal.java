@@ -9,7 +9,7 @@
  */
 public interface Mortal {
     
-    void estavivo();
+    void estaVivo();
     void morir();
     
     default void verificarMuerte()

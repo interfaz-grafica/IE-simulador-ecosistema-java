@@ -7,7 +7,7 @@
  *
  * @author GZ TIENDA
  */
-public abstract class Animal extends Entidad {
+public abstract class Animal extends Entidad implements Mortal {
 
     private int velocidad;
     private double peso;
@@ -17,14 +17,12 @@ public abstract class Animal extends Entidad {
         super(nombre, energia, edad, viva);
         
         this.velocidad = velocidad;
-        this.peso = peso; 
-       
+        this.peso = peso;   
     }
     
     public int getVelocidad() {
         return velocidad;
     }
-
     public void setVelocidad(int velocidad) {
         this.velocidad = velocidad;
     }
@@ -32,27 +30,29 @@ public abstract class Animal extends Entidad {
     public double getPeso() {
         return peso;
     }
-
     public void setPeso(double peso) {
         this.peso = peso;
     }
     
     public abstract void comer(Ecosistema eco);
   
-    public void moverse()
-    {
+    public void moverse() {
         
     }
     
     @Override
-    public void actuar(Ecosistema eco)
-    {
+    public void estaVivo(){
+        
+    }
+
+    @Override
+    public void morir(){
+        
+    }
+
+    @Override //Habría que hacer override o no? Con default es opcional.
+    public void verificarMuerte(){
         
     }
     
-    @Override
-    public void mostrarEstado()
-    {
-        
-    }
 }
