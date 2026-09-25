@@ -25,6 +25,10 @@ public class Planta extends Entidad implements Reproducible {
         super(nombre, energia, edad, viva);
         this.tamanio = tamanio;
     }
+    
+    public double serComida() {
+        return 0; //A modificar
+    }
 
     
     @Override
