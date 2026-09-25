@@ -8,13 +8,15 @@ package interfazgraficaie;
  *
  * @author GZ TIENDA
  */
+import java.util.Scanner;
 public class InterfazGraficaIE {
 
-    /**
-     * @param args the command line arguments
-     */
+    private static Scanner scanner;
+    private static Ecosistema ecosistema;
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        scanner = new Scanner(System.in);
+        ecosistema = new Ecosistema();
     }
     
 }
