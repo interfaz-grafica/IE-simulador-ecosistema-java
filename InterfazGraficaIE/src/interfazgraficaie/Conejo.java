@@ -1,4 +1,6 @@
- /*
+package interfazgraficaie;
+
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -7,21 +9,11 @@
  *
  * @author GZ TIENDA
  */
-public class Lobo extends Animal implements Peligroso {
+public class Conejo extends Animal implements Reproducible {
 
-    private int exitosCaza;  
-       
-    public Lobo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso, int exitosCaza) {
+    public Conejo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso) {
         
         super(nombre, energia, edad, viva, velocidad, peso);
-    }
-    
-    public int getExitosCaza() {
-        return exitosCaza;
-    }
-
-    public void setExitosCaza(int exitosCaza) {
-        this.exitosCaza = exitosCaza;
     }
     
     @Override
@@ -37,8 +29,17 @@ public class Lobo extends Animal implements Peligroso {
     }
     
     @Override
-    public int getNivelPeligro() {
-        return 0;
+    public void reproducirse(Ecosistema eco) {
+ 
+    }
+
+    @Override
+    public void intentarReproduccion(Ecosistema eco) {
+        
     }
     
+    @Override
+    public void puedeReproducirse() {
+       
+    }   
 }
