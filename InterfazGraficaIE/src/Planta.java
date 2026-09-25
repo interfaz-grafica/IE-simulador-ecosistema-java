@@ -29,7 +29,6 @@ public class Planta extends Entidad implements Reproducible {
     public double serComida() {
         return 0; //A modificar
     }
-
     
     @Override
     public void reproducirse(Ecosistema eco) {
@@ -45,7 +44,6 @@ public class Planta extends Entidad implements Reproducible {
     public void puedeReproducirse() {
        
     }
-
 
     @Override
     public void actuar(Ecosistema eco) {
