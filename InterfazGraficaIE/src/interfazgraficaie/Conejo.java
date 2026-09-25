@@ -1,14 +1,5 @@
 package interfazgraficaie;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author GZ TIENDA
- */
 public class Conejo extends Animal implements Reproducible {
 
     public Conejo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso) {

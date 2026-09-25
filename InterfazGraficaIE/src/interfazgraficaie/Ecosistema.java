@@ -1,13 +1,5 @@
 package interfazgraficaie;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-/**
- *
- * @author GZ TIENDA
- */
 import java.util.ArrayList;
 
 public class Ecosistema {
@@ -26,6 +18,31 @@ public class Ecosistema {
         this.lobos = new ArrayList<>();
         this.turnoActual = 1;
     }
+    
+    public void procesarTurno() {
+    }
+    
+    public void mostrarEstado() {
+    }
+    
+    public void agregarEntidad(String tipo) {
+    }
+    
+    public void agregarEntidad(String tipo, double energia) {
+    }
+    
+    public void cambiarClima (Clima nuevo) {
+    }
+    
+    public boolean ecosistemaColapsado() {
+        return false;
+    }
+    
+    public void generarReporteFinal() {
+    }
+    
+    //-----------------------------------------------------------------------//
+    //Getters y setters
     
     public ArrayList<Planta> getPlantas() {
         return plantas;
@@ -67,25 +84,4 @@ public class Ecosistema {
         this.turnoActual = turnoActual;
     }
     
-    public void procesarTurno() {
-    }
-    
-    public void mostrarEstado() {
-    }
-    
-    public void agregarEntidad(String tipo) {
-    }
-    
-    public void agregarEntidad(String tipo, double energia) {
-    }
-    
-    public void cambiarClima (Clima nuevo) {
-    }
-    
-    public boolean ecosistemaColapsado() {
-        return false;
-    }
-    
-    public void generarReporteFinal() {
-    }
 }

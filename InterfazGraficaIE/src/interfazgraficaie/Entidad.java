@@ -1,14 +1,5 @@
 package interfazgraficaie;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author GZ TIENDA
- */
 public abstract class Entidad {
 
     private String nombre;
@@ -23,6 +14,17 @@ public abstract class Entidad {
         this.edad = edad;
         this.viva = viva; 
     }
+    
+    public abstract void actuar(Ecosistema eco); 
+    
+    public abstract void mostrarEstado();
+    
+    public void envejecer() {
+        
+    }
+
+    //-----------------------------------------------------------------------//
+    //Getters y setters
     
     public String getNombre() {
         return nombre;
@@ -47,21 +49,12 @@ public abstract class Entidad {
     public void setEdad(int edad) {
         this.edad = edad;
     }
-
+    
     public boolean isViva() {
         return viva;
     }
 
     public void setViva(boolean viva) {
         this.viva = viva;
-    }
-    
-    public abstract void actuar(Ecosistema eco); 
-    
-    public abstract void mostrarEstado();
-    
-    public void envejecer()
-    {
-        
     }
 }

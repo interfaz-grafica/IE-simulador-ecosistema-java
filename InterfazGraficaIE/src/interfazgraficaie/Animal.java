@@ -1,14 +1,5 @@
 package interfazgraficaie;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author GZ TIENDA
- */
 public abstract class Animal extends Entidad implements Mortal {
 
     private int velocidad;
@@ -20,20 +11,6 @@ public abstract class Animal extends Entidad implements Mortal {
         
         this.velocidad = velocidad;
         this.peso = peso;   
-    }
-    
-    public int getVelocidad() {
-        return velocidad;
-    }
-    public void setVelocidad(int velocidad) {
-        this.velocidad = velocidad;
-    }
-
-    public double getPeso() {
-        return peso;
-    }
-    public void setPeso(double peso) {
-        this.peso = peso;
     }
     
     public abstract void comer(Ecosistema eco);
@@ -56,5 +33,23 @@ public abstract class Animal extends Entidad implements Mortal {
     public void verificarMuerte(){
         
     }
+    
+    //-----------------------------------------------------------------------//
+    //Getters y setters
+    
+    public int getVelocidad() {
+      return velocidad;
+    }
+    public void setVelocidad(int velocidad) {
+        this.velocidad = velocidad;
+    }
+
+    public double getPeso() {
+        return peso;
+    }
+    public void setPeso(double peso) {
+        this.peso = peso;
+    }  
+
     
 }
