@@ -1,6 +1,7 @@
 package interfazgraficaie;
 
 public enum Clima {
+    // Definimos los climas con sus factores segun la consigna
     SOLEADO("Soleado", 1.2, 1.0),
     LLUVIOSO("Lluvioso", 1.5, 0.9),
     SEQUIA("Sequía", 0.4, 1.3),

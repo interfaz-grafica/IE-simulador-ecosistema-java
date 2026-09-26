@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Ecosistema {
 
+    // Listas principales para guardar las entidades
     private ArrayList<Planta> plantas;
     private ArrayList<Conejo> conejos;
     private ArrayList<Lobo> lobos;
@@ -11,7 +12,7 @@ public class Ecosistema {
     private Clima climaActual;
     private int turnoActual;
 
-    // Metricas historicas obligatorias por consigna
+    // Contadores para el reporte final
     private int totalNacimientosPlantas = 0;
     private int totalNacimientosConejos = 0;
     private int totalNacimientosLobos = 0;
@@ -20,6 +21,7 @@ public class Ecosistema {
     private int totalMuertesConejos = 0;
     private int totalMuertesLobos = 0;
 
+    // Variables para guardar el turno con mas bajas
     private int turnoMayorActividad = 1;
     private int maxCambiosEnUnTurno = 0;
 
@@ -31,11 +33,12 @@ public class Ecosistema {
         this.turnoActual = 0;
     }
 
-    // --- Sobrecarga requerida de agregarEntidad ---
+    // Sobrecarga: metodo simple sin pasarle energia
     public void agregarEntidad(String tipo) {
         agregarEntidad(tipo, -1);
     }
 
+    // Metodo principal para crear y meter entidades a las listas
     public void agregarEntidad(String tipo, double energia) {
         if (tipo == null) return;
         String t = tipo.trim().toLowerCase();
@@ -59,6 +62,7 @@ public class Ecosistema {
                 break;
 
             case "lobo":
+                // Tope estricto de 5 lobos en todo el juego
                 if (lobos.size() >= 5) {
                     System.out.println("No se pueden agregar más de 5 lobos en total en la simulación.");
                     return;
@@ -84,6 +88,7 @@ public class Ecosistema {
         System.out.println("El clima cambió a: " + nuevo);
     }
 
+    // Devuelve true si alguna poblacion se extinguio
     public boolean ecosistemaColapsado() {
         return plantas.isEmpty() || conejos.isEmpty() || lobos.isEmpty();
     }
@@ -94,7 +99,7 @@ public class Ecosistema {
         System.out.println(">>> INICIANDO TURNO " + turnoActual + " [Clima: " + climaActual + "] <<<");
         System.out.println("==========================================");
 
-        // 1. Accion polimorfica de Flora y Fauna con actuar(Ecosistema)
+        // 1. Cada entidad hace lo suyo con actuar()
         System.out.println("\n--- 1. Fase de Flora ---");
         for (Planta p : plantas) {
             if (p.estaVivo()) {
@@ -116,7 +121,7 @@ public class Ecosistema {
             }
         }
 
-        // 2. Uso obligatorio de polimorfismo con la interfaz Reproducible
+        // 2. Aca aplicamos polimorfismo juntando todo lo que sea Reproducible
         System.out.println("\n--- 4. Intento de Reproducción (Polimorfismo Reproducible) ---");
         ArrayList<Reproducible> reproducibles = new ArrayList<>();
         reproducibles.addAll(plantas);
@@ -125,7 +130,7 @@ public class Ecosistema {
             r.intentarReproduccion(this);
         }
 
-        // 3. Envejecimiento y consumo metabolico
+        // 3. Envejecen y gastan energia base
         System.out.println("\n--- 5. Envejecimiento y consumo metabólico ---");
         for (Conejo c : conejos) {
             c.envejecer();
@@ -134,17 +139,18 @@ public class Ecosistema {
             l.envejecer();
         }
 
-        // 4. Limpieza de bajas
+        // 4. Sacamos a los que murieron en este turno
         limpiarEntidadesMuertas();
 
-        // 5. Resumen del turno
+        // 5. Estado rapido por consola
         System.out.println("\n--- Estado al cierre del Turno " + turnoActual + " ---");
         mostrarEstado();
 
-        // 6. Probabilidad de cambio climatico
+        // 6. Chance de que cambie el clima solo
         verificarCambioClimatico();
     }
 
+    // Limpiamos las listas usando copias para que no tire ConcurrentModificationException
     private void limpiarEntidadesMuertas() {
         int plantasMuertasTurno = 0;
         int conejosMuertosTurno = 0;
@@ -173,6 +179,7 @@ public class Ecosistema {
         totalMuertesConejos += conejosMuertosTurno;
         totalMuertesLobos += lobosMuertosTurno;
 
+        // Vemos si este turno tuvo mas bajas que los anteriores
         int bajasTotalesTurno = plantasMuertasTurno + conejosMuertosTurno + lobosMuertosTurno;
         if (bajasTotalesTurno > maxCambiosEnUnTurno) {
             maxCambiosEnUnTurno = bajasTotalesTurno;
@@ -185,7 +192,7 @@ public class Ecosistema {
     }
 
     private void verificarCambioClimatico() {
-        if (Math.random() < 0.35) {
+        if (Math.random() < 0.35) { // 35% de chance de rotar clima
             Clima[] climas = Clima.values();
             Clima nuevoClima = climas[(int) (Math.random() * climas.length)];
             if (nuevoClima != this.climaActual) {
@@ -230,7 +237,7 @@ public class Ecosistema {
         System.out.println("\n--- Records de la Simulación ---");
         System.out.println("Turno con mayor actividad/bajas: Turno " + turnoMayorActividad);
 
-        // Entidad mas longeva
+        // Busqueda de los mas viejos recorriendo cada lista
         Planta plantaLongeva = null;
         for (Planta p : plantas) {
             if (plantaLongeva == null || p.getEdad() > plantaLongeva.getEdad()) {
