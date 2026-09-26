@@ -14,6 +14,8 @@ public class InterfazGraficaIE {
         System.out.println("=========================================");
         System.out.println("   SIMULADOR DE ECOSISTEMA - INICIO      ");
         System.out.println("=========================================\n");
+        
+        ingresarDatosIniciales();
     }
     
    private static void ingresarDatosIniciales() {
@@ -24,10 +26,11 @@ public class InterfazGraficaIE {
         int cantidadInicialLobos = ingresarEnteroEnRango("Cantidad inicial de lobos", 1, 5);
         Clima climaInicial = ingresarClima();
         int turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
+        
+        mostrarConfiguracionInicial(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial, turnosTotales);
    }
     
  
-   
     private static int ingresarEnteroEnRango(String mensaje, int min, int max) {
         
         int numero = -1;
@@ -77,5 +80,16 @@ public class InterfazGraficaIE {
             case 4: return Clima.INVIERNO;
             default: return Clima.SOLEADO;
         }
+    }
+    
+    private static void mostrarConfiguracionInicial(int cantidadInicialPlantas, int cantidadInicialConejos, int cantidadInicialLobos, Clima climaInicial, int turnosTotales) {
+        System.out.println("\n-------------------------------------------");
+        System.out.println("DATOS INGRESADOS:");
+        System.out.println("• Plantas iniciales: " + cantidadInicialPlantas);
+        System.out.println("• Conejos iniciales: " + cantidadInicialConejos);
+        System.out.println("• Lobos iniciales:   " + cantidadInicialLobos);
+        System.out.println("• Clima inicial:     " + climaInicial);
+        System.out.println("• Duración total:    " + turnosTotales + " turnos");
+        System.out.println("-------------------------------------------");           
     }
 }
