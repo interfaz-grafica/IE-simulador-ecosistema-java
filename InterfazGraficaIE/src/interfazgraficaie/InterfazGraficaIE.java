@@ -19,15 +19,36 @@ public class InterfazGraficaIE {
     }
     
    private static void ingresarDatosIniciales() {
-        System.out.println("--- CONFIGURACIÓN INICIAL DEL ECOSISTEMA ---\n");    
+       
+        boolean configuracionConfirmada = false;
         
-        int cantidadInicialPlantas = ingresarEnteroEnRango("Cantidad inicial de plantas", 5, 30);
-        int cantidadInicialConejos = ingresarEnteroEnRango("Cantidad inicial de conejos", 2, 15);
-        int cantidadInicialLobos = ingresarEnteroEnRango("Cantidad inicial de lobos", 1, 5);
-        Clima climaInicial = ingresarClima();
-        int turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
-        
-        mostrarConfiguracionInicial(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial, turnosTotales);
+        while(configuracionConfirmada == false) {
+            
+            System.out.println("--- CONFIGURACIÓN INICIAL DEL ECOSISTEMA ---\n");    
+
+            int cantidadInicialPlantas = ingresarEnteroEnRango("Cantidad inicial de plantas", 5, 30);
+            int cantidadInicialConejos = ingresarEnteroEnRango("Cantidad inicial de conejos", 2, 15);
+            int cantidadInicialLobos = ingresarEnteroEnRango("Cantidad inicial de lobos", 1, 5);
+            Clima climaInicial = ingresarClima();
+            int turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
+
+            mostrarConfiguracionInicial(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial, turnosTotales);
+            
+            //Pedir confirmación
+            int opcion = ingresarEnteroEnRango("\n¿Deseas confirmar esta configuración? (1 = Sí / 2 = Volver a ingresar)", 1, 2);
+
+            if (opcion == 1) {
+                configuracionConfirmada = true;
+                
+                // Acá se va a instanciar el ecosistema más adelante,
+                // ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial, turnosTotales);
+                
+                System.out.println("\n>> ¡Configuración guardada exitosamente! Iniciando simulación...\n");
+            } else {
+                // Si elige 2, la variable sigue siendo false, el bucle reinicia y las variables locales se sobrescriben.
+                System.out.println("\n>> Descartando datos. Reiniciando el panel de configuración...\n");
+            }
+       }
    }
     
  
