@@ -12,7 +12,7 @@ public class Ecosistema {
     
     private int turnoActual;
 
-    // Variables para el reporte final
+    // VARIABLES
     private int nacimientosPlantas = 0;
     private int nacimientosConejos = 0;
     private int nacimientosLobos = 0;
@@ -35,7 +35,7 @@ public class Ecosistema {
     public void procesarTurno() {
         System.out.println("Turno: " + turnoActual + " - Clima: " + climaActual);
 
-        // 1. Actuan las plantas
+        // 1. TURNO PLANTAS
         for (int i = 0; i < plantas.size(); i++) {
             Planta p = plantas.get(i);
             if (p.estaVivo()) {
@@ -43,7 +43,7 @@ public class Ecosistema {
             }
         }
 
-        // 2. Actuan los conejos
+        // 2. TURNO CONEJOS
         for (int i = 0; i < conejos.size(); i++) {
             Conejo c = conejos.get(i);
             if (c.estaVivo()) {
@@ -51,7 +51,7 @@ public class Ecosistema {
             }
         }
 
-        // 3. Actuan los lobos
+        // 3. TURNO LOBOS
         for (int i = 0; i < lobos.size(); i++) {
             Lobo l = lobos.get(i);
             if (l.estaVivo()) {
@@ -59,7 +59,7 @@ public class Ecosistema {
             }
         }
 
-        // 4. Polimorfismo con la interfaz Reproducible (Clase 9)
+        // 4. INTERFAZ REPRODUCIBLE (polimorfismo)
         ArrayList<Reproducible> listaReproduccion = new ArrayList<>();
         for (int i = 0; i < plantas.size(); i++) {
             listaReproduccion.add(plantas.get(i));
@@ -72,7 +72,7 @@ public class Ecosistema {
             listaReproduccion.get(i).intentarReproduccion(this);
         }
 
-        // 5. Envejecimiento
+        // 5. ENVEJECIMIENTO
         for (int i = 0; i < conejos.size(); i++) {
             conejos.get(i).envejecer();
         }
@@ -80,7 +80,7 @@ public class Ecosistema {
             lobos.get(i).envejecer();
         }
 
-        // 6. Limpieza de muertos con for hacia atras para no saltar indices
+        // 6. LIMPIEZA DE MUERTOS
         int bajasEsteTurno = 0;
 
         for (int i = plantas.size() - 1; i >= 0; i--) {
@@ -112,7 +112,7 @@ public class Ecosistema {
             turnoMayorActividad = turnoActual;
         }
 
-        // 7. Mostrar estado
+        // 7. MOSTRAR ESTADO
         mostrarEstado();
 
         turnoActual++;
@@ -187,7 +187,7 @@ public class Ecosistema {
 
         System.out.println("Turno con mayor cantidad de bajas: Turno " + turnoMayorActividad);
 
-        // Buscar mas longevos recorriendo con un for clasico
+        // BUSCAR LOS MAS LONJEVOS 
         Planta pMax = null;
         for (int i = 0; i < plantas.size(); i++) {
             if (pMax == null || plantas.get(i).getEdad() > pMax.getEdad()) {
@@ -229,7 +229,7 @@ public class Ecosistema {
     }
     
     //-----------------------------------------------------------------------//
-    //Getters y setters
+    //GETTERS Y SETTERS
     
     public ArrayList<Planta> getPlantas() {
         return plantas;
