@@ -7,6 +7,7 @@ public class Lobo extends Animal implements Peligroso {
     public Lobo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso, int exitosCaza) {
         
         super(nombre, energia, edad, viva, velocidad, peso);
+        this.exitosCaza = exitosCaza;
     }
     
     @Override
