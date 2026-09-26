@@ -1,20 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 package interfazgraficaie;
 
-/**
- *
- * @author GZ TIENDA
- */
+import java.util.Scanner;
+
 public class InterfazGraficaIE {
 
-    /**
-     * @param args the command line arguments
-     */
+    private static Scanner scanner;
+    private static Ecosistema ecosistema;
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        scanner = new Scanner(System.in);
+        ecosistema = new Ecosistema();
     }
     
 }
