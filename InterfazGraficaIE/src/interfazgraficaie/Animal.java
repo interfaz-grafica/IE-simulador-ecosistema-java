@@ -16,17 +16,17 @@ public abstract class Animal extends Entidad implements Mortal {
     public abstract void comer(Ecosistema eco);
   
     public void moverse() {
-        
+        System.out.println(getNombre() + " se desplazó a " + getVelocidad() + " km/h.");
     }
     
     @Override
     public boolean estaVivo() {
-        return false;
+        return isViva();
     }
 
     @Override
     public void morir() {
-        
+        setViva(false);
     }
     
     //-----------------------------------------------------------------------//
