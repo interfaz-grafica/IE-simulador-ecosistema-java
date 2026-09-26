@@ -10,6 +10,14 @@ public class Ecosistema {
 
     private Clima climaActual;
     private int turnoActual;
+    
+
+    private int totalMuertesPlantas = 0;
+    private int totalMuertesConejos = 0;
+    private int totalMuertesLobos = 0;
+
+    private int turnoMayorActividad = 1;
+    private int maxCambiosEnUnTurno = 0;
 
     public Ecosistema() {
         this.plantas = new ArrayList<>();
@@ -153,32 +161,41 @@ public class Ecosistema {
     }
 
     private void limpiarEntidadesMuertas() {
-        int plantasMuertas = 0;
-        int conejosMuertos = 0;
-        int lobosMuertos = 0;
+        int plantasMuertasTurno = 0;
+        int conejosMuertosTurno = 0;
+        int lobosMuertosTurno = 0;
 
-        // removeIf recorre de forma segura y evita ConcurrentModificationException
         for (Planta p : new ArrayList<>(plantas)) {
             if (!p.estaVivo()) {
                 plantas.remove(p);
-                plantasMuertas++;
+                plantasMuertasTurno++;
             }
         }
         for (Conejo c : new ArrayList<>(conejos)) {
             if (!c.estaVivo()) {
                 conejos.remove(c);
-                conejosMuertos++;
+                conejosMuertosTurno++;
             }
         }
         for (Lobo l : new ArrayList<>(lobos)) {
             if (!l.estaVivo()) {
                 lobos.remove(l);
-                lobosMuertos++;
+                lobosMuertosTurno++;
             }
         }
 
-        if (plantasMuertas > 0 || conejosMuertos > 0 || lobosMuertos > 0) {
-            System.out.println("[Bajas del turno] Plantas: -" + plantasMuertas + " | Conejos: -" + conejosMuertos + " | Lobos: -" + lobosMuertos);
+        totalMuertesPlantas += plantasMuertasTurno;
+        totalMuertesConejos += conejosMuertosTurno;
+        totalMuertesLobos += lobosMuertosTurno;
+
+        int bajasTotalesTurno = plantasMuertasTurno + conejosMuertosTurno + lobosMuertosTurno;
+        if (bajasTotalesTurno > maxCambiosEnUnTurno) {
+            maxCambiosEnUnTurno = bajasTotalesTurno;
+            turnoMayorActividad = turnoActual;
+        }
+
+        if (bajasTotalesTurno > 0) {
+            System.out.println("[Bajas del turno] Plantas: -" + plantasMuertasTurno + " | Conejos: -" + conejosMuertosTurno + " | Lobos: -" + lobosMuertosTurno);
         }
     }
 
@@ -192,8 +209,36 @@ public class Ecosistema {
         }
     }
 
-    public void generarReporteFinal() {
-        // Se completa en el siguiente paso
+public void generarReporteFinal() {
+        System.out.println("\n========================================================");
+        System.out.println("            REPORTE FINAL DE LA SIMULACION             ");
+        System.out.println("========================================================");
+        System.out.println("Turnos completados: " + turnoActual);
+        System.out.println("Clima final: " + climaActual.getDescripcion());
+
+        System.out.println("\n--- Estado Final de Poblaciones ---");
+        System.out.println("Plantas sobrevivientes : " + plantas.size());
+        System.out.println("Conejos sobrevivientes : " + conejos.size());
+        System.out.println("Lobos sobrevivientes   : " + lobos.size());
+
+        System.out.println("\n--- Bajas Historicas Registradas ---");
+        System.out.println("Plantas extinguidas/consumidas : " + totalMuertesPlantas);
+        System.out.println("Conejos cazados/fallecidos     : " + totalMuertesConejos);
+        System.out.println("Lobos fallecidos               : " + totalMuertesLobos);
+
+        System.out.println("\n--- Diagnostico del Ecosistema ---");
+        if (ecosistemaColapsado()) {
+            System.out.println("ESTADO: COLAPSO ECOLOGICO DETECTADO");
+            if (plantas.isEmpty()) System.out.println("-> Causa principal: Extincion de flora.");
+            if (conejos.isEmpty()) System.out.println("-> Causa principal: Extincion de herbivoros (conejos).");
+            if (lobos.isEmpty()) System.out.println("-> Causa principal: Extincion de depredadores tope (lobos).");
+        } else {
+            System.out.println("ESTADO: EQUILIBRIO SOSTENIBLE ALCANZADO");
+            System.out.println("Todas las poblaciones conservaron especimenes activos.");
+        }
+
+        System.out.println("\nTurno con mayor cantidad de eventos criticos: Turno " + turnoMayorActividad);
+        System.out.println("========================================================\n");
     }
 
     // --- Getters y Setters ---
