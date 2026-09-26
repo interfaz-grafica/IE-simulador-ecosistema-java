@@ -74,8 +74,122 @@ public class Ecosistema {
         return plantas.isEmpty() || conejos.isEmpty() || lobos.isEmpty();
     }
 
-    public void procesarTurno() {
-        // Se completa en el siguiente paso
+  public void procesarTurno() {
+        turnoActual++;
+        System.out.println("\n==========================================");
+        System.out.println(">>> INICIANDO TURNO " + turnoActual + " [Clima: " + climaActual + "] <<<");
+        System.out.println("==========================================");
+
+        // 1. Accion de la Flora segun Clima
+        System.out.println("\n--- 1. Fase de Flora ---");
+        for (Planta p : plantas) {
+            if (p.estaVivo()) {
+                p.fotosintesis(climaActual);
+            }
+        }
+
+        // 2. Accion de Conejos (Herbívoros buscando plantas)
+        System.out.println("\n--- 2. Fase de Herbívoros (Conejos) ---");
+        for (Conejo c : conejos) {
+            if (c.estaVivo()) {
+                // El conejo intenta comer si hay plantas disponibles
+                Planta plantaDisponible = obtenerPlantaDisponible();
+                c.alimentarse(plantaDisponible);
+            }
+        }
+
+        // 3. Accion de Lobos (Carnívoros cazando conejos)
+        System.out.println("\n--- 3. Fase de Carnívoros (Lobos) ---");
+        for (Lobo l : lobos) {
+            if (l.estaVivo()) {
+                // El lobo intenta cazar un conejo vivo
+                Conejo presaDisponible = obtenerConejoDisponible();
+                l.cazar(presaDisponible);
+            }
+        }
+
+        // 4. Envejecimiento y consumo general de turno
+        System.out.println("\n--- 4. Consumo metabólico y ciclo vital ---");
+        aplicarGastoMetabolico();
+
+        // 5. Limpieza segura de bajas
+        limpiarEntidadesMuertas();
+
+        // 6. Resumen del turno actual
+        System.out.println("\n--- Estado al cierre del Turno " + turnoActual + " ---");
+        mostrarEstado();
+
+        // 7. Evento climático aleatorio (30% de probabilidad de cambio por turno)
+        verificarCambioClimatico();
+    }
+
+    // --- Metodos de apoyo internos para el motor ---
+
+    private Planta obtenerPlantaDisponible() {
+        for (Planta p : plantas) {
+            if (p.estaVivo()) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    private Conejo obtenerConejoDisponible() {
+        for (Conejo c : conejos) {
+            if (c.estaVivo()) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    private void aplicarGastoMetabolico() {
+        for (Conejo c : conejos) {
+            c.gastoTurno();
+        }
+        for (Lobo l : lobos) {
+            l.gastoTurno();
+        }
+    }
+
+    private void limpiarEntidadesMuertas() {
+        int plantasMuertas = 0;
+        int conejosMuertos = 0;
+        int lobosMuertos = 0;
+
+        // removeIf recorre de forma segura y evita ConcurrentModificationException
+        for (Planta p : new ArrayList<>(plantas)) {
+            if (!p.estaVivo()) {
+                plantas.remove(p);
+                plantasMuertas++;
+            }
+        }
+        for (Conejo c : new ArrayList<>(conejos)) {
+            if (!c.estaVivo()) {
+                conejos.remove(c);
+                conejosMuertos++;
+            }
+        }
+        for (Lobo l : new ArrayList<>(lobos)) {
+            if (!l.estaVivo()) {
+                lobos.remove(l);
+                lobosMuertos++;
+            }
+        }
+
+        if (plantasMuertas > 0 || conejosMuertos > 0 || lobosMuertos > 0) {
+            System.out.println("[Bajas del turno] Plantas: -" + plantasMuertas + " | Conejos: -" + conejosMuertos + " | Lobos: -" + lobosMuertos);
+        }
+    }
+
+    private void verificarCambioClimatico() {
+        if (Math.random() < 0.35) { // 35% de chance de rotar clima
+            Clima[] climas = Clima.values();
+            Clima nuevoClima = climas[(int) (Math.random() * climas.length)];
+            if (nuevoClima != this.climaActual) {
+                cambiarClima(nuevoClima);
+            }
+        }
     }
 
     public void generarReporteFinal() {
