@@ -9,13 +9,25 @@ public class InterfazGraficaIE {
     
     public static void main(String[] args) {
         scanner = new Scanner(System.in);
-        ecosistema = new Ecosistema();    
+        //ecosistema = new Ecosistema();  
+
+        System.out.println("=========================================");
+        System.out.println("   SIMULADOR DE ECOSISTEMA - INICIO      ");
+        System.out.println("=========================================\n");
     }
     
    private static void ingresarDatosIniciales() {
-   
+        System.out.println("--- CONFIGURACIÓN INICIAL DEL ECOSISTEMA ---\n");    
+        
+        int cantidadInicialPlantas = ingresarEnteroEnRango("Cantidad inicial de plantas", 5, 30);
+        int cantidadInicialConejos = ingresarEnteroEnRango("Cantidad inicial de conejos", 2, 15);
+        int cantidadInicialLobos = ingresarEnteroEnRango("Cantidad inicial de lobos", 1, 5);
+        Clima climaInicial = ingresarClima();
+        int turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
    }
     
+ 
+   
     private static int ingresarEnteroEnRango(String mensaje, int min, int max) {
         
         int numero = -1;
