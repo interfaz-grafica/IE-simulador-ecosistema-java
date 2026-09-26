@@ -16,15 +16,24 @@ public class Lobo extends Animal implements Peligroso {
 
     @Override
     public void actuar(Ecosistema eco) {
+        
+        this.comer(eco);
+        
     }
     
     @Override
     public void mostrarEstado() {
+        
+        // Mostramos el nombre, estado y cantidad de cazas exitosas de un lobo
+        System.out.print("Lobo '" + getNombre() + "' (Energia: " + getEnergia() + ") [Cacerias exitosas: " + this.exitosCaza + "]");
+        System.out.println();
     }
     
     @Override
     public int getNivelPeligro() {
-        return 0;
+        
+        // Mientras más energía y cazas exitosas tenga, más peligroso es
+        return (int)(getEnergia()) + (this.exitosCaza * 10);
     }
     
     //-----------------------------------------------------------------------//
