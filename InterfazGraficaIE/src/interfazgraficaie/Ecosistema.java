@@ -10,7 +10,11 @@ public class Ecosistema {
 
     private Clima climaActual;
     private int turnoActual;
-    
+
+    // Metricas historicas obligatorias por consigna
+    private int totalNacimientosPlantas = 0;
+    private int totalNacimientosConejos = 0;
+    private int totalNacimientosLobos = 0;
 
     private int totalMuertesPlantas = 0;
     private int totalMuertesConejos = 0;
@@ -29,7 +33,7 @@ public class Ecosistema {
 
     // --- Sobrecarga requerida de agregarEntidad ---
     public void agregarEntidad(String tipo) {
-        agregarEntidad(tipo, -1); // -1 indica que asigna energía inicial por defecto
+        agregarEntidad(tipo, -1);
     }
 
     public void agregarEntidad(String tipo, double energia) {
@@ -42,6 +46,7 @@ public class Ecosistema {
                 int tam = (int) (Math.random() * 5 + 1);
                 Planta p = new Planta("Planta-" + (plantas.size() + 1), energiaPlanta, tam);
                 plantas.add(p);
+                totalNacimientosPlantas++;
                 System.out.println("Se agregó la planta '" + p.getNombre() + "' al ecosistema.");
                 break;
 
@@ -49,11 +54,11 @@ public class Ecosistema {
                 double energiaConejo = (energia > 0) ? energia : (40 + Math.random() * 30);
                 Conejo c = new Conejo("Conejo-" + (conejos.size() + 1), energiaConejo, 10, 2.5);
                 conejos.add(c);
+                totalNacimientosConejos++;
                 System.out.println("Se agregó el conejo '" + c.getNombre() + "' al ecosistema.");
                 break;
 
             case "lobo":
-                // Regla estricta: máximo 5 lobos en total
                 if (lobos.size() >= 5) {
                     System.out.println("No se pueden agregar más de 5 lobos en total en la simulación.");
                     return;
@@ -61,6 +66,7 @@ public class Ecosistema {
                 double energiaLobo = (energia > 0) ? energia : (60 + Math.random() * 30);
                 Lobo l = new Lobo("Lobo-" + (lobos.size() + 1), energiaLobo, 15, 20.0);
                 lobos.add(l);
+                totalNacimientosLobos++;
                 System.out.println("Se agregó el lobo '" + l.getNombre() + "' al ecosistema.");
                 break;
 
@@ -82,82 +88,61 @@ public class Ecosistema {
         return plantas.isEmpty() || conejos.isEmpty() || lobos.isEmpty();
     }
 
-  public void procesarTurno() {
+    public void procesarTurno() {
         turnoActual++;
         System.out.println("\n==========================================");
         System.out.println(">>> INICIANDO TURNO " + turnoActual + " [Clima: " + climaActual + "] <<<");
         System.out.println("==========================================");
 
-        // 1. Accion de la Flora segun Clima
+        // 1. Accion polimorfica de Flora y Fauna con actuar(Ecosistema)
         System.out.println("\n--- 1. Fase de Flora ---");
         for (Planta p : plantas) {
             if (p.estaVivo()) {
-                p.fotosintesis(climaActual);
+                p.actuar(this);
             }
         }
 
-        // 2. Accion de Conejos (Herbívoros buscando plantas)
         System.out.println("\n--- 2. Fase de Herbívoros (Conejos) ---");
         for (Conejo c : conejos) {
             if (c.estaVivo()) {
-                // El conejo intenta comer si hay plantas disponibles
-                Planta plantaDisponible = obtenerPlantaDisponible();
-                c.alimentarse(plantaDisponible);
+                c.actuar(this);
             }
         }
 
-        // 3. Accion de Lobos (Carnívoros cazando conejos)
         System.out.println("\n--- 3. Fase de Carnívoros (Lobos) ---");
         for (Lobo l : lobos) {
             if (l.estaVivo()) {
-                // El lobo intenta cazar un conejo vivo
-                Conejo presaDisponible = obtenerConejoDisponible();
-                l.cazar(presaDisponible);
+                l.actuar(this);
             }
         }
 
-        // 4. Envejecimiento y consumo general de turno
-        System.out.println("\n--- 4. Consumo metabólico y ciclo vital ---");
-        aplicarGastoMetabolico();
+        // 2. Uso obligatorio de polimorfismo con la interfaz Reproducible
+        System.out.println("\n--- 4. Intento de Reproducción (Polimorfismo Reproducible) ---");
+        ArrayList<Reproducible> reproducibles = new ArrayList<>();
+        reproducibles.addAll(plantas);
+        reproducibles.addAll(conejos);
+        for (Reproducible r : reproducibles) {
+            r.intentarReproduccion(this);
+        }
 
-        // 5. Limpieza segura de bajas
+        // 3. Envejecimiento y consumo metabolico
+        System.out.println("\n--- 5. Envejecimiento y consumo metabólico ---");
+        for (Conejo c : conejos) {
+            c.envejecer();
+        }
+        for (Lobo l : lobos) {
+            l.envejecer();
+        }
+
+        // 4. Limpieza de bajas
         limpiarEntidadesMuertas();
 
-        // 6. Resumen del turno actual
+        // 5. Resumen del turno
         System.out.println("\n--- Estado al cierre del Turno " + turnoActual + " ---");
         mostrarEstado();
 
-        // 7. Evento climático aleatorio (30% de probabilidad de cambio por turno)
+        // 6. Probabilidad de cambio climatico
         verificarCambioClimatico();
-    }
-
-    // --- Metodos de apoyo internos para el motor ---
-
-    private Planta obtenerPlantaDisponible() {
-        for (Planta p : plantas) {
-            if (p.estaVivo()) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    private Conejo obtenerConejoDisponible() {
-        for (Conejo c : conejos) {
-            if (c.estaVivo()) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    private void aplicarGastoMetabolico() {
-        for (Conejo c : conejos) {
-            c.gastoTurno();
-        }
-        for (Lobo l : lobos) {
-            l.gastoTurno();
-        }
     }
 
     private void limpiarEntidadesMuertas() {
@@ -200,7 +185,7 @@ public class Ecosistema {
     }
 
     private void verificarCambioClimatico() {
-        if (Math.random() < 0.35) { // 35% de chance de rotar clima
+        if (Math.random() < 0.35) {
             Clima[] climas = Clima.values();
             Clima nuevoClima = climas[(int) (Math.random() * climas.length)];
             if (nuevoClima != this.climaActual) {
@@ -209,7 +194,7 @@ public class Ecosistema {
         }
     }
 
-public void generarReporteFinal() {
+    public void generarReporteFinal() {
         System.out.println("\n========================================================");
         System.out.println("            REPORTE FINAL DE LA SIMULACION             ");
         System.out.println("========================================================");
@@ -220,6 +205,11 @@ public void generarReporteFinal() {
         System.out.println("Plantas sobrevivientes : " + plantas.size());
         System.out.println("Conejos sobrevivientes : " + conejos.size());
         System.out.println("Lobos sobrevivientes   : " + lobos.size());
+
+        System.out.println("\n--- Total de Nacimientos / Ingresos Registrados ---");
+        System.out.println("Total plantas incorporadas : " + totalNacimientosPlantas);
+        System.out.println("Total conejos nacidos      : " + totalNacimientosConejos);
+        System.out.println("Total lobos incorporados   : " + totalNacimientosLobos);
 
         System.out.println("\n--- Bajas Historicas Registradas ---");
         System.out.println("Plantas extinguidas/consumidas : " + totalMuertesPlantas);
@@ -237,7 +227,37 @@ public void generarReporteFinal() {
             System.out.println("Todas las poblaciones conservaron especimenes activos.");
         }
 
-        System.out.println("\nTurno con mayor cantidad de eventos criticos: Turno " + turnoMayorActividad);
+        System.out.println("\n--- Records de la Simulación ---");
+        System.out.println("Turno con mayor actividad/bajas: Turno " + turnoMayorActividad);
+
+        // Entidad mas longeva
+        Planta plantaLongeva = null;
+        for (Planta p : plantas) {
+            if (plantaLongeva == null || p.getEdad() > plantaLongeva.getEdad()) {
+                plantaLongeva = p;
+            }
+        }
+        Conejo conejoLongevo = null;
+        for (Conejo c : conejos) {
+            if (conejoLongevo == null || c.getEdad() > conejoLongevo.getEdad()) {
+                conejoLongevo = c;
+            }
+        }
+        Lobo loboLongevo = null;
+        Lobo loboMasCazador = null;
+        for (Lobo l : lobos) {
+            if (loboLongevo == null || l.getEdad() > loboLongevo.getEdad()) {
+                loboLongevo = l;
+            }
+            if (loboMasCazador == null || l.getExitosCaza() > loboMasCazador.getExitosCaza()) {
+                loboMasCazador = l;
+            }
+        }
+
+        System.out.println("Planta más longeva : " + (plantaLongeva != null ? plantaLongeva.getNombre() + " (" + plantaLongeva.getEdad() + " turnos)" : "Ninguna"));
+        System.out.println("Conejo más longevo : " + (conejoLongevo != null ? conejoLongevo.getNombre() + " (" + conejoLongevo.getEdad() + " turnos)" : "Ninguno"));
+        System.out.println("Lobo más longevo   : " + (loboLongevo != null ? loboLongevo.getNombre() + " (" + loboLongevo.getEdad() + " turnos)" : "Ninguno"));
+        System.out.println("Lobo más cazador   : " + (loboMasCazador != null ? loboMasCazador.getNombre() + " con " + loboMasCazador.getExitosCaza() + " cacerias" : "Ninguno"));
         System.out.println("========================================================\n");
     }
 
