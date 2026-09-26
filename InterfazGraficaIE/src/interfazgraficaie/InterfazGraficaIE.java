@@ -9,34 +9,12 @@ public class InterfazGraficaIE {
     
     public static void main(String[] args) {
         scanner = new Scanner(System.in);
-        //ecosistema = new Ecosistema();
-        
-        System.out.println("=========================================");
-        System.out.println("   SIMULADOR DE ECOSISTEMA - INICIO      ");
-        System.out.println("=========================================\n");
+        ecosistema = new Ecosistema();    
     }
     
-    
-    private static void ingresarDatosIniciales() {
-        
-        System.out.println("--- CONFIGURACIÓN INICIAL DEL ECOSISTEMA ---\n");    
-        
-        int cantidadInicialPlantas = ingresarEnteroEnRango("Cantidad inicial de plantas", 5, 30);
-        int cantidadInicialConejos = ingresarEnteroEnRango("Cantidad inicial de conejos", 2, 15);
-        int cantidadInicialLobos = ingresarEnteroEnRango("Cantidad inicial de lobos", 1, 5);
-        Clima climaInicial = ingresarClima();
-        int turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
-
-        System.out.println("\n-------------------------------------------");
-        System.out.println("DATOS INGRESADOS:");
-        System.out.println("• Plantas iniciales: " + cantidadInicialPlantas);
-        System.out.println("• Conejos iniciales: " + cantidadInicialConejos);
-        System.out.println("• Lobos iniciales:   " + cantidadInicialLobos);
-        System.out.println("• Clima inicial:     " + climaInicial);
-        System.out.println("• Duración total:    " + turnosTotales + " turnos");
-        System.out.println("-------------------------------------------");
-    }
-    
+   private static void ingresarDatosIniciales() {
+   
+   }
     
     private static int ingresarEnteroEnRango(String mensaje, int min, int max) {
         
@@ -70,7 +48,7 @@ public class InterfazGraficaIE {
     
     
     private static Clima ingresarClima() {
-        
+
         System.out.println("\nSelecciona el clima inicial:");
         System.out.println("1. Soleado");
         System.out.println("2. Lluvioso");
