@@ -6,13 +6,26 @@ public class PlantaVenenosa extends Planta implements Peligroso {
         super(nombre, energia, edad, viva, tamanio);
     }
     
+    //sobrescribe el comportamiento al ser comido
+    //en lugar de sumar energia, resta -30.0 como castigo
     @Override
     public double serComida() {
-        return 0;
+        if (!isViva()) return 0; 
+       
+        setViva(false);
+        setEnergia(0);
+       
+        return -30.0;
+    }
+    
+    //metodo de la inetrfaz Peligroso
+    @Override
+    public int getNivelPeligro() {
+        return 5;
     }
     
     @Override
-    public int getNivelPeligro() {
-        return 0;
+    public void mostrarEstado() {
+        System.out.println("Planta: " + getNombre() + " Tamaño: " + getTamanio() + " Energía: " + getEnergia());
     }
 }
