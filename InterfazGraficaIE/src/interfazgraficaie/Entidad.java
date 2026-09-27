@@ -10,7 +10,8 @@ public abstract class Entidad {
     public Entidad(String nombre, double energia, int edad, boolean viva)
     {
         this.nombre = nombre;
-        this.energia = energia;
+        // Modificacion: usamos el setter en vez de this.energia para asegurar que la validación se aplique desde la creación del objeto
+        setEnergia(energia);
         this.edad = edad;
         this.viva = viva; 
     }
@@ -20,11 +21,12 @@ public abstract class Entidad {
     public abstract void mostrarEstado();
     
     public void envejecer() {
-        
+        this.edad++;
+        setEnergia(this.energia - 2.0);
     }
-
+  
     //-----------------------------------------------------------------------//
-    //Getters y setters
+    //Getters y setters 
     
     public String getNombre() {
         return nombre;
@@ -37,9 +39,13 @@ public abstract class Entidad {
     public double getEnergia() {
         return energia;
     }
-
+    //modificacion: Se agregó la validación recomendada en clase para que la energía nunca sea negativa
     public void setEnergia(double energia) {
-        this.energia = energia;
+       if (energia < 0) {
+            this.energia = 0;
+        } else {
+            this.energia = energia;
+        }
     }
 
     public int getEdad() {
