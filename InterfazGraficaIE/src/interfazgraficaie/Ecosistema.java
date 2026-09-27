@@ -38,7 +38,8 @@ public class Ecosistema {
         // 1. TURNO PLANTAS
         for (int i = 0; i < plantas.size(); i++) {
             Planta p = plantas.get(i);
-            if (p.estaVivo()) {
+            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
+            if (p.isViva()) {
                 p.actuar(this);
             }
         }
@@ -46,7 +47,8 @@ public class Ecosistema {
         // 2. TURNO CONEJOS
         for (int i = 0; i < conejos.size(); i++) {
             Conejo c = conejos.get(i);
-            if (c.estaVivo()) {
+            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
+            if (c.isViva()) {
                 c.actuar(this);
             }
         }
@@ -54,7 +56,8 @@ public class Ecosistema {
         // 3. TURNO LOBOS
         for (int i = 0; i < lobos.size(); i++) {
             Lobo l = lobos.get(i);
-            if (l.estaVivo()) {
+            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
+            if (l.isViva()) {
                 l.actuar(this);
             }
         }
@@ -84,7 +87,8 @@ public class Ecosistema {
         int bajasEsteTurno = 0;
 
         for (int i = plantas.size() - 1; i >= 0; i--) {
-            if (!plantas.get(i).estaVivo()) {
+            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
+            if (!plantas.get(i).isViva()) {
                 plantas.remove(i);
                 muertesPlantas++;
                 bajasEsteTurno++;
@@ -92,7 +96,8 @@ public class Ecosistema {
         }
 
         for (int i = conejos.size() - 1; i >= 0; i--) {
-            if (!conejos.get(i).estaVivo()) {
+            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
+            if (!conejos.get(i).isViva()) {
                 conejos.remove(i);
                 muertesConejos++;
                 bajasEsteTurno++;
@@ -100,7 +105,8 @@ public class Ecosistema {
         }
 
         for (int i = lobos.size() - 1; i >= 0; i--) {
-            if (!lobos.get(i).estaVivo()) {
+            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
+            if (!lobos.get(i).isViva()) {
                 lobos.remove(i);
                 muertesLobos++;
                 bajasEsteTurno++;
@@ -133,13 +139,14 @@ public class Ecosistema {
 
         if (tipo.equalsIgnoreCase("planta")) {
             double e = (energia > 0) ? energia : 30.0;
-            Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 2);
+            Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
             plantas.add(p);
             nacimientosPlantas++;
             System.out.println("Se agrego una planta.");
         } else if (tipo.equalsIgnoreCase("conejo")) {
             double e = (energia > 0) ? energia : 50.0;
-            Conejo c = new Conejo("Conejo-" + (conejos.size() + 1), e, 10, 2.0);
+            // CAMBIO AQUÍ: Se agrega el atributo de velocidad (ej: 5) antes del peso (2.0)
+            Conejo c = new Conejo("Conejo-" + (conejos.size() + 1), e, 0, true, 5, 2.0);
             conejos.add(c);
             nacimientosConejos++;
             System.out.println("Se agrego un conejo.");
@@ -149,14 +156,15 @@ public class Ecosistema {
                 return;
             }
             double e = (energia > 0) ? energia : 70.0;
-            Lobo l = new Lobo("Lobo-" + (lobos.size() + 1), e, 15, 20.0);
+        // CAMBIO AQUÍ: Se agrega el 0 final correspondiente a exitosCaza
+            Lobo l = new Lobo("Lobo-" + (lobos.size() + 1), e, 0, true, 10, 20.0, 0);
             lobos.add(l);
             nacimientosLobos++;
             System.out.println("Se agrego un lobo.");
         } else {
             System.out.println("Tipo no valido: " + tipo);
         }
-    }
+        }
     
     public void cambiarClima (Clima nuevo) {
         this.climaActual = nuevo;
