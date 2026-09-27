@@ -7,7 +7,6 @@ public class InterfazGraficaIE {
     private static Scanner scanner;
     private static Ecosistema ecosistema;
     
-    
     private static int cantidadInicialPlantas;
     private static int cantidadInicialConejos;
     private static int cantidadInicialLobos;
@@ -15,6 +14,7 @@ public class InterfazGraficaIE {
     private static int turnosTotales;
     
     private static int lobosAgregados = 0;
+    
     
     public static void main(String[] args) {
         scanner = new Scanner(System.in); 
@@ -36,10 +36,9 @@ public class InterfazGraficaIE {
             
             // 3. Evalúa la decisión
             // CAMBIO AQUÍ: Se reemplaza ingresarEnteroEnRango por pedirConfirmacion
-            boolean confirma = pedirConfirmacion("\nDeseas confirmar esta configuracion?"); 
+            boolean confirmacion = pedirConfirmacion("\nDeseas confirmar esta configuracion?"); 
 
-            // CAMBIO AQUÍ: Se evalúa directamente el booleano
-            if (confirma) { 
+            if (confirmacion) { 
                 
                 configuracionConfirmada = true;
                 System.out.println("\n>> Configuracion guardada exitosamente!\n");
@@ -48,8 +47,7 @@ public class InterfazGraficaIE {
                 
                 ejecutarBuclePrincipal();
                 
-                // Aquí instanciarás el ecosistema más adelante usando las variables de clase
-                // ecosistema = new Ecosistema(cantidadPlantas, cantidadConejos, cantidadLobos, climaInicial, turnosTotales);
+                // ecosistema = new Ecosistema(cantidadPlantas, cantidadConejos, cantidadLobos, climaInicial, turnosTotales); --> INSTANCIAR ECOSISTEMA;
             } else {
                 System.out.println("\n>> Descartando datos. Reiniciando el panel de configuracion...\n");
             }
@@ -164,7 +162,6 @@ public class InterfazGraficaIE {
         }
         System.out.println("=========================================\n");
 
-        // CAMBIO AQUÍ (Punto 3): Invocamos el reporte estadístico
         ecosistema.generarReporteFinal();
     }
     
@@ -248,7 +245,6 @@ public class InterfazGraficaIE {
     
     
     private static boolean pedirConfirmacion(String mensaje) {
-        // CAMBIO AQUÍ: Se desacopla de ingresarEnteroEnRango para tener control total del formato de texto impreso.
         int numero = -1;
         boolean opcionValida = false;
 
