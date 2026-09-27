@@ -140,13 +140,56 @@ public class InterfazGraficaIE {
             System.out.println("========================================="); 
             
             
-            System.out.print(">> Presiona [ENTER] para avanzar al siguiente turno.");
-            scanner.nextLine(); // Pausar la ejecución hasta que el usuario presione Enter. La única forma de liberar ese bloqueo es que el scanner detecte un salto de línea
+            if (turnoActual % 3 == 0) {
+                mostrarMenuIntervencion();
+            } else {
+                System.out.print(">> Presiona [ENTER] para avanzar al siguiente turno.");
+                scanner.nextLine(); // Pausar la ejecución hasta que el usuario presione Enter. La única forma de liberar ese bloqueo es que el scanner detecte un salto de línea      
+            }
             
             ecosistema.procesarTurno(); // Llama a la lógica del ecosistema.
             ecosistema.mostrarEstado(); // Renderiza los resultados del turno en pantalla.
         }
         
         System.out.println("\n>> Se alcanzo el limite de turnos, la simulacion ha finalizado.");
+    }
+    
+    
+    private static void mostrarMenuIntervencion() {
+        System.out.println("\n--- INTERVENCION DEL JUGADOR ---");
+        System.out.println("1. Cambiar el clima");
+        System.out.println("2. Agregar entidad (Planta, Conejo o Lobo)");
+        System.out.println("3. Avanzar turno sin intervenir");
+
+        int opcion = ingresarEnteroEnRango("Elige una accion", 1, 3);
+
+        if (opcion == 1) {
+            System.out.println("\n[MOCK] Abriendo menu de clima...");
+            
+        } else if (opcion == 2) {
+            mostrarMenuAgregarEntidad();
+            
+        } else if (opcion == 3) {
+            System.out.println("\n>> Avanzando de turno sin intervenir...");
+        }
+    }
+    
+    
+    private static void mostrarMenuAgregarEntidad() {
+        System.out.println("\n--- AGREGAR ENTIDAD ---");
+        System.out.println("1. Planta");
+        System.out.println("2. Conejo");
+        System.out.println("3. Lobo");
+
+        int opcionEntidad = ingresarEnteroEnRango("Que entidad deseas agregar?", 1, 3);
+
+        
+        if (opcionEntidad == 1) {
+            System.out.println("\n[MOCK] Preparando para agregar Planta...");
+        } else if (opcionEntidad == 2) {
+            System.out.println("\n[MOCK] Preparando para agregar Conejo...");
+        } else if (opcionEntidad == 3) {
+            System.out.println("\n[MOCK] Preparando para agregar Lobo...");
+        }
     }
 }
