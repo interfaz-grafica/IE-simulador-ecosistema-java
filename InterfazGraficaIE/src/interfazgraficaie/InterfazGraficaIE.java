@@ -140,6 +140,9 @@ public class InterfazGraficaIE {
             System.out.print(">> Presiona [ENTER] para avanzar al siguiente turno.");
             scanner.nextLine(); // Pausar la ejecución hasta que el usuario presione Enter. La única forma de liberar ese bloqueo es que el scanner detecte un salto de línea
         }
+
+            ecosistema.procesarTurno(); // Llama a la lógica del ecosistema.
+            ecosistema.mostrarEstado(); // Renderiza los resultados del turno en pantalla.
         
         System.out.println("\n>> Se alcanzó el límite de turnos, la simulación ha finalizado.");
     }
