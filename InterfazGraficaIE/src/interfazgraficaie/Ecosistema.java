@@ -20,9 +20,11 @@ public class Ecosistema {
     }
     
     public void procesarTurno() {
+        System.out.println("MOCK: Procesando turno...");
     }
     
     public void mostrarEstado() {
+        System.out.println("MOCK: Mostrando estado...");
     }
     
     public void agregarEntidad(String tipo) {

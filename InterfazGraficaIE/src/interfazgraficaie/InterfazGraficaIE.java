@@ -15,8 +15,7 @@ public class InterfazGraficaIE {
     private static int turnosTotales;
     
     public static void main(String[] args) {
-        scanner = new Scanner(System.in);
-        //ecosistema = new Ecosistema();  
+        scanner = new Scanner(System.in); 
 
         System.out.println("=========================================");
         System.out.println("   SIMULADOR DE ECOSISTEMA - INICIO      ");
@@ -25,7 +24,7 @@ public class InterfazGraficaIE {
         boolean configuracionConfirmada = false;
 
         // El main toma el control del flujo del programa
-        while (!configuracionConfirmada) {
+        while (configuracionConfirmada == false) {
             
             // 1. Solo recolecta datos
             ingresarDatosIniciales();
@@ -37,8 +36,12 @@ public class InterfazGraficaIE {
             int opcion = ingresarEnteroEnRango("\nDeseas confirmar esta configuracion? (1 = Si / 2 = Volver a ingresar)", 1, 2);
 
             if (opcion == 1) {
+                
                 configuracionConfirmada = true;
                 System.out.println("\n>> Configuracion guardada exitosamente!\n");
+                
+                ecosistema = new Ecosistema(); 
+                
                 ejecutarBuclePrincipal();
                 
                 // Aquí instanciarás el ecosistema más adelante usando las variables de clase
@@ -139,11 +142,11 @@ public class InterfazGraficaIE {
             
             System.out.print(">> Presiona [ENTER] para avanzar al siguiente turno.");
             scanner.nextLine(); // Pausar la ejecución hasta que el usuario presione Enter. La única forma de liberar ese bloqueo es que el scanner detecte un salto de línea
-        }
-
+            
             ecosistema.procesarTurno(); // Llama a la lógica del ecosistema.
             ecosistema.mostrarEstado(); // Renderiza los resultados del turno en pantalla.
+        }
         
-        System.out.println("\n>> Se alcanzó el límite de turnos, la simulación ha finalizado.");
+        System.out.println("\n>> Se alcanzo el limite de turnos, la simulacion ha finalizado.");
     }
 }
