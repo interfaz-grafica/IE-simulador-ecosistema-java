@@ -33,9 +33,11 @@ public class InterfazGraficaIE {
             mostrarConfiguracionInicial();
             
             // 3. Evalúa la decisión
-            int opcion = ingresarEnteroEnRango("\nDeseas confirmar esta configuracion? (1 = Si / 2 = Volver a ingresar)", 1, 2);
+            // CAMBIO AQUÍ: Se reemplaza ingresarEnteroEnRango por pedirConfirmacion
+            boolean confirma = pedirConfirmacion("\nDeseas confirmar esta configuracion?"); 
 
-            if (opcion == 1) {
+            // CAMBIO AQUÍ: Se evalúa directamente el booleano
+            if (confirma) { 
                 
                 configuracionConfirmada = true;
                 System.out.println("\n>> Configuracion guardada exitosamente!\n");
@@ -107,7 +109,7 @@ public class InterfazGraficaIE {
 
         int opcion = ingresarEnteroEnRango("Opcion de clima", 1, 4);
 
-        // Se retorna la constante exacta del Enum dependiendo del número ingresado[cite: 1].
+        // Se retorna la constante exacta del Enum dependiendo del número ingresado.
         switch (opcion) {
             case 1: return Clima.SOLEADO;
             case 2: return Clima.LLUVIOSO;
@@ -156,26 +158,46 @@ public class InterfazGraficaIE {
     
     
     private static void mostrarMenuIntervencion() {
-        System.out.println("\n--- INTERVENCION DEL JUGADOR ---");
-        System.out.println("1. Cambiar el clima");
-        System.out.println("2. Agregar entidad (Planta, Conejo o Lobo)");
-        System.out.println("3. Avanzar turno sin intervenir");
+        boolean finIntervencion = false;
+        
+        // Todo el menú debe estar DENTRO de las llaves del while
+        while(finIntervencion == false) {
+            System.out.println("\n--- INTERVENCION DEL JUGADOR ---");
+            System.out.println("1. Cambiar el clima");
+            System.out.println("2. Agregar entidad (Planta, Conejo o Lobo)");
+            System.out.println("3. Avanzar turno sin intervenir");
 
-        int opcion = ingresarEnteroEnRango("Elige una accion", 1, 3);
+            int opcion = ingresarEnteroEnRango("Elige una accion", 1, 3);
 
-        if (opcion == 1) {
-            System.out.println("\n[MOCK] Abriendo menu de clima...");
-            
-        } else if (opcion == 2) {
-            mostrarMenuAgregarEntidad();
-            
-        } else if (opcion == 3) {
-            System.out.println("\n>> Avanzando de turno sin intervenir...");
+            if (opcion == 1) {
+                boolean confirmacion = pedirConfirmacion("\nConfirmas el cambio de clima?");
+                if (confirmacion) {
+                    System.out.println("\n[MOCK] Ejecutando cambio de clima...");
+                    finIntervencion = true; 
+                } else {
+                    System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
+                }
+
+            } else if (opcion == 2) {
+                boolean entidadAgregada = mostrarMenuAgregarEntidad();
+                if (entidadAgregada) {
+                    finIntervencion = true;
+                }
+
+            } else if (opcion == 3) {
+                boolean confirmacion = pedirConfirmacion("\nConfirmas que deseas avanzar sin intervenir?");
+                if (confirmacion) {
+                    System.out.println("\n>> Avanzando de turno sin intervenir...");
+                    finIntervencion = true; 
+                } else {
+                    System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
+                }
+            }
         }
     }
     
     
-    private static void mostrarMenuAgregarEntidad() {
+    private static boolean mostrarMenuAgregarEntidad() {
         System.out.println("\n--- AGREGAR ENTIDAD ---");
         System.out.println("1. Planta");
         System.out.println("2. Conejo");
@@ -183,13 +205,49 @@ public class InterfazGraficaIE {
 
         int opcionEntidad = ingresarEnteroEnRango("Que entidad deseas agregar?", 1, 3);
 
-        
+        String nombreEntidad = "";
         if (opcionEntidad == 1) {
-            System.out.println("\n[MOCK] Preparando para agregar Planta...");
+            nombreEntidad = "Planta";
         } else if (opcionEntidad == 2) {
-            System.out.println("\n[MOCK] Preparando para agregar Conejo...");
+            nombreEntidad = "Conejo";
         } else if (opcionEntidad == 3) {
-            System.out.println("\n[MOCK] Preparando para agregar Lobo...");
+            nombreEntidad = "Lobo";
         }
+
+        boolean confirmacion = pedirConfirmacion("\nConfirmas que deseas inyectar un/a " + nombreEntidad + " al ecosistema?");
+        
+        if (confirmacion) {
+            System.out.println("\n[MOCK] Entidad " + nombreEntidad + " agregada exitosamente.");
+            return true;
+        } else {
+            System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
+            return false;
+        }
+    }
+    
+    
+    private static boolean pedirConfirmacion(String mensaje) {
+        // CAMBIO AQUÍ: Se desacopla de ingresarEnteroEnRango para tener control total del formato de texto impreso.
+        int numero = -1;
+        boolean opcionValida = false;
+
+        while (opcionValida == false) {
+            System.out.print(mensaje + " (1 = Si / 2 = No): ");
+            String inputUsuario = scanner.nextLine().trim(); //trim() recorta los espacios en blanco accidentales que el usuario haya puesto en los bordes.
+
+            try {
+                numero = Integer.parseInt(inputUsuario);
+                
+                if (numero == 1 || numero == 2) {
+                    opcionValida = true;
+                } else {
+                    System.out.println("(!) Error: Debes ingresar 1 (Si) o 2 (No).");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("(!) Error: Debes ingresar un numero entero."); 
+            }
+        }
+        
+        return numero == 1;
     }
 }
