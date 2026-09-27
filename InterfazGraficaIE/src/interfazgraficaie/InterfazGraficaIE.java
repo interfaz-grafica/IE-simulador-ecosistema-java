@@ -14,6 +14,8 @@ public class InterfazGraficaIE {
     private static Clima climaInicial;
     private static int turnosTotales;
     
+    private static int lobosAgregados = 0;
+    
     public static void main(String[] args) {
         scanner = new Scanner(System.in); 
 
@@ -211,6 +213,10 @@ public class InterfazGraficaIE {
         } else if (opcionEntidad == 2) {
             nombreEntidad = "Conejo";
         } else if (opcionEntidad == 3) {
+            if(lobosAgregados >= 5) {
+                System.out.println("\n(!) Limite maximo de lobos alcanzado. No puedes agregar mas lobos en esta simulacion.");
+                return false; // Al retornar false, lo obliga a volver al menú de intervención a elegir otra cosa            
+            }
             nombreEntidad = "Lobo";
         }
 
@@ -218,6 +224,11 @@ public class InterfazGraficaIE {
         
         if (confirmacion) {
             System.out.println("\n[MOCK] Entidad " + nombreEntidad + " agregada exitosamente.");
+            
+            if (opcionEntidad == 3) {
+                    lobosAgregados++;
+                }    
+
             return true;
         } else {
             System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
