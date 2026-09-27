@@ -1,6 +1,8 @@
 package interfazgraficaie;
 
 public enum Clima {
-    
-    SOLEADO, LLUVIOSO, SEQUIA, INVIERNO;
+    SOLEADO,
+    LLUVIOSO,
+    SEQUIA,
+    INVIERNO
 }
