@@ -1,5 +1,8 @@
 package interfazgraficaie;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Lobo extends Animal implements Peligroso {
 
     private int exitosCaza;  
@@ -12,19 +15,79 @@ public class Lobo extends Animal implements Peligroso {
     
     @Override
     public void comer(Ecosistema eco) {
+        
+        ArrayList<Conejo> conejosVivos = obtenerConejosVivos(eco);
+        
+        // Si no puede comer, pierde energía
+        if (conejosVivos.isEmpty()) {
+            setEnergia(getEnergia() - 15);
+            System.out.println("Lobo '" + getNombre() + "' no encontró conejos vivos (-15 energia)");
+            return;
+        }
+
+        // Se elige un conejo
+        Random generadorAleatorio = new Random();
+        Conejo presa = conejosVivos.get(generadorAleatorio.nextInt(conejosVivos.size()));
+        
+        // Se come el conejo
+        ejecutarAtaque(eco, presa, generadorAleatorio);
+    }
+    
+    // ------------ Refactorización para aplicar en método comer() ---------------
+    private ArrayList<Conejo> obtenerConejosVivos(Ecosistema eco) {
+        ArrayList<Conejo> vivos = new ArrayList<>();
+        for (Conejo conejoActual : eco.getConejos()) {
+            if (conejoActual.isViva()) {
+                vivos.add(conejoActual);
+            }
+        }
+        return vivos;
     }
 
+    private void ejecutarAtaque(Ecosistema eco, Conejo presa, Random generador) {
+        double probabilidadExitoCaza = getEnergia() / 100.0;
+        
+        // En invierno los lobos son más peligrosos, cazan mejor
+        if (eco.getClimaActual() == Clima.INVIERNO) {
+            probabilidadExitoCaza = probabilidadExitoCaza + 0.20; 
+        }
+        
+        double intentoCaza = generador.nextDouble();
+        
+        // Analizamos si el lobo logra cazar al conejo o falla
+        if (intentoCaza <= probabilidadExitoCaza) {
+            presa.morir();
+            setEnergia(getEnergia() + 40);
+            this.exitosCaza++;
+            System.out.println("Lobo '" + getNombre() + "' CAZÓ EXITOSAMENTE al Conejo '" + presa.getNombre() + "' (+40 energia) [Exitos totales: " + this.exitosCaza + "]");
+        } else {
+            setEnergia(getEnergia() - 10);
+            System.out.println("Lobo '" + getNombre() + "' intentó cazar al Conejo '" + presa.getNombre() + "' y FALLÓ (-10 energia)");
+        }
+    }
+    
+    // ------------ Fin refactorización ---------------
+    
     @Override
     public void actuar(Ecosistema eco) {
+        
+        this.comer(eco);
+        
     }
     
     @Override
     public void mostrarEstado() {
+        
+        // Mostramos el nombre, estado y cantidad de cazas exitosas de un lobo
+        System.out.print("Lobo '" + getNombre() + "' (Energia: " + getEnergia() + ") [Cacerias exitosas: " + this.exitosCaza + "]");
+        System.out.println();
     }
     
     @Override
     public int getNivelPeligro() {
-        return 0;
+        
+        // Mientras más energía y cazas exitosas tenga, más peligroso es
+        return (int)(getEnergia()) + (this.exitosCaza * 10);
     }
     
     //-----------------------------------------------------------------------//
