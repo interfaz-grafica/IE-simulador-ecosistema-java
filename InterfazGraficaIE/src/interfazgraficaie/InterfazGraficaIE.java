@@ -43,11 +43,10 @@ public class InterfazGraficaIE {
                 configuracionConfirmada = true;
                 System.out.println("\n>> Configuracion guardada exitosamente!\n");
                 
-                ecosistema = new Ecosistema(); 
+                ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
                 
                 ejecutarBuclePrincipal();
                 
-                // ecosistema = new Ecosistema(cantidadPlantas, cantidadConejos, cantidadLobos, climaInicial, turnosTotales); --> INSTANCIAR ECOSISTEMA;
             } else {
                 System.out.println("\n>> Descartando datos. Reiniciando el panel de configuracion...\n");
             }
