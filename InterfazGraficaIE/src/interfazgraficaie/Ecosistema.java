@@ -24,12 +24,22 @@ public class Ecosistema {
     private int turnoMayorActividad = 1;
     private int maxBajasEnUnTurno = 0;
     
-    public Ecosistema() {
+    public Ecosistema(int cantPlantas, int cantConejos, int cantLobos, Clima climaInicial) {
         this.plantas = new ArrayList<>();
         this.conejos = new ArrayList<>();
         this.lobos = new ArrayList<>();
-        this.climaActual = Clima.SOLEADO;
+        this.climaActual = climaInicial;
         this.turnoActual = 1;
+        
+        // Poblamos las listas iniciales invocando al método de la clase
+        for (int i = 0; i < cantPlantas; i++) { agregarEntidad("planta"); }
+        for (int i = 0; i < cantConejos; i++) { agregarEntidad("conejo"); }
+        for (int i = 0; i < cantLobos; i++) { agregarEntidad("lobo"); }
+        
+        // Reseteamos los contadores a 0 para que la inyección inicial no cuente como nacimientos en el reporte final
+        this.nacimientosPlantas = 0;
+        this.nacimientosConejos = 0;
+        this.nacimientosLobos = 0;
     }
     
     public void procesarTurno() {
@@ -75,12 +85,37 @@ public class Ecosistema {
             listaReproduccion.get(i).intentarReproduccion(this);
         }
 
-        // 5. ENVEJECIMIENTO
+        // 5. ENVEJECIMIENTO Y EFECTOS CLIMATICOS
         for (int i = 0; i < conejos.size(); i++) {
-            conejos.get(i).envejecer();
+            Conejo c = conejos.get(i);
+            c.envejecer(); // Resta -2.0 base
+            if (null != climaActual) // Modificadores climáticos para Conejos
+            switch (climaActual) {
+                case SOLEADO:
+                    c.setEnergia(c.getEnergia() + 5);
+                    break;
+                case LLUVIOSO:
+                    c.setEnergia(c.getEnergia() + 3);
+                    break;
+                case SEQUIA:
+                    c.setEnergia(c.getEnergia() - 5);
+                    break;
+                case INVIERNO:
+                    c.setEnergia(c.getEnergia() - 8);
+                    break;
+                default:
+                    break;
+            }
         }
+
         for (int i = 0; i < lobos.size(); i++) {
-            lobos.get(i).envejecer();
+            Lobo l = lobos.get(i);
+            l.envejecer(); // Resta -2.0 base
+            
+            // Modificadores climáticos para Lobos
+            if (climaActual == Clima.LLUVIOSO) {
+                l.setEnergia(l.getEnergia() - 5);
+            }
         }
 
         // 6. LIMPIEZA DE MUERTOS
