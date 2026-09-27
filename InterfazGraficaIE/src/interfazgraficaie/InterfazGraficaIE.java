@@ -7,6 +7,13 @@ public class InterfazGraficaIE {
     private static Scanner scanner;
     private static Ecosistema ecosistema;
     
+    
+    private static int cantidadInicialPlantas;
+    private static int cantidadInicialConejos;
+    private static int cantidadInicialLobos;
+    private static Clima climaInicial;
+    private static int turnosTotales;
+    
     public static void main(String[] args) {
         scanner = new Scanner(System.in);
         //ecosistema = new Ecosistema();  
@@ -14,44 +21,45 @@ public class InterfazGraficaIE {
         System.out.println("=========================================");
         System.out.println("   SIMULADOR DE ECOSISTEMA - INICIO      ");
         System.out.println("=========================================\n");
-        
-        ingresarDatosIniciales();
-    }
-    
-   private static void ingresarDatosIniciales() {
-       
+
         boolean configuracionConfirmada = false;
-        
-        while(configuracionConfirmada == false) {
-            
-            System.out.println("--- CONFIGURACIÓN INICIAL DEL ECOSISTEMA ---\n");    
 
-            int cantidadInicialPlantas = ingresarEnteroEnRango("Cantidad inicial de plantas", 5, 30);
-            int cantidadInicialConejos = ingresarEnteroEnRango("Cantidad inicial de conejos", 2, 15);
-            int cantidadInicialLobos = ingresarEnteroEnRango("Cantidad inicial de lobos", 1, 5);
-            Clima climaInicial = ingresarClima();
-            int turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
-
-            mostrarConfiguracionInicial(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial, turnosTotales);
+        // El main toma el control del flujo del programa
+        while (!configuracionConfirmada) {
             
-            //Pedir confirmación
-            int opcion = ingresarEnteroEnRango("\n¿Deseas confirmar esta configuración? (1 = Sí / 2 = Volver a ingresar)", 1, 2);
+            // 1. Solo recolecta datos
+            ingresarDatosIniciales();
+            
+            // 2. Solo muestra el resumen en pantalla
+            mostrarConfiguracionInicial();
+            
+            // 3. Evalúa la decisión
+            int opcion = ingresarEnteroEnRango("\nDeseas confirmar esta configuracion? (1 = Si / 2 = Volver a ingresar)", 1, 2);
 
             if (opcion == 1) {
                 configuracionConfirmada = true;
+                System.out.println("\n>> Configuracion guardada exitosamente! Iniciando simulacion...\n");
                 
-                // Acá se va a instanciar el ecosistema más adelante,
-                // ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial, turnosTotales);
-                
-                System.out.println("\n>> ¡Configuración guardada exitosamente! Iniciando simulación...\n");
+                // Aquí instanciarás el ecosistema más adelante usando las variables de clase
+                // ecosistema = new Ecosistema(cantidadPlantas, cantidadConejos, cantidadLobos, climaInicial, turnosTotales);
             } else {
-                // Si elige 2, la variable sigue siendo false, el bucle reinicia y las variables locales se sobrescriben.
-                System.out.println("\n>> Descartando datos. Reiniciando el panel de configuración...\n");
+                System.out.println("\n>> Descartando datos. Reiniciando el panel de configuracion...\n");
             }
-       }
-   }
+        }
+    }
     
- 
+    private static void ingresarDatosIniciales() {
+
+        System.out.println("--- CONFIGURACION INICIAL DEL ECOSISTEMA ---\n");    
+
+        cantidadInicialPlantas = ingresarEnteroEnRango("Cantidad inicial de plantas", 5, 30);
+        cantidadInicialConejos = ingresarEnteroEnRango("Cantidad inicial de conejos", 2, 15);
+        cantidadInicialLobos = ingresarEnteroEnRango("Cantidad inicial de lobos", 1, 5);
+        climaInicial = ingresarClima();
+        turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
+
+        }
+    
     private static int ingresarEnteroEnRango(String mensaje, int min, int max) {
         
         int numero = -1;
@@ -75,23 +83,22 @@ public class InterfazGraficaIE {
                 }
                 
             } catch (NumberFormatException e) {
-                System.out.println("(!) Error: Debes ingresar un número entero."); //Si parseInt explota (porque el usuario tipeó "hola" o letras)
+                System.out.println("(!) Error: Debes ingresar un numero entero."); //Si parseInt explota (porque el usuario tipeó "hola" o letras)
             }
         }
         
         return numero;        
     }
     
-    
     private static Clima ingresarClima() {
 
         System.out.println("\nSelecciona el clima inicial:");
         System.out.println("1. Soleado");
         System.out.println("2. Lluvioso");
-        System.out.println("3. Sequía");
+        System.out.println("3. Sequia");
         System.out.println("4. Invierno");
 
-        int opcion = ingresarEnteroEnRango("Opción de clima", 1, 4);
+        int opcion = ingresarEnteroEnRango("Opcion de clima", 1, 4);
 
         // Se retorna la constante exacta del Enum dependiendo del número ingresado[cite: 1].
         switch (opcion) {
@@ -103,14 +110,14 @@ public class InterfazGraficaIE {
         }
     }
     
-    private static void mostrarConfiguracionInicial(int cantidadInicialPlantas, int cantidadInicialConejos, int cantidadInicialLobos, Clima climaInicial, int turnosTotales) {
+    private static void mostrarConfiguracionInicial() {
         System.out.println("\n-------------------------------------------");
         System.out.println("DATOS INGRESADOS:");
-        System.out.println("• Plantas iniciales: " + cantidadInicialPlantas);
-        System.out.println("• Conejos iniciales: " + cantidadInicialConejos);
-        System.out.println("• Lobos iniciales:   " + cantidadInicialLobos);
-        System.out.println("• Clima inicial:     " + climaInicial);
-        System.out.println("• Duración total:    " + turnosTotales + " turnos");
+        System.out.println("Plantas iniciales: " + cantidadInicialPlantas);
+        System.out.println("Conejos iniciales: " + cantidadInicialConejos);
+        System.out.println("Lobos iniciales:   " + cantidadInicialLobos);
+        System.out.println("Clima inicial:     " + climaInicial);
+        System.out.println("Duracion total:    " + turnosTotales + " turnos");
         System.out.println("-------------------------------------------");           
     }
 }
