@@ -138,7 +138,7 @@ public class InterfazGraficaIE {
         
         System.out.println("\n--- INICIANDO SIMULACION ---");  
         
-        for (int turnoActual = 1; turnoActual <= turnosTotales; turnoActual++) {
+        for (int turnoActual = 1; turnoActual <= turnosTotales && !ecosistema.ecosistemaColapsado(); turnoActual++) {
             System.out.println("\n=========================================");
             System.out.println("               TURNO " + turnoActual);
             System.out.println("========================================="); 
@@ -155,7 +155,17 @@ public class InterfazGraficaIE {
             ecosistema.mostrarEstado(); // Renderiza los resultados del turno en pantalla.
         }
         
-        System.out.println("\n>> Se alcanzo el limite de turnos, la simulacion ha finalizado.");
+        //Evaluamos por qué se rompió el bucle anterior
+        System.out.println("\n=========================================");
+        if (ecosistema.ecosistemaColapsado()) {
+            System.out.println(">> FIN DE LA SIMULACION: El ecosistema ha colapsado (una poblacion se extinguio).");
+        } else {
+            System.out.println(">> FIN DE LA SIMULACION: Se alcanzo el limite maximo de " + turnosTotales + " turnos.");
+        }
+        System.out.println("=========================================\n");
+
+        // CAMBIO AQUÍ (Punto 3): Invocamos el reporte estadístico
+        ecosistema.generarReporteFinal();
     }
     
     
@@ -261,4 +271,6 @@ public class InterfazGraficaIE {
         
         return numero == 1;
     }
+    
+
 }
