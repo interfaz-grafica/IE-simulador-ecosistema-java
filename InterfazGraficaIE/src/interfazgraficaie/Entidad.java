@@ -41,8 +41,9 @@ public abstract class Entidad {
     }
     //modificacion: Se agregó la validación recomendada en clase para que la energía nunca sea negativa
     public void setEnergia(double energia) {
-       if (energia < 0) {
+        if (energia <= 0) {
             this.energia = 0;
+            this.viva = false; // Muere automáticamente por inanición
         } else {
             this.energia = energia;
         }
