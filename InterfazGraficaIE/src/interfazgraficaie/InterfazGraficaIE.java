@@ -134,7 +134,11 @@ public class InterfazGraficaIE {
         for (int turnoActual = 1; turnoActual <= turnosTotales; turnoActual++) {
             System.out.println("\n=========================================");
             System.out.println("               TURNO " + turnoActual);
-            System.out.println("=========================================");            
+            System.out.println("========================================="); 
+            
+            
+            System.out.print(">> Presiona [ENTER] para avanzar al siguiente turno.");
+            scanner.nextLine(); // Pausar la ejecución hasta que el usuario presione Enter. La única forma de liberar ese bloqueo es que el scanner detecte un salto de línea
         }
         
         System.out.println("\n>> Se alcanzó el límite de turnos, la simulación ha finalizado.");
