@@ -38,7 +38,8 @@ public class InterfazGraficaIE {
 
             if (opcion == 1) {
                 configuracionConfirmada = true;
-                System.out.println("\n>> Configuracion guardada exitosamente! Iniciando simulacion...\n");
+                System.out.println("\n>> Configuracion guardada exitosamente!\n");
+                ejecutarBuclePrincipal();
                 
                 // Aquí instanciarás el ecosistema más adelante usando las variables de clase
                 // ecosistema = new Ecosistema(cantidadPlantas, cantidadConejos, cantidadLobos, climaInicial, turnosTotales);
@@ -47,6 +48,7 @@ public class InterfazGraficaIE {
             }
         }
     }
+    
     
     private static void ingresarDatosIniciales() {
 
@@ -59,6 +61,7 @@ public class InterfazGraficaIE {
         turnosTotales = ingresarEnteroEnRango("Cantidad de turnos totales", 10, 50);
 
         }
+    
     
     private static int ingresarEnteroEnRango(String mensaje, int min, int max) {
         
@@ -90,6 +93,7 @@ public class InterfazGraficaIE {
         return numero;        
     }
     
+    
     private static Clima ingresarClima() {
 
         System.out.println("\nSelecciona el clima inicial:");
@@ -110,6 +114,7 @@ public class InterfazGraficaIE {
         }
     }
     
+    
     private static void mostrarConfiguracionInicial() {
         System.out.println("\n-------------------------------------------");
         System.out.println("DATOS INGRESADOS:");
@@ -119,5 +124,19 @@ public class InterfazGraficaIE {
         System.out.println("Clima inicial:     " + climaInicial);
         System.out.println("Duracion total:    " + turnosTotales + " turnos");
         System.out.println("-------------------------------------------");           
+    }
+    
+    
+    private static void ejecutarBuclePrincipal() {
+        
+        System.out.println("\n--- INICIANDO SIMULACION ---");  
+        
+        for (int turnoActual = 1; turnoActual <= turnosTotales; turnoActual++) {
+            System.out.println("\n=========================================");
+            System.out.println("               TURNO " + turnoActual);
+            System.out.println("=========================================");            
+        }
+        
+        System.out.println("\n>> Se alcanzó el límite de turnos, la simulación ha finalizado.");
     }
 }
