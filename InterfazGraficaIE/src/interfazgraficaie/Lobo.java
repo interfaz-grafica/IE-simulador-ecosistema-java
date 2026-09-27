@@ -1,5 +1,8 @@
 package interfazgraficaie;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Lobo extends Animal implements Peligroso {
 
     private int exitosCaza;  
@@ -12,6 +15,51 @@ public class Lobo extends Animal implements Peligroso {
     
     @Override
     public void comer(Ecosistema eco) {
+        
+        //Recolección de presas (conejos) vivas
+        ArrayList<Conejo> conejosVivos = new ArrayList<>();
+        
+        for (Conejo conejoActual : eco.getConejos())
+            {
+                if(conejoActual.isViva())
+                {
+                    conejosVivos.add(conejoActual);
+                }   
+            }
+        if (conejosVivos.isEmpty())
+            {
+                setEnergia((getEnergia()-15));
+                System.out.println("Lobo '" + getNombre() + "' no encontró conejos vivos (-15 energia)");
+                return; 
+            }
+        Random generadorAleatorio = new Random();
+        
+        int conejoAleatorio = generadorAleatorio.nextInt(conejosVivos.size());
+        Conejo presa = conejosVivos.get(conejoAleatorio);
+        
+        double probabilidadExitoCaza = getEnergia() / 100;
+        
+        if(eco.getClimaActual() == Clima.INVIERNO)
+        {
+            probabilidadExitoCaza = probabilidadExitoCaza + 0.20;
+        }
+        
+        double intentoCaza = generadorAleatorio.nextDouble();
+        
+        if(intentoCaza <= probabilidadExitoCaza)
+        {
+            presa.morir();
+            
+            setEnergia(getEnergia()+ 40);
+            this.exitosCaza++;
+            System.out.println("Lobo '" + getNombre() + "' CAZÓ EXITOSAMENTE a Conejo '" + presa.getNombre() + "' (+40 energia) [Exitos totales: " + this.exitosCaza + "]");
+        }
+        else
+        {
+            // El lobo falló el ataque
+            setEnergia(getEnergia() - 10); // Pierde energía por el esfuerzo en vano
+            System.out.println("Lobo '" + getNombre() + "' intentó cazar a Conejo '" + presa.getNombre() + "' y FALLÓ (-10 energia)");
+        }
     }
 
     @Override
