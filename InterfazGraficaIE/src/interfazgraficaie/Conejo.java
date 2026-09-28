@@ -22,8 +22,9 @@ public class Conejo extends Animal implements Reproducible {
                 double nuevaEnergia = getEnergia() + valorNutritivoObtenido;
                 setEnergia(nuevaEnergia);
 
-                // CAMBIO AQUÍ: Se ajustó el texto para que sea idéntico a la imagen (con el signo + y espacios correctos)
-                System.out.println("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (+" + valorNutritivoObtenido + " energia)");
+                // CAMBIO AQUÍ: Se ajustó el texto para que el signo sea dinámico según si es positivo o negativo
+                String signo = (valorNutritivoObtenido >= 0) ? "+" : "";
+                System.out.println("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (" + signo + valorNutritivoObtenido + " energia)");
 
                 // Rompemos el bucle porque es una planta por turno.
                 conejoEncontroComida = true;
