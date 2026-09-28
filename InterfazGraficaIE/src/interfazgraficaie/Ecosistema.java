@@ -1,12 +1,18 @@
 package interfazgraficaie;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Ecosistema {
     
     private ArrayList<Planta> plantas;
     private ArrayList<Conejo> conejos;
-    private ArrayList<Lobo> lobos;  
+    private ArrayList<Lobo> lobos;
+    
+    // VARIABLES DE HISTORIAL (ESTADÍSTICAS EN TIEMPO REAL)
+    private ArrayList<Integer> historialPlantas;
+    private ArrayList<Integer> historialConejos;
+    private ArrayList<Integer> historialLobos;
     
     private Clima climaActual;
     
@@ -28,6 +34,9 @@ public class Ecosistema {
         this.plantas = new ArrayList<>();
         this.conejos = new ArrayList<>();
         this.lobos = new ArrayList<>();
+        this.historialPlantas = new ArrayList<>();
+        this.historialConejos = new ArrayList<>();
+        this.historialLobos = new ArrayList<>();
         this.climaActual = climaInicial;
         this.turnoActual = 1;
         
@@ -155,6 +164,11 @@ public class Ecosistema {
 
         // 7. MOSTRAR ESTADO
         mostrarEstado();
+        
+        // --- GUARDAR HISTORIAL PARA ESTADÍSTICAS ---
+        historialPlantas.add(plantas.size());
+        historialConejos.add(conejos.size());
+        historialLobos.add(lobos.size());
 
         turnoActual++;
     }
@@ -299,7 +313,27 @@ public class Ecosistema {
                 System.out.println(posicionRanking + ". " + nombrePeligroso + " (Nivel de peligro: " + entidadPeligrosa.getNivelPeligro() + ")");
                 posicionRanking++;
             }
-        }
+        } 
+        
+        // --- ESTADÍSTICAS EN TIEMPO REAL (MÁXIMOS Y MÍNIMOS) ---
+        System.out.println("\n--- Picos Poblacionales Historicos ---");
+        calcularYMostrarMaxMinPoblacion("Plantas", historialPlantas);
+        calcularYMostrarMaxMinPoblacion("Conejos", historialConejos);
+        calcularYMostrarMaxMinPoblacion("Lobos", historialLobos);
+    }
+    
+    private void calcularYMostrarMaxMinPoblacion(String especie, ArrayList<Integer> historial) {
+        if (historial.isEmpty()) return;
+
+        // Métodos nativos de Java para encontrar el valor más alto y más bajo
+        int max = Collections.max(historial);
+        int min = Collections.min(historial);
+
+        // indexOf() busca en qué posición exacta de la lista ocurrió ese número
+        int turnoMax = historial.indexOf(max) + 1; // +1 porque el índice empieza en 0
+        int turnoMin = historial.indexOf(min) + 1;
+
+        System.out.println(especie + " -> Maximo: " + max + " (Turno " + turnoMax + ") | Minimo: " + min + " (Turno " + turnoMin + ")");
     }
     //-----------------------------------------------------------------------//
     //GETTERS Y SETTERS
