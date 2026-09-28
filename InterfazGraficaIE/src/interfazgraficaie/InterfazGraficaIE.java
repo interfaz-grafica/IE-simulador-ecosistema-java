@@ -43,11 +43,10 @@ public class InterfazGraficaIE {
                 configuracionConfirmada = true;
                 System.out.println("\n>> Configuracion guardada exitosamente!\n");
                 
-                ecosistema = new Ecosistema(); 
+                ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
                 
                 ejecutarBuclePrincipal();
                 
-                // ecosistema = new Ecosistema(cantidadPlantas, cantidadConejos, cantidadLobos, climaInicial, turnosTotales); --> INSTANCIAR ECOSISTEMA;
             } else {
                 System.out.println("\n>> Descartando datos. Reiniciando el panel de configuracion...\n");
             }
@@ -137,20 +136,16 @@ public class InterfazGraficaIE {
         System.out.println("\n--- INICIANDO SIMULACION ---");  
         
         for (int turnoActual = 1; turnoActual <= turnosTotales && !ecosistema.ecosistemaColapsado(); turnoActual++) {
-            System.out.println("\n=========================================");
-            System.out.println("               TURNO " + turnoActual);
-            System.out.println("========================================="); 
-            
+
+            ecosistema.procesarTurno(); // Llama a la lógica del ecosistema.
+           
             
             if (turnoActual % 3 == 0) {
                 mostrarMenuIntervencion();
             } else {
-                System.out.print(">> Presiona [ENTER] para avanzar al siguiente turno.");
+                System.out.print(">>> Presione Enter para continuar...");
                 scanner.nextLine(); // Pausar la ejecución hasta que el usuario presione Enter. La única forma de liberar ese bloqueo es que el scanner detecte un salto de línea      
             }
-            
-            ecosistema.procesarTurno(); // Llama a la lógica del ecosistema.
-            ecosistema.mostrarEstado(); // Renderiza los resultados del turno en pantalla.
         }
         
         //Evaluamos por qué se rompió el bucle anterior
@@ -169,19 +164,22 @@ public class InterfazGraficaIE {
     private static void mostrarMenuIntervencion() {
         boolean finIntervencion = false;
         
-        // Todo el menú debe estar DENTRO de las llaves del while
         while(finIntervencion == false) {
-            System.out.println("\n--- INTERVENCION DEL JUGADOR ---");
-            System.out.println("1. Cambiar el clima");
-            System.out.println("2. Agregar entidad (Planta, Conejo o Lobo)");
-            System.out.println("3. Avanzar turno sin intervenir");
+            System.out.println("\n=== INTERVENCION (cada 3 turnos) ===");
+            System.out.println("1. Cambiar clima (actual: " + ecosistema.getClimaActual() + ")");
+            System.out.println("2. Agregar entidad");
+            System.out.println("3. Solo avanzar");
 
-            int opcion = ingresarEnteroEnRango("Elige una accion", 1, 3);
+            int opcion = ingresarEnteroEnRango("Opcion", 1, 3);
 
             if (opcion == 1) {
+                // CAMBIO AQUÍ: Primero le pedimos al usuario que elija el nuevo clima
+                Clima nuevoClima = ingresarClima();
+                
                 boolean confirmacion = pedirConfirmacion("\nConfirmas el cambio de clima?");
                 if (confirmacion) {
-                    System.out.println("\n[MOCK] Ejecutando cambio de clima...");
+                    // CAMBIO AQUÍ: Borramos el [MOCK] e invocamos la lógica real del ecosistema
+                    ecosistema.cambiarClima(nuevoClima);
                     finIntervencion = true; 
                 } else {
                     System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
@@ -207,12 +205,8 @@ public class InterfazGraficaIE {
     
     
     private static boolean mostrarMenuAgregarEntidad() {
-        System.out.println("\n--- AGREGAR ENTIDAD ---");
-        System.out.println("1. Planta");
-        System.out.println("2. Conejo");
-        System.out.println("3. Lobo");
 
-        int opcionEntidad = ingresarEnteroEnRango("Que entidad deseas agregar?", 1, 3);
+        int opcionEntidad = ingresarEnteroEnRango("Que entidad agregar? (1=planta/2=conejo/3=lobo)", 1, 3);
 
         String nombreEntidad = "";
         if (opcionEntidad == 1) {
@@ -230,19 +224,20 @@ public class InterfazGraficaIE {
         boolean confirmacion = pedirConfirmacion("\nConfirmas que deseas inyectar un/a " + nombreEntidad + " al ecosistema?");
         
         if (confirmacion) {
-            System.out.println("\n[MOCK] Entidad " + nombreEntidad + " agregada exitosamente.");
+            ecosistema.agregarEntidad(nombreEntidad);
+            
+            // CAMBIO AQUÍ: Se agregó este mensaje para confirmar la acción manual (ya que se borró del Ecosistema)
+            System.out.println("Se agrego '" + nombreEntidad + "' al ecosistema.");
             
             if (opcionEntidad == 3) {
-                    lobosAgregados++;
-                }    
-
+                lobosAgregados++;
+            }    
             return true;
         } else {
             System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
             return false;
         }
-    }
-    
+    }  
     
     private static boolean pedirConfirmacion(String mensaje) {
         int numero = -1;

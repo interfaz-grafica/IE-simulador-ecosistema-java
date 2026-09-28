@@ -12,32 +12,36 @@ public class Conejo extends Animal implements Reproducible {
         boolean conejoEncontroComida = false;
         
         //Buscamos la primer planta de nuestro ecosistema
-        for(Planta plantaActual : eco.getPlantas())
-            {
+        for(Planta plantaActual : eco.getPlantas()) {
             // Si está viva la planta entonces, puede ser comida
-            if(plantaActual.isViva())
-                {
-                    // Asignamos cómo obtener el valor nutritivo de la planta
-                    double valorNutritivoObtenido = plantaActual.serComida();
-                    
-                    // Incrementamos a la energía actual el valor nutritivo de la planta y la establecemos
-                    double nuevaEnergia = getEnergia() + valorNutritivoObtenido;
-                    setEnergia(nuevaEnergia);
+            if(plantaActual.isViva()) {
+                // Asignamos cómo obtener el valor nutritivo de la planta
+                double valorNutritivoObtenido = plantaActual.serComida();
+                
+                // Incrementamos a la energía actual el valor nutritivo de la planta y la establecemos
+                double nuevaEnergia = getEnergia() + valorNutritivoObtenido;
+                setEnergia(nuevaEnergia);
 
-                    System.out.println("Conejo '" + getNombre() + "' comió la planta'" + plantaActual.getNombre() + "' (" + valorNutritivoObtenido + " energia)");
+                // CAMBIO AQUÍ: Se ajustó el texto para que el signo sea dinámico según si es positivo o negativo
+                String signo = (valorNutritivoObtenido >= 0) ? "+" : "";
+                System.out.println("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (" + signo + valorNutritivoObtenido + " energia)");
 
-                    // Rompemos el bucle porque es una planta por turno.
-                    conejoEncontroComida = true;
-                    break;
-                }
+                // Rompemos el bucle porque es una planta por turno.
+                conejoEncontroComida = true;
+                break;
             }
+        }
         
         // Si el conejo no encontró comida en este turno pierde energía
-        if(!conejoEncontroComida)
-                {
-                    setEnergia(getEnergia() - 15);
-                    System.out.println("Conejo " + getNombre() + " no encontró comida (-15 energía)");
-                }
+        if(!conejoEncontroComida) {
+            setEnergia(getEnergia() - 15);
+            // CAMBIO AQUÍ: Se agregó el aviso de peligro en la misma línea si la energía cae por debajo de 20
+            System.out.print("Conejo '" + getNombre() + "' no encontro comida (-15.0 energia)");
+            if (getEnergia() < 20 && getEnergia() > 0) {
+                System.out.print(" [PELIGRO: energia=" + getEnergia() + "]");
+            }
+            System.out.println(); // Salto de línea final
+        }
     }
 
     @Override
@@ -46,7 +50,7 @@ public class Conejo extends Animal implements Reproducible {
         //Acciones establecidas
         this.comer(eco);
         
-        this.intentarReproduccion(eco);
+        //this.intentarReproduccion(eco); --> Comentado para evitar reproducción extra en el mismo turno
     }
     
     @Override
@@ -82,7 +86,7 @@ public class Conejo extends Animal implements Reproducible {
                     // Restamos energía al padre por el esfuerzo de reproducirse
                     this.setEnergia(this.getEnergia() - 20);
                     
-                    System.out.println(this.getNombre() + " se ha reproducido con " + conejoActual.getNombre() + ". Nació: " + cria.getNombre());
+                    System.out.println(this.getNombre() + " se ha reproducido con " + conejoActual.getNombre() + ". Nacio: " + cria.getNombre());
                     
                     // Rompemos el bucle para que solo tenga una cría por turno
                     break;
@@ -103,6 +107,6 @@ public class Conejo extends Animal implements Reproducible {
         else return false;*/
         
         // Forma optimizada
-        return getEnergia()>60;
+        return isViva() && getEnergia() > 60;
     } 
 }
