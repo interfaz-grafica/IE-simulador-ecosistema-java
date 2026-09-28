@@ -59,10 +59,12 @@ public class Lobo extends Animal implements Peligroso {
             presa.morir();
             setEnergia(getEnergia() + 40);
             this.exitosCaza++;
-            System.out.println("Lobo '" + getNombre() + "' CAZO EXITOSAMENTE al Conejo '" + presa.getNombre() + "' (+40 energia) [Exitos totales: " + this.exitosCaza + "]");
+            // CAMBIO AQUÍ: Se eliminaron las mayúsculas y se adaptó el formato a la imagen de referencia
+            System.out.println("Lobo '" + getNombre() + "' cazo a Conejo '" + presa.getNombre() + "' (+40.0 energia) [cacerias: " + this.exitosCaza + "]");
         } else {
             setEnergia(getEnergia() - 10);
-            System.out.println("Lobo '" + getNombre() + "' intento cazar al Conejo '" + presa.getNombre() + "' y FALLO (-10 energia)");
+            // CAMBIO AQUÍ: Se redujo el texto para coincidir con la imagen ("falló la caza")
+            System.out.println("Lobo '" + getNombre() + "' fallo la caza (-10.0 energia)");
         }
     }
     

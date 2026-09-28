@@ -12,32 +12,35 @@ public class Conejo extends Animal implements Reproducible {
         boolean conejoEncontroComida = false;
         
         //Buscamos la primer planta de nuestro ecosistema
-        for(Planta plantaActual : eco.getPlantas())
-            {
+        for(Planta plantaActual : eco.getPlantas()) {
             // Si está viva la planta entonces, puede ser comida
-            if(plantaActual.isViva())
-                {
-                    // Asignamos cómo obtener el valor nutritivo de la planta
-                    double valorNutritivoObtenido = plantaActual.serComida();
-                    
-                    // Incrementamos a la energía actual el valor nutritivo de la planta y la establecemos
-                    double nuevaEnergia = getEnergia() + valorNutritivoObtenido;
-                    setEnergia(nuevaEnergia);
+            if(plantaActual.isViva()) {
+                // Asignamos cómo obtener el valor nutritivo de la planta
+                double valorNutritivoObtenido = plantaActual.serComida();
+                
+                // Incrementamos a la energía actual el valor nutritivo de la planta y la establecemos
+                double nuevaEnergia = getEnergia() + valorNutritivoObtenido;
+                setEnergia(nuevaEnergia);
 
-                    System.out.println("Conejo '" + getNombre() + "' comio la planta'" + plantaActual.getNombre() + "' (" + valorNutritivoObtenido + " energia)");
+                // CAMBIO AQUÍ: Se ajustó el texto para que sea idéntico a la imagen (con el signo + y espacios correctos)
+                System.out.println("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (+" + valorNutritivoObtenido + " energia)");
 
-                    // Rompemos el bucle porque es una planta por turno.
-                    conejoEncontroComida = true;
-                    break;
-                }
+                // Rompemos el bucle porque es una planta por turno.
+                conejoEncontroComida = true;
+                break;
             }
+        }
         
         // Si el conejo no encontró comida en este turno pierde energía
-        if(!conejoEncontroComida)
-                {
-                    setEnergia(getEnergia() - 15);
-                    System.out.println("Conejo " + getNombre() + " no encontro comida (-15 energia)");
-                }
+        if(!conejoEncontroComida) {
+            setEnergia(getEnergia() - 15);
+            // CAMBIO AQUÍ: Se agregó el aviso de peligro en la misma línea si la energía cae por debajo de 20
+            System.out.print("Conejo '" + getNombre() + "' no encontro comida (-15.0 energia)");
+            if (getEnergia() < 20 && getEnergia() > 0) {
+                System.out.print(" [PELIGRO: energia=" + getEnergia() + "]");
+            }
+            System.out.println(); // Salto de línea final
+        }
     }
 
     @Override

@@ -189,35 +189,32 @@ public class Ecosistema {
         if (tipo == null) {
             return;
         }
-
         if (tipo.equalsIgnoreCase("planta")) {
             double e = (energia > 0) ? energia : 30.0;
             Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
             plantas.add(p);
             nacimientosPlantas++;
-            System.out.println("Se agrego una planta.");
+            // CAMBIO AQUÍ: Se borró el System.out.println("Se agrego una planta.") para evitar spam
         } else if (tipo.equalsIgnoreCase("conejo")) {
             double e = (energia > 0) ? energia : 50.0;
-            // CAMBIO AQUÍ: Se agrega el atributo de velocidad (ej: 5) antes del peso (2.0)
             Conejo c = new Conejo("Conejo-" + (conejos.size() + 1), e, 0, true, 5, 2.0);
             conejos.add(c);
             nacimientosConejos++;
-            System.out.println("Se agrego un conejo.");
+            // CAMBIO AQUÍ: Se borró el System.out.println("Se agrego un conejo.") para evitar spam
         } else if (tipo.equalsIgnoreCase("lobo")) {
             if (lobos.size() >= 5) {
                 System.out.println("No se pueden agregar mas de 5 lobos.");
                 return;
             }
             double e = (energia > 0) ? energia : 70.0;
-        // CAMBIO AQUÍ: Se agrega el 0 final correspondiente a exitosCaza
             Lobo l = new Lobo("Lobo-" + (lobos.size() + 1), e, 0, true, 10, 20.0, 0);
             lobos.add(l);
             nacimientosLobos++;
-            System.out.println("Se agrego un lobo.");
+            // CAMBIO AQUÍ: Se borró el System.out.println("Se agrego un lobo.") para evitar spam
         } else {
             System.out.println("Tipo no valido: " + tipo);
         }
-        }
+    }
     
     public void cambiarClima (Clima nuevo) {
         this.climaActual = nuevo;

@@ -224,14 +224,14 @@ public class InterfazGraficaIE {
         boolean confirmacion = pedirConfirmacion("\nConfirmas que deseas inyectar un/a " + nombreEntidad + " al ecosistema?");
         
         if (confirmacion) {
-            // CAMBIO AQUÍ: Borramos el System.out del [MOCK] y llamamos al método real.
-            // La clase Ecosistema ya se encarga de imprimir "Se agrego un..." internamente.
             ecosistema.agregarEntidad(nombreEntidad);
+            
+            // CAMBIO AQUÍ: Se agregó este mensaje para confirmar la acción manual (ya que se borró del Ecosistema)
+            System.out.println("Se agrego '" + nombreEntidad + "' al ecosistema.");
             
             if (opcionEntidad == 3) {
                 lobosAgregados++;
             }    
-
             return true;
         } else {
             System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
