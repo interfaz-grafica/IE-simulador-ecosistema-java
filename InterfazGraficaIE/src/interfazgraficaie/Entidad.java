@@ -42,7 +42,7 @@ public abstract class Entidad {
     //modificacion: Se agrego la validacion recomendada en clase para que la energia nunca sea negativa
     public void setEnergia(double energia) {
         if (energia <= 0) {
-            // CAMBIO AQUÍ: Se agregó un print para cuando mueren de inanición,
+            // Registro de evento de muerte por inanición en consola
             // validando this.viva para que NO se imprima falsamente si fueron comidos/cazados.
             if (this.viva) {
                 System.out.println(getNombre() + " murio de inanicion.");

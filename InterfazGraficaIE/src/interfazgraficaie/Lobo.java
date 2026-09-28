@@ -33,7 +33,7 @@ public class Lobo extends Animal implements Peligroso {
         ejecutarAtaque(eco, presa, generadorAleatorio);
     }
     
-    // ------------ Refactorización para aplicar en método comer() ---------------
+    // Métodos auxiliares de caza
     private ArrayList<Conejo> obtenerConejosVivos(Ecosistema eco) {
         ArrayList<Conejo> vivos = new ArrayList<>();
         for (Conejo conejoActual : eco.getConejos()) {
@@ -47,7 +47,7 @@ public class Lobo extends Animal implements Peligroso {
     private void ejecutarAtaque(Ecosistema eco, Conejo presa, Random generador) {
         double probabilidadExitoCaza = getEnergia() / 100.0;
         
-        // En invierno los lobos son más peligrosos, cazan mejor
+        // Bonificación del 20% en probabilidad de caza durante clima invernal
         if (eco.getClimaActual() == Clima.INVIERNO) {
             probabilidadExitoCaza = probabilidadExitoCaza + 0.20; 
         }
@@ -59,16 +59,14 @@ public class Lobo extends Animal implements Peligroso {
             presa.morir();
             setEnergia(getEnergia() + 40);
             this.exitosCaza++;
-            // CAMBIO AQUÍ: Se eliminaron las mayúsculas y se adaptó el formato a la imagen de referencia
             System.out.println("Lobo '" + getNombre() + "' cazo a Conejo '" + presa.getNombre() + "' (+40.0 energia) [cacerias: " + this.exitosCaza + "]");
         } else {
             setEnergia(getEnergia() - 10);
-            // CAMBIO AQUÍ: Se redujo el texto para coincidir con la imagen ("falló la caza")
             System.out.println("Lobo '" + getNombre() + "' fallo la caza (-10.0 energia)");
         }
     }
     
-    // ------------ Fin refactorización ---------------
+
     
     @Override
     public void actuar(Ecosistema eco) {

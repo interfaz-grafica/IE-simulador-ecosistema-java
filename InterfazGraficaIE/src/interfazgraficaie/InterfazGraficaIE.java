@@ -35,7 +35,7 @@ public class InterfazGraficaIE {
             mostrarConfiguracionInicial();
             
             // 3. Evalúa la decisión
-            // CAMBIO AQUÍ: Se reemplaza ingresarEnteroEnRango por pedirConfirmacion
+            // Solicitud de confirmación de parámetros al usuario
             boolean confirmacion = pedirConfirmacion("\nDeseas confirmar esta configuracion?"); 
 
             if (confirmacion) { 
@@ -77,7 +77,7 @@ public class InterfazGraficaIE {
             
             System.out.print(mensaje + " [" + min + " - " + max + "]: ");
             
-            String inputUsuario = scanner.nextLine().trim(); //trim() recorta los espacios en blanco accidentales que el usuario haya puesto en los bordes.
+            String inputUsuario = scanner.nextLine().trim(); // Sanitización del input eliminando espacios perimetrales
 
             try {
                 
@@ -90,7 +90,7 @@ public class InterfazGraficaIE {
                 }
                 
             } catch (NumberFormatException e) {
-                System.out.println("(!) Error: Debes ingresar un numero entero."); //Si parseInt explota (porque el usuario tipeó "hola" o letras)
+                System.out.println("(!) Error: Debes ingresar un numero entero."); // Manejo de excepción por input no numérico
             }
         }
         
@@ -173,12 +173,12 @@ public class InterfazGraficaIE {
             int opcion = ingresarEnteroEnRango("Opcion", 1, 3);
 
             if (opcion == 1) {
-                // CAMBIO AQUÍ: Primero le pedimos al usuario que elija el nuevo clima
+                // Selección del nuevo clima por el usuario
                 Clima nuevoClima = ingresarClima();
                 
                 boolean confirmacion = pedirConfirmacion("\nConfirmas el cambio de clima?");
                 if (confirmacion) {
-                    // CAMBIO AQUÍ: Borramos el [MOCK] e invocamos la lógica real del ecosistema
+                    // Invocación a la lógica central del ecosistema
                     ecosistema.cambiarClima(nuevoClima);
                     finIntervencion = true; 
                 } else {
@@ -226,7 +226,7 @@ public class InterfazGraficaIE {
         if (confirmacion) {
             ecosistema.agregarEntidad(nombreEntidad);
             
-            // CAMBIO AQUÍ: Se agregó este mensaje para confirmar la acción manual (ya que se borró del Ecosistema)
+            // Mensaje de confirmación de la inserción manual de entidad
             System.out.println("Se agrego '" + nombreEntidad + "' al ecosistema.");
             
             if (opcionEntidad == 3) {

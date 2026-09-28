@@ -27,7 +27,7 @@ public abstract class Animal extends Entidad implements Mortal {
     @Override
     public void morir() {
         setViva(false);
-        // CAMBIO AQUÍ: Se vacía la energía al morir para evitar zombies
+        // Vaciar reservas de energía al morir
         setEnergia(0);
     }
     
