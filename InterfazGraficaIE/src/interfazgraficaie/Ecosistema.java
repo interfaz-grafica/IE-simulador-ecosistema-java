@@ -274,43 +274,33 @@ public class Ecosistema {
         // --- BONUS: ORDENAMIENTO DE ENTIDADES PELIGROSAS ---
         System.out.println("\n--- Ranking de Entidades Peligrosas ---");
         ArrayList<Peligroso> listaPeligrosos = new ArrayList<>();
-        
-        // 1. Recolectar Lobos
-        for (int i = 0; i < lobos.size(); i++) {
-            listaPeligrosos.add(lobos.get(i));
-        }
-        
-        // 2. Recolectar Plantas Venenosas mediante polimorfismo
-        for (int i = 0; i < plantas.size(); i++) {
-            if (plantas.get(i) instanceof PlantaVenenosa) {
-                listaPeligrosos.add((PlantaVenenosa) plantas.get(i));
+
+        // 1. Recolectar Lobos (Función nativa addAll reemplaza el for)
+        listaPeligrosos.addAll(lobos);
+
+        // 2. Recolectar Plantas Venenosas (Usando for-each más limpio)
+        for (Planta plantaActual : plantas) {
+            if (plantaActual instanceof PlantaVenenosa plantaVenenosa) {
+                listaPeligrosos.add(plantaVenenosa);
             }
         }
-        
-        // 3. Ordenamiento Burbuja (Mayor a menor nivel de peligro)
-        for (int i = 0; i < listaPeligrosos.size() - 1; i++) {
-            for (int j = 0; j < listaPeligrosos.size() - i - 1; j++) {
-                if (listaPeligrosos.get(j).getNivelPeligro() < listaPeligrosos.get(j + 1).getNivelPeligro()) {
-                    Peligroso aux = listaPeligrosos.get(j);
-                    listaPeligrosos.set(j, listaPeligrosos.get(j + 1));
-                    listaPeligrosos.set(j + 1, aux);
-                }
-            }
-        }
-        
+
+        // 3. Ordenamiento Nativo (Reemplaza los 2 bucles for del Método Burbuja)
+        listaPeligrosos.sort(java.util.Comparator.comparingInt(Peligroso::getNivelPeligro).reversed());
+
         // 4. Imprimir resultados
         if (listaPeligrosos.isEmpty()) {
             System.out.println("No hay entidades peligrosas vivas en el ecosistema.");
         } else {
-            for (int i = 0; i < listaPeligrosos.size(); i++) {
-                Peligroso p = listaPeligrosos.get(i);
+            int posicionRanking = 1;
+            for (Peligroso entidadPeligrosa : listaPeligrosos) {
                 // Hacemos cast a Entidad solo para poder imprimir el nombre heredado
-                String nombrePeligroso = ((Entidad) p).getNombre(); 
-                System.out.println((i + 1) + ". " + nombrePeligroso + " (Nivel de peligro: " + p.getNivelPeligro() + ")");
+                String nombrePeligroso = ((Entidad) entidadPeligrosa).getNombre(); 
+                System.out.println(posicionRanking + ". " + nombrePeligroso + " (Nivel de peligro: " + entidadPeligrosa.getNivelPeligro() + ")");
+                posicionRanking++;
             }
         }
     }
-    
     //-----------------------------------------------------------------------//
     //GETTERS Y SETTERS
     
