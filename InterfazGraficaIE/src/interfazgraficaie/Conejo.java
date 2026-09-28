@@ -46,7 +46,7 @@ public class Conejo extends Animal implements Reproducible {
         //Acciones establecidas
         this.comer(eco);
         
-        this.intentarReproduccion(eco);
+        //this.intentarReproduccion(eco); --> Comentado para evitar reproducción extra en el mismo turno
     }
     
     @Override

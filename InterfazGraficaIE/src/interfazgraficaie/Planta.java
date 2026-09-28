@@ -44,10 +44,12 @@ public class Planta extends Entidad implements Reproducible {
         if (isViva()) {
             envejecer(); 
             
-            // la validacion del clima la va a manejar Ecosistema
+            /* --> Comentado para evitar reproducción extra en el mismo turno
+             la validacion del clima la va a manejar Ecosistema
             if (puedeReproducirse()) {
                 reproducirse(eco);
             }
+            */
         } 
     }
     
