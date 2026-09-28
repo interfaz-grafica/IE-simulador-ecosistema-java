@@ -133,32 +133,39 @@ public class Ecosistema {
         // 6. LIMPIEZA DE MUERTOS
         int bajasEsteTurno = 0;
 
-        for (int i = plantas.size() - 1; i >= 0; i--) {
+        // --- CORRECCIÓN: Uso de COPIAS DEFENSIVAS en lugar de bucle inverso ---
+        // Esto cumple explícitamente con lo solicitado en la Issue 21.
+        
+        ArrayList<Planta> copiasPlantas = new ArrayList<>(plantas);
+        for (Planta p : copiasPlantas) {
             // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
-            if (!plantas.get(i).isViva()) {
-                plantas.remove(i);
+            if (!p.isViva()) {
+                plantas.remove(p);
                 muertesPlantas++;
                 bajasEsteTurno++;
             }
         }
 
-        for (int i = conejos.size() - 1; i >= 0; i--) {
+        ArrayList<Conejo> copiasConejos = new ArrayList<>(conejos);
+        for (Conejo c : copiasConejos) {
             // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
-            if (!conejos.get(i).isViva()) {
-                conejos.remove(i);
+            if (!c.isViva()) {
+                conejos.remove(c);
                 muertesConejos++;
                 bajasEsteTurno++;
             }
         }
 
-        for (int i = lobos.size() - 1; i >= 0; i--) {
+        ArrayList<Lobo> copiasLobos = new ArrayList<>(lobos);
+        for (Lobo l : copiasLobos) {
             // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
-            if (!lobos.get(i).isViva()) {
-                lobos.remove(i);
+            if (!l.isViva()) {
+                lobos.remove(l);
                 muertesLobos++;
                 bajasEsteTurno++;
             }
         }
+        // --- FIN DE LA CORRECCIÓN ---
 
         if (bajasEsteTurno > maxBajasEnUnTurno) {
             maxBajasEnUnTurno = bajasEsteTurno;
@@ -191,8 +198,19 @@ public class Ecosistema {
         }
         if (tipo.equalsIgnoreCase("planta")) {
             double e = (energia > 0) ? energia : 30.0;
-            Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
-            plantas.add(p);
+            
+            // --- CORRECCIÓN: INTEGRACIÓN BONUS 1 (PLANTA VENENOSA) ---
+            // Le damos una chance aleatoria (por ejemplo, 15%) de que la planta instanciada sea venenosa.
+            // Así, convive polimórficamente en la lista con las plantas normales.
+            if (Math.random() <= 0.15) {
+                PlantaVenenosa pv = new PlantaVenenosa("Venenosa-" + (plantas.size() + 1), e, 0, true, 2);
+                plantas.add(pv);
+            } else {
+                Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
+                plantas.add(p);
+            }
+            // --- FIN DE LA CORRECCIÓN ---
+            
             nacimientosPlantas++;
             // CAMBIO AQUÍ: Se borró el System.out.println("Se agrego una planta.") para evitar spam
         } else if (tipo.equalsIgnoreCase("conejo")) {
