@@ -6,8 +6,8 @@ public class PlantaVenenosa extends Planta implements Peligroso {
         super(nombre, energia, edad, viva, tamanio);
     }
     
-    //sobrescribe el comportamiento al ser comido
-    //en lugar de sumar energia, resta -30.0 como castigo
+    // Sobreescritura del método serComida
+    // Aplica una penalización energética de -30.0 al consumidor
     @Override
     public double serComida() {
         if (!isViva()) return 0; 
@@ -18,7 +18,7 @@ public class PlantaVenenosa extends Planta implements Peligroso {
         return -30.0;
     }
     
-    //metodo de la inetrfaz Peligroso
+    // Implementación de la interfaz Peligroso
     @Override
     public int getNivelPeligro() {
         return 5;

@@ -7,7 +7,7 @@ public class Planta extends Entidad implements Reproducible {
     public Planta(String nombre, double energia, int edad, boolean viva, int tamanio) {
         
         super(nombre, energia, edad, viva);
-        // se usa el setter para garantizar que nazca con un tamaño de 1 a 5
+        // Inicialización con tamaño aleatorio controlado entre 1 y 5
         setTamanio(tamanio);
     }
     
@@ -32,7 +32,7 @@ public class Planta extends Entidad implements Reproducible {
     @Override
     public void reproducirse(Ecosistema eco) {
         
-        // 1. Regla de Invierno: las plantas no se reproducen con este clima.
+        // Condición climática: Inhibición reproductiva durante el invierno
         if (eco.getClimaActual() == Clima.INVIERNO) {
             return; // Termina la ejecución del método aquí mismo. No hace nada.
         } 
@@ -50,7 +50,7 @@ public class Planta extends Entidad implements Reproducible {
                 
             case SOLEADO:
                 // Multiplicador x1.5: 1 brote asegurado + 50% de probabilidad de tener un segundo brote.
-                // Math.random() genera un número entre 0.0 y 1.0. Si es mayor a 0.5, significa que "ganó" el 50%.
+                // Cálculo probabilístico del 50% para brote adicional
                 if (Math.random() > 0.5) {
                     brotes = 2;
                 } else {

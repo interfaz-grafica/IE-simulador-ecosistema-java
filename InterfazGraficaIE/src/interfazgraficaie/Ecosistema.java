@@ -40,19 +40,19 @@ public class Ecosistema {
         this.climaActual = climaInicial;
         this.turnoActual = 1;
         
-        // Poblamos las listas iniciales invocando al método de la clase
+        // Instanciación inicial de las poblaciones base
         for (int i = 0; i < cantPlantas; i++) { agregarEntidad("planta"); }
         for (int i = 0; i < cantConejos; i++) { agregarEntidad("conejo"); }
         for (int i = 0; i < cantLobos; i++) { agregarEntidad("lobo"); }
         
-        // Reseteamos los contadores a 0 para que la inyección inicial no cuente como nacimientos en el reporte final
+        // Reinicio de métricas para ignorar la inyección base en el reporte estadístico
         this.nacimientosPlantas = 0;
         this.nacimientosConejos = 0;
         this.nacimientosLobos = 0;
     }
     
     public void procesarTurno() {
-        // CAMBIO AQUÍ: Encabezado, conteo inicial y subtítulo de eventos según la imagen de referencia
+        // Renderizado de cabecera de turno y censo poblacional
         System.out.println("\n=== TURNO " + turnoActual + " | Clima: " + climaActual + " ===");
         System.out.println("Plantas: " + plantas.size() + "  Conejos: " + conejos.size() + "  Lobos: " + lobos.size());
         System.out.println("-- Eventos --");
@@ -60,7 +60,6 @@ public class Ecosistema {
         // 1. TURNO PLANTAS
         for (int i = 0; i < plantas.size(); i++) {
             Planta p = plantas.get(i);
-            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
             if (p.isViva()) {
                 p.actuar(this);
             }
@@ -69,7 +68,6 @@ public class Ecosistema {
         // 2. TURNO CONEJOS
         for (int i = 0; i < conejos.size(); i++) {
             Conejo c = conejos.get(i);
-            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
             if (c.isViva()) {
                 c.actuar(this);
             }
@@ -78,13 +76,12 @@ public class Ecosistema {
         // 3. TURNO LOBOS
         for (int i = 0; i < lobos.size(); i++) {
             Lobo l = lobos.get(i);
-            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
             if (l.isViva()) {
                 l.actuar(this);
             }
         }
 
-        // 4. INTERFAZ REPRODUCIBLE (polimorfismo)
+        // 4. Fase 4: Procesamiento polimórfico de entidades reproducibles
         ArrayList<Reproducible> listaReproduccion = new ArrayList<>();
         for (int i = 0; i < plantas.size(); i++) {
             listaReproduccion.add(plantas.get(i));
@@ -133,12 +130,10 @@ public class Ecosistema {
         // 6. LIMPIEZA DE MUERTOS
         int bajasEsteTurno = 0;
 
-        // --- CORRECCIÓN: Uso de COPIAS DEFENSIVAS en lugar de bucle inverso ---
-        // Esto cumple explícitamente con lo solicitado en la Issue 21.
+        // Uso de copias defensivas para iterar y eliminar entidades de manera segura
         
         ArrayList<Planta> copiasPlantas = new ArrayList<>(plantas);
         for (Planta p : copiasPlantas) {
-            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
             if (!p.isViva()) {
                 plantas.remove(p);
                 muertesPlantas++;
@@ -148,7 +143,6 @@ public class Ecosistema {
 
         ArrayList<Conejo> copiasConejos = new ArrayList<>(conejos);
         for (Conejo c : copiasConejos) {
-            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
             if (!c.isViva()) {
                 conejos.remove(c);
                 muertesConejos++;
@@ -158,14 +152,12 @@ public class Ecosistema {
 
         ArrayList<Lobo> copiasLobos = new ArrayList<>(lobos);
         for (Lobo l : copiasLobos) {
-            // CAMBIO AQUÍ: Se reemplaza estaVivo() por isViva()
             if (!l.isViva()) {
                 lobos.remove(l);
                 muertesLobos++;
                 bajasEsteTurno++;
             }
         }
-        // --- FIN DE LA CORRECCIÓN ---
 
         if (bajasEsteTurno > maxBajasEnUnTurno) {
             maxBajasEnUnTurno = bajasEsteTurno;
@@ -184,7 +176,7 @@ public class Ecosistema {
     }
     
     public void mostrarEstado() {
-        // CAMBIO AQUÍ: Formato de pie de turno para el estado final, según la imagen de referencia
+        // Formato de pie de turno
         System.out.println("Estado: Plantas: " + plantas.size() + "  Conejos: " + conejos.size() + "  Lobos: " + lobos.size());
     }
     
@@ -199,8 +191,7 @@ public class Ecosistema {
         if (tipo.equalsIgnoreCase("planta")) {
             double e = (energia > 0) ? energia : 30.0;
             
-            // --- CORRECCIÓN: INTEGRACIÓN BONUS 1 (PLANTA VENENOSA) ---
-            // Le damos una chance aleatoria (por ejemplo, 15%) de que la planta instanciada sea venenosa.
+            // Probabilidad del 15% de instanciar una PlantaVenenosa (Polimorfismo)
             // Así, convive polimórficamente en la lista con las plantas normales.
             if (Math.random() <= 0.15) {
                 PlantaVenenosa pv = new PlantaVenenosa("Venenosa-" + (plantas.size() + 1), e, 0, true, 2);
@@ -209,16 +200,13 @@ public class Ecosistema {
                 Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
                 plantas.add(p);
             }
-            // --- FIN DE LA CORRECCIÓN ---
             
             nacimientosPlantas++;
-            // CAMBIO AQUÍ: Se borró el System.out.println("Se agrego una planta.") para evitar spam
         } else if (tipo.equalsIgnoreCase("conejo")) {
             double e = (energia > 0) ? energia : 50.0;
             Conejo c = new Conejo("Conejo-" + (conejos.size() + 1), e, 0, true, 5, 2.0);
             conejos.add(c);
             nacimientosConejos++;
-            // CAMBIO AQUÍ: Se borró el System.out.println("Se agrego un conejo.") para evitar spam
         } else if (tipo.equalsIgnoreCase("lobo")) {
             if (lobos.size() >= 5) {
                 System.out.println("No se pueden agregar mas de 5 lobos.");
@@ -228,7 +216,6 @@ public class Ecosistema {
             Lobo l = new Lobo("Lobo-" + (lobos.size() + 1), e, 0, true, 10, 20.0, 0);
             lobos.add(l);
             nacimientosLobos++;
-            // CAMBIO AQUÍ: Se borró el System.out.println("Se agrego un lobo.") para evitar spam
         } else {
             System.out.println("Tipo no valido: " + tipo);
         }
@@ -303,8 +290,7 @@ public class Ecosistema {
             System.out.println("Lobo mas cazador: " + cazadorMax.getNombre() + " (" + cazadorMax.getExitosCaza() + " presas)");
         }
         
-        // ------------------ NUEVO AGREGADO ----------------------
-        // --- BONUS: ORDENAMIENTO DE ENTIDADES PELIGROSAS ---
+        // Lógica de ordenamiento y ranking para entidades que implementen la interfaz Peligroso
         System.out.println("\n--- Ranking de Entidades Peligrosas ---");
         ArrayList<Peligroso> listaPeligrosos = new ArrayList<>();
 
