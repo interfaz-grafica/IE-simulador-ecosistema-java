@@ -20,12 +20,18 @@ public class Conejo extends Animal implements Reproducible {
                 
                 // Incrementamos a la energía actual el valor nutritivo de la planta y la establecemos
                 double nuevaEnergia = getEnergia() + valorNutritivoObtenido;
-                setEnergia(nuevaEnergia);
 
                 // El formato del signo en la energía se añade manualmente si el aporte es positivo
                 String signo = (valorNutritivoObtenido >= 0) ? "+" : "";
                 System.out.println("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (" + signo + valorNutritivoObtenido + " energia)");
 
+                if (nuevaEnergia <= 0 && valorNutritivoObtenido < 0) {
+                    System.out.println(getNombre() + " murio intoxicado.");
+                    setViva(false); // Para evitar el print genérico de 'inanición'
+                }
+                
+                setEnergia(nuevaEnergia);
+                
                 // Rompemos el bucle porque es una planta por turno.
                 conejoEncontroComida = true;
                 break;
@@ -71,26 +77,34 @@ public class Conejo extends Animal implements Reproducible {
         // Si la energía del conejo es mayor a 60 entonces, puede reproducirse
         if(puedeReproducirse())
         {
-            //Recorremos al conejo que está actualmente
+            java.util.ArrayList<Conejo> posiblesParejas = new java.util.ArrayList<>();
+            
+            // Recolectamos todas las parejas viables
             for(Conejo conejoActual : eco.getConejos())
             {
-                // Nos aseguremos que el conejo con el que se reproduzca esté vivo y que no se intente reproducir consigo mismo
                 if (conejoActual.isViva() && conejoActual != this)
                 {
-                    // Nace un nuevo conejo. Hereda el nombre del padre y su sufijo, inicia con 30 de energía, edad 0, vivo, misma velocidad y peso.
-                    Conejo cria = new Conejo(this.getNombre() + "-Cria", 30.0, 0, true, this.getVelocidad(), this.getPeso());
-                    
-                    // Agregamos la cría a la lista de conejos del ecosistema
-                    eco.getConejos().add(cria);
-                    
-                    // Restamos energía al padre por el esfuerzo de reproducirse
-                    this.setEnergia(this.getEnergia() - 20);
-                    
-                    System.out.println(this.getNombre() + " se ha reproducido con " + conejoActual.getNombre() + ". Nacio: " + cria.getNombre());
-                    
-                    // Rompemos el bucle para que solo tenga una cría por turno
-                    break;
+                    posiblesParejas.add(conejoActual);
                 }
+            }
+            
+            if (!posiblesParejas.isEmpty())
+            {
+                // Elegimos una pareja al azar
+                java.util.Random rand = new java.util.Random();
+                Conejo pareja = posiblesParejas.get(rand.nextInt(posiblesParejas.size()));
+                
+                // Nace un nuevo conejo. Hereda el nombre del padre y su sufijo, inicia con 30 de energía, edad 0, vivo, misma velocidad y peso.
+                Conejo cria = new Conejo(this.getNombre() + "-Cria", 30.0, 0, true, this.getVelocidad(), this.getPeso());
+                
+                // Agregamos la cría a la lista de conejos del ecosistema
+                eco.getConejos().add(cria);
+                eco.registrarNacimientoConejo(); // Suma al contador del reporte final
+                
+                // Restamos energía al padre por el esfuerzo de reproducirse
+                this.setEnergia(this.getEnergia() - 20);
+                
+                System.out.println(this.getNombre() + " se ha reproducido con " + pareja.getNombre() + ". Nacio: " + cria.getNombre());
             }
         }
         
@@ -99,7 +113,6 @@ public class Conejo extends Animal implements Reproducible {
     @Override
     public boolean puedeReproducirse() {
         
-
         return isViva() && getEnergia() > 60;
     } 
 }

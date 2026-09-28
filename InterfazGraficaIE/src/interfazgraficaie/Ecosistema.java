@@ -221,6 +221,10 @@ public class Ecosistema {
         }
     }
     
+    public void registrarNacimientoConejo() {
+        this.nacimientosConejos++;
+    }
+    
     public void cambiarClima (Clima nuevo) {
         this.climaActual = nuevo;
         System.out.println("El clima cambio a: " + nuevo);
