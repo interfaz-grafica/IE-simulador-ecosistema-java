@@ -99,7 +99,7 @@ public class Planta extends Entidad implements Reproducible {
     
     @Override
     public void mostrarEstado() {
-        System.out.println("Planta: " + getNombre() + " Tamaño: " + this.tamanio + " Energía: " + getEnergia());
+        System.out.println("Planta: " + getNombre() + " Tamanio: " + this.tamanio + " Energia: " + getEnergia());
     }
     
     //-----------------------------------------------------------------------//

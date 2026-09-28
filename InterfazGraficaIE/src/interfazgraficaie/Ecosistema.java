@@ -52,7 +52,10 @@ public class Ecosistema {
     }
     
     public void procesarTurno() {
-        System.out.println("Turno: " + turnoActual + " - Clima: " + climaActual);
+        // CAMBIO AQUÍ: Encabezado, conteo inicial y subtítulo de eventos según la imagen de referencia
+        System.out.println("\n=== TURNO " + turnoActual + " | Clima: " + climaActual + " ===");
+        System.out.println("Plantas: " + plantas.size() + "  Conejos: " + conejos.size() + "  Lobos: " + lobos.size());
+        System.out.println("-- Eventos --");
 
         // 1. TURNO PLANTAS
         for (int i = 0; i < plantas.size(); i++) {
@@ -174,7 +177,8 @@ public class Ecosistema {
     }
     
     public void mostrarEstado() {
-        System.out.println("Plantas: " + plantas.size() + " | Conejos: " + conejos.size() + " | Lobos: " + lobos.size() + " | Clima: " + climaActual);
+        // CAMBIO AQUÍ: Formato de pie de turno para el estado final, según la imagen de referencia
+        System.out.println("Estado: Plantas: " + plantas.size() + "  Conejos: " + conejos.size() + "  Lobos: " + lobos.size());
     }
     
     public void agregarEntidad(String tipo) {

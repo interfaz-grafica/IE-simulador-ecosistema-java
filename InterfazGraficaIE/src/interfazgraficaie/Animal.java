@@ -16,7 +16,7 @@ public abstract class Animal extends Entidad implements Mortal {
     public abstract void comer(Ecosistema eco);
   
     public void moverse() {
-        System.out.println(getNombre() + " se desplazó a " + getVelocidad() + " km/h.");
+        System.out.println(getNombre() + " se desplazo a " + getVelocidad() + " km/h.");
     }
     
     @Override
@@ -27,6 +27,8 @@ public abstract class Animal extends Entidad implements Mortal {
     @Override
     public void morir() {
         setViva(false);
+        // CAMBIO AQUÍ: Se vacía la energía al morir para evitar zombies
+        setEnergia(0);
     }
     
     //-----------------------------------------------------------------------//

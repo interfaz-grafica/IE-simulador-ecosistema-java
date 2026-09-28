@@ -21,7 +21,7 @@ public class Lobo extends Animal implements Peligroso {
         // Si no puede comer, pierde energía
         if (conejosVivos.isEmpty()) {
             setEnergia(getEnergia() - 15);
-            System.out.println("Lobo '" + getNombre() + "' no encontró conejos vivos (-15 energia)");
+            System.out.println("Lobo '" + getNombre() + "' no encontro conejos vivos (-15 energia)");
             return;
         }
 
@@ -59,10 +59,10 @@ public class Lobo extends Animal implements Peligroso {
             presa.morir();
             setEnergia(getEnergia() + 40);
             this.exitosCaza++;
-            System.out.println("Lobo '" + getNombre() + "' CAZÓ EXITOSAMENTE al Conejo '" + presa.getNombre() + "' (+40 energia) [Exitos totales: " + this.exitosCaza + "]");
+            System.out.println("Lobo '" + getNombre() + "' CAZO EXITOSAMENTE al Conejo '" + presa.getNombre() + "' (+40 energia) [Exitos totales: " + this.exitosCaza + "]");
         } else {
             setEnergia(getEnergia() - 10);
-            System.out.println("Lobo '" + getNombre() + "' intentó cazar al Conejo '" + presa.getNombre() + "' y FALLÓ (-10 energia)");
+            System.out.println("Lobo '" + getNombre() + "' intento cazar al Conejo '" + presa.getNombre() + "' y FALLO (-10 energia)");
         }
     }
     

@@ -24,7 +24,7 @@ public class Conejo extends Animal implements Reproducible {
                     double nuevaEnergia = getEnergia() + valorNutritivoObtenido;
                     setEnergia(nuevaEnergia);
 
-                    System.out.println("Conejo '" + getNombre() + "' comió la planta'" + plantaActual.getNombre() + "' (" + valorNutritivoObtenido + " energia)");
+                    System.out.println("Conejo '" + getNombre() + "' comio la planta'" + plantaActual.getNombre() + "' (" + valorNutritivoObtenido + " energia)");
 
                     // Rompemos el bucle porque es una planta por turno.
                     conejoEncontroComida = true;
@@ -36,7 +36,7 @@ public class Conejo extends Animal implements Reproducible {
         if(!conejoEncontroComida)
                 {
                     setEnergia(getEnergia() - 15);
-                    System.out.println("Conejo " + getNombre() + " no encontró comida (-15 energía)");
+                    System.out.println("Conejo " + getNombre() + " no encontro comida (-15 energia)");
                 }
     }
 
@@ -82,7 +82,7 @@ public class Conejo extends Animal implements Reproducible {
                     // Restamos energía al padre por el esfuerzo de reproducirse
                     this.setEnergia(this.getEnergia() - 20);
                     
-                    System.out.println(this.getNombre() + " se ha reproducido con " + conejoActual.getNombre() + ". Nació: " + cria.getNombre());
+                    System.out.println(this.getNombre() + " se ha reproducido con " + conejoActual.getNombre() + ". Nacio: " + cria.getNombre());
                     
                     // Rompemos el bucle para que solo tenga una cría por turno
                     break;
@@ -103,6 +103,6 @@ public class Conejo extends Animal implements Reproducible {
         else return false;*/
         
         // Forma optimizada
-        return getEnergia()>60;
+        return isViva() && getEnergia() > 60;
     } 
 }
