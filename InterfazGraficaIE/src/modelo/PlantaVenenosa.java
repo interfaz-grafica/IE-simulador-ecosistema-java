@@ -26,6 +26,5 @@ public class PlantaVenenosa extends Planta implements Peligroso {
     
     @Override
     public void mostrarEstado() {
-        System.out.println("Planta: " + getNombre() + " Tamaño: " + getTamanio() + " Energía: " + getEnergia());
     }
 }

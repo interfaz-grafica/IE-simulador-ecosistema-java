@@ -21,10 +21,6 @@ public class InterfazGraficaIE {
     public static void main(String[] args) {
         scanner = new Scanner(System.in); 
 
-        System.out.println("=========================================");
-        System.out.println("   SIMULADOR DE ECOSISTEMA - INICIO      ");
-        System.out.println("=========================================\n");
-
         boolean configuracionConfirmada = false;
 
         // El main toma el control del flujo del programa
@@ -40,7 +36,6 @@ public class InterfazGraficaIE {
             if (confirmacion) { 
                 
                 configuracionConfirmada = true;
-                System.out.println("\n>> Configuracion guardada exitosamente!\n");
                 
                 ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
                 
@@ -48,15 +43,12 @@ public class InterfazGraficaIE {
                 ejecutarBuclePrincipal();
                 
             } else {
-                System.out.println("\n>> Descartando datos. Reiniciando el panel de configuracion...\n");
             }
         }
     }
     
     
     private static void ingresarDatosIniciales() {
-
-        System.out.println("--- CONFIGURACION INICIAL DEL ECOSISTEMA ---\n");    
 
         cantidadInicialPlantas = ingresarEnteroEnRango("Cantidad inicial de plantas", 5, 30);
         cantidadInicialConejos = ingresarEnteroEnRango("Cantidad inicial de conejos", 2, 15);
@@ -74,9 +66,7 @@ public class InterfazGraficaIE {
         boolean esValido = false;
 
         while (esValido == false) {
-            
-            System.out.print(mensaje + " [" + min + " - " + max + "]: ");
-            
+                        
             String inputUsuario = scanner.nextLine().trim(); // Eliminar espacios finales
 
             try {
@@ -86,11 +76,9 @@ public class InterfazGraficaIE {
                 if (numero >= min && numero <= max) {
                     esValido = true;
                 } else {
-                    System.out.println("(!) Error: El valor debe estar comprendido entre " + min + " y " + max + ".");
                 }
                 
             } catch (NumberFormatException e) { 
-                System.out.println("(!) Error: Debes ingresar un numero entero."); // Excepción por input no numérico
             }
         }
         
@@ -99,12 +87,6 @@ public class InterfazGraficaIE {
     
     
     private static Clima ingresarClima() {
-
-        System.out.println("\nSelecciona el clima inicial:");
-        System.out.println("1. Soleado");
-        System.out.println("2. Lluvioso");
-        System.out.println("3. Sequia");
-        System.out.println("4. Invierno");
 
         int opcion = ingresarEnteroEnRango("Opcion de clima", 1, 4);
 
@@ -120,20 +102,12 @@ public class InterfazGraficaIE {
     
     
     private static void mostrarConfiguracionInicial() {
-        System.out.println("\n-------------------------------------------");
-        System.out.println("DATOS INGRESADOS:");
-        System.out.println("Plantas iniciales: " + cantidadInicialPlantas);
-        System.out.println("Conejos iniciales: " + cantidadInicialConejos);
-        System.out.println("Lobos iniciales:   " + cantidadInicialLobos);
-        System.out.println("Clima inicial:     " + climaInicial);
-        System.out.println("Duracion total:    " + turnosTotales + " turnos");
-        System.out.println("-------------------------------------------");           
+       
     }
     
     
     private static void ejecutarBuclePrincipal() {
-        
-        System.out.println("\n--- INICIANDO SIMULACION ---");  
+         
         
         for (int turnoActual = 1; turnoActual <= turnosTotales && !ecosistema.ecosistemaColapsado(); turnoActual++) {
 
@@ -143,20 +117,14 @@ public class InterfazGraficaIE {
             if (turnoActual % 3 == 0) {
                 mostrarMenuIntervencion();
             } else {
-                System.out.print(">>> Presione Enter para continuar...");
                 scanner.nextLine(); // Pausar la ejecución hasta que el usuario presione Enter. La única forma de liberar ese bloqueo es que el scanner detecte un salto de línea      
             }
         }
         
         //Evaluamos por qué se rompió el bucle anterior
-        System.out.println("\n=========================================");
         if (ecosistema.ecosistemaColapsado()) {
-            System.out.println(">> FIN DE LA SIMULACION: El ecosistema ha colapsado (una poblacion se extinguio).");
         } else {
-            System.out.println(">> FIN DE LA SIMULACION: Se alcanzo el limite maximo de " + turnosTotales + " turnos.");
         }
-        System.out.println("=========================================\n");
-
         ecosistema.generarReporteFinal();
     }
     
@@ -165,10 +133,6 @@ public class InterfazGraficaIE {
         boolean finIntervencion = false;
         
         while(finIntervencion == false) {
-            System.out.println("\n=== INTERVENCION (cada 3 turnos) ===");
-            System.out.println("1. Cambiar clima (actual: " + ecosistema.getClimaActual() + ")");
-            System.out.println("2. Agregar entidad");
-            System.out.println("3. Solo avanzar");
 
             int opcion = ingresarEnteroEnRango("Opcion", 1, 3);
 
@@ -182,7 +146,6 @@ public class InterfazGraficaIE {
                     ecosistema.cambiarClima(nuevoClima);
                     finIntervencion = true; 
                 } else {
-                    System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
                 }
 
             } else if (opcion == 2) {
@@ -194,10 +157,8 @@ public class InterfazGraficaIE {
             } else if (opcion == 3) {
                 boolean confirmacion = pedirConfirmacion("\nConfirmas que deseas avanzar sin intervenir?");
                 if (confirmacion) {
-                    System.out.println("\n>> Avanzando de turno sin intervenir...");
                     finIntervencion = true; 
                 } else {
-                    System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
                 }
             }
         }
@@ -215,7 +176,6 @@ public class InterfazGraficaIE {
             nombreEntidad = "Conejo";
         } else if (opcionEntidad == 3) {
             if(lobosAgregados >= 5) {
-                System.out.println("\n(!) Limite maximo de lobos alcanzado. No puedes agregar mas lobos en esta simulacion.");
                 return false; // Al retornar false, lo obliga a volver al menú de intervención a elegir otra cosa            
             }
             nombreEntidad = "Lobo";
@@ -225,16 +185,12 @@ public class InterfazGraficaIE {
         
         if (confirmacion) {
             ecosistema.agregarEntidad(nombreEntidad);
-            
-            // Mensaje de confirmación de la inserción manual de entidad
-            System.out.println("Se agrego '" + nombreEntidad + "' al ecosistema.");
-            
+               
             if (opcionEntidad == 3) {
                 lobosAgregados++;
             }    
             return true;
         } else {
-            System.out.println(">> Accion cancelada. Volviendo al menu de intervencion...");
             return false;
         }
     }  
@@ -244,7 +200,6 @@ public class InterfazGraficaIE {
         boolean opcionValida = false;
 
         while (opcionValida == false) {
-            System.out.print(mensaje + " (1 = Si / 2 = No): ");
             String inputUsuario = scanner.nextLine().trim(); //trim() recorta los espacios en blanco accidentales que el usuario haya puesto en los bordes.
 
             try {
@@ -253,10 +208,8 @@ public class InterfazGraficaIE {
                 if (numero == 1 || numero == 2) {
                     opcionValida = true;
                 } else {
-                    System.out.println("(!) Error: Debes ingresar 1 (Si) o 2 (No).");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("(!) Error: Debes ingresar un numero entero."); 
             }
         }
         

@@ -45,7 +45,6 @@ public abstract class Entidad {
             // Registro de evento de muerte por inanición en consola
             // validando this.viva para que NO se imprima falsamente si fueron comidos/cazados.
             if (this.viva) {
-                System.out.println(getNombre() + " murio de inanicion.");
             }
             this.energia = 0;
             this.viva = false; // Muere automaticamente por inanicion

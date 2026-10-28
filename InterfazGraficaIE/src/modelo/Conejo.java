@@ -23,10 +23,8 @@ public class Conejo extends Animal implements Reproducible {
 
                 // El formato del signo en la energía se añade manualmente si el aporte es positivo
                 String signo = (valorNutritivoObtenido >= 0) ? "+" : "";
-                System.out.println("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (" + signo + valorNutritivoObtenido + " energia)");
 
                 if (nuevaEnergia <= 0 && valorNutritivoObtenido < 0) {
-                    System.out.println(getNombre() + " murio intoxicado.");
                     setViva(false); // Para evitar el print genérico de 'inanición'
                 }
                 
@@ -42,11 +40,8 @@ public class Conejo extends Animal implements Reproducible {
         if(!conejoEncontroComida) {
             setEnergia(getEnergia() - 15);
             // Anexo del estado de alerta en consola para advertir peligro inminente
-            System.out.print("Conejo '" + getNombre() + "' no encontro comida (-15.0 energia)");
             if (getEnergia() < 20 && getEnergia() > 0) {
-                System.out.print(" [PELIGRO: energia=" + getEnergia() + "]");
             }
-            System.out.println(); // Salto de línea final
         }
     }
 
@@ -62,12 +57,8 @@ public class Conejo extends Animal implements Reproducible {
     @Override
     public void mostrarEstado() {
         
-        // Mostramos el nombre del conejo y su estado según su energía
-        System.out.print("Conejo '" + getNombre() + "' (Energia: " + getEnergia() + ")");
         if (getEnergia() < 20) {
-            System.out.print(" [EN PELIGRO]");
         }
-        System.out.println();
         
     }
     
@@ -104,7 +95,6 @@ public class Conejo extends Animal implements Reproducible {
                 // Restamos energía al padre por el esfuerzo de reproducirse
                 this.setEnergia(this.getEnergia() - 20);
                 
-                System.out.println(this.getNombre() + " se ha reproducido con " + pareja.getNombre() + ". Nacio: " + cria.getNombre());
             }
         }
         
