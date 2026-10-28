@@ -34,10 +34,28 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         lblTurno = new javax.swing.JLabel();
         lblClima = new javax.swing.JLabel();
         pnlCentroSimulacion = new javax.swing.JPanel();
+        pnlDatosCentro = new javax.swing.JPanel();
+        pnlSeccionTabla = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        tblEntidades = new javax.swing.JScrollPane();
+        tblTablaEntidad = new javax.swing.JTable();
+        pnlSeccionEventos = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        txtEventos = new javax.swing.JScrollPane();
+        txtEventosArea = new javax.swing.JTextArea();
         pnlContadores = new javax.swing.JPanel();
         lblContadorPlantas = new javax.swing.JLabel();
         lblContadorConejos = new javax.swing.JLabel();
         lblContadorLobos = new javax.swing.JLabel();
+        pnlSurSimulacion = new javax.swing.JPanel();
+        btnAvanzarTurno = new javax.swing.JButton();
+        pnlIntervencion = new javax.swing.JPanel();
+        lblEstadoIntervencion = new javax.swing.JLabel();
+        pnlFilaIntervencion = new javax.swing.JPanel();
+        btnAgregarEntidad = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        cmbNuevoClima = new javax.swing.JComboBox<>();
+        cmbAgregarEntidad = new javax.swing.JComboBox<>();
         pnlConfiguracion = new javax.swing.JPanel();
         pnlBotonesConfiguracion = new javax.swing.JPanel();
         btnCargarPartida = new javax.swing.JButton();
@@ -86,13 +104,63 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         pnlCentroSimulacion.setBackground(new java.awt.Color(226, 232, 240));
         pnlCentroSimulacion.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         pnlCentroSimulacion.setLayout(new java.awt.BorderLayout(0, 12));
-        pnlSimulacion.add(pnlCentroSimulacion, java.awt.BorderLayout.CENTER);
+
+        pnlDatosCentro.setBackground(new java.awt.Color(226, 232, 240));
+        pnlDatosCentro.setLayout(new java.awt.BorderLayout(15, 0));
+
+        pnlSeccionTabla.setBackground(new java.awt.Color(226, 232, 240));
+        pnlSeccionTabla.setLayout(new java.awt.BorderLayout(0, 6));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(29, 42, 68));
+        jLabel7.setText("Tabla de Entidades");
+        jLabel7.setToolTipText("");
+        pnlSeccionTabla.add(jLabel7, java.awt.BorderLayout.NORTH);
+
+        tblTablaEntidad.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Nombre", "Tipo", "Energía", "Edad", "Detalle"
+            }
+        ));
+        tblEntidades.setViewportView(tblTablaEntidad);
+
+        pnlSeccionTabla.add(tblEntidades, java.awt.BorderLayout.CENTER);
+
+        pnlDatosCentro.add(pnlSeccionTabla, java.awt.BorderLayout.CENTER);
+
+        pnlSeccionEventos.setBackground(new java.awt.Color(226, 232, 240));
+        pnlSeccionEventos.setPreferredSize(new java.awt.Dimension(250, 200));
+        pnlSeccionEventos.setLayout(new java.awt.BorderLayout(0, 6));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(29, 42, 68));
+        jLabel8.setText("Eventos del Turno");
+        pnlSeccionEventos.add(jLabel8, java.awt.BorderLayout.NORTH);
+
+        txtEventosArea.setColumns(20);
+        txtEventosArea.setRows(5);
+        txtEventos.setViewportView(txtEventosArea);
+
+        pnlSeccionEventos.add(txtEventos, java.awt.BorderLayout.CENTER);
+
+        pnlDatosCentro.add(pnlSeccionEventos, java.awt.BorderLayout.EAST);
+
+        pnlCentroSimulacion.add(pnlDatosCentro, java.awt.BorderLayout.CENTER);
 
         pnlContadores.setBackground(new java.awt.Color(226, 232, 240));
         pnlContadores.setPreferredSize(new java.awt.Dimension(780, 50));
         pnlContadores.setLayout(new java.awt.GridLayout(1, 3, 20, 0));
 
-        lblContadorPlantas.setBackground(new java.awt.Color(110, 146, 119));
+        lblContadorPlantas.setBackground(new java.awt.Color(123, 163, 128));
         lblContadorPlantas.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         lblContadorPlantas.setForeground(new java.awt.Color(255, 255, 255));
         lblContadorPlantas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -100,7 +168,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         lblContadorPlantas.setOpaque(true);
         pnlContadores.add(lblContadorPlantas);
 
-        lblContadorConejos.setBackground(new java.awt.Color(122, 141, 155));
+        lblContadorConejos.setBackground(new java.awt.Color(127, 163, 161));
         lblContadorConejos.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         lblContadorConejos.setForeground(new java.awt.Color(255, 255, 255));
         lblContadorConejos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -108,7 +176,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         lblContadorConejos.setOpaque(true);
         pnlContadores.add(lblContadorConejos);
 
-        lblContadorLobos.setBackground(new java.awt.Color(217, 119, 104));
+        lblContadorLobos.setBackground(new java.awt.Color(224, 122, 107));
         lblContadorLobos.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         lblContadorLobos.setForeground(new java.awt.Color(255, 255, 255));
         lblContadorLobos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -116,7 +184,57 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         lblContadorLobos.setOpaque(true);
         pnlContadores.add(lblContadorLobos);
 
-        pnlSimulacion.add(pnlContadores, java.awt.BorderLayout.NORTH);
+        pnlCentroSimulacion.add(pnlContadores, java.awt.BorderLayout.NORTH);
+
+        pnlSimulacion.add(pnlCentroSimulacion, java.awt.BorderLayout.CENTER);
+
+        pnlSurSimulacion.setBackground(new java.awt.Color(239, 243, 248));
+        pnlSurSimulacion.setPreferredSize(new java.awt.Dimension(780, 95));
+        pnlSurSimulacion.setLayout(new java.awt.BorderLayout(15, 0));
+
+        btnAvanzarTurno.setBackground(new java.awt.Color(182, 195, 182));
+        btnAvanzarTurno.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAvanzarTurno.setForeground(new java.awt.Color(255, 255, 255));
+        btnAvanzarTurno.setText("<html><center>AVANZAR TURNO<br>(Siguiente)</center></html>");
+        btnAvanzarTurno.setPreferredSize(new java.awt.Dimension(160, 90));
+        pnlSurSimulacion.add(btnAvanzarTurno, java.awt.BorderLayout.EAST);
+
+        pnlIntervencion.setBackground(new java.awt.Color(239, 243, 248));
+        pnlIntervencion.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(29, 42, 68), 1, true)), "Intervención", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(29, 42, 68))); // NOI18N
+        pnlIntervencion.setLayout(new java.awt.BorderLayout(0, 6));
+
+        lblEstadoIntervencion.setForeground(new java.awt.Color(110, 116, 139));
+        lblEstadoIntervencion.setText("Simulación terminada");
+        lblEstadoIntervencion.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 6, 0));
+        pnlIntervencion.add(lblEstadoIntervencion, java.awt.BorderLayout.SOUTH);
+
+        pnlFilaIntervencion.setBackground(new java.awt.Color(239, 243, 248));
+        pnlFilaIntervencion.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 8, 6, 8));
+        pnlFilaIntervencion.setLayout(new java.awt.BorderLayout(10, 0));
+
+        btnAgregarEntidad.setBackground(new java.awt.Color(182, 195, 182));
+        btnAgregarEntidad.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAgregarEntidad.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarEntidad.setText("+");
+        btnAgregarEntidad.setPreferredSize(new java.awt.Dimension(45, 32));
+        pnlFilaIntervencion.add(btnAgregarEntidad, java.awt.BorderLayout.EAST);
+
+        jPanel1.setBackground(new java.awt.Color(239, 243, 248));
+        jPanel1.setLayout(new java.awt.GridLayout(1, 2, 10, 0));
+
+        cmbNuevoClima.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona nuevo clima", "Soleado", "Lluvia", "Sequía" }));
+        jPanel1.add(cmbNuevoClima);
+
+        cmbAgregarEntidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Agregar Entidad", "Planta", "Conejo", "Lobo" }));
+        jPanel1.add(cmbAgregarEntidad);
+
+        pnlFilaIntervencion.add(jPanel1, java.awt.BorderLayout.CENTER);
+
+        pnlIntervencion.add(pnlFilaIntervencion, java.awt.BorderLayout.CENTER);
+
+        pnlSurSimulacion.add(pnlIntervencion, java.awt.BorderLayout.CENTER);
+
+        pnlSimulacion.add(pnlSurSimulacion, java.awt.BorderLayout.SOUTH);
 
         tabPantallas.addTab("Simulación", pnlSimulacion);
 
@@ -137,7 +255,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         pnlBotonesConfiguracion.add(btnCargarPartida);
         btnCargarPartida.getAccessibleContext().setAccessibleName("");
 
-        btnIniciarSimulacion.setBackground(new java.awt.Color(118, 158, 130));
+        btnIniciarSimulacion.setBackground(new java.awt.Color(110, 146, 119));
         btnIniciarSimulacion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnIniciarSimulacion.setForeground(new java.awt.Color(255, 255, 255));
         btnIniciarSimulacion.setText("Iniciar Simulación");
@@ -146,7 +264,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
 
         pnlConfiguracion.add(pnlBotonesConfiguracion, java.awt.BorderLayout.SOUTH);
 
-        pnlTarjetaParametros.setBackground(new java.awt.Color(226, 232, 240));
+        pnlTarjetaParametros.setBackground(new java.awt.Color(229, 234, 242));
         pnlTarjetaParametros.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 20, 15, 20));
         pnlTarjetaParametros.setForeground(new java.awt.Color(255, 255, 255));
         pnlTarjetaParametros.setPreferredSize(new java.awt.Dimension(400, 480));
@@ -166,7 +284,6 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         jLabel1.setText("Cantidad de Plantas (5 - 30)");
         jLabel1.setToolTipText("");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel1.setPreferredSize(new java.awt.Dimension(150, 16));
         pnlTarjetaParametros.add(jLabel1);
 
         txtCantidadPlantas.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -180,7 +297,6 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         jLabel2.setText("Cantidad de Conejos (2-15)");
         jLabel2.setToolTipText("");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel2.setPreferredSize(new java.awt.Dimension(148, 16));
         pnlTarjetaParametros.add(jLabel2);
 
         txtCantidadConejos.setPreferredSize(new java.awt.Dimension(360, 32));
@@ -194,7 +310,6 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         jLabel5.setText("Cantidad de Lobos (1 - 5)");
         jLabel5.setToolTipText("");
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel5.setPreferredSize(new java.awt.Dimension(136, 16));
         pnlTarjetaParametros.add(jLabel5);
 
         txtCantidadLobos.setPreferredSize(new java.awt.Dimension(360, 32));
@@ -207,7 +322,6 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         jLabel3.setText("Turnos Totales (10 - 50)");
         jLabel3.setToolTipText("");
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
-        jLabel3.setPreferredSize(new java.awt.Dimension(131, 16));
         pnlTarjetaParametros.add(jLabel3);
 
         txtTurnosTotales.setPreferredSize(new java.awt.Dimension(360, 32));
@@ -297,20 +411,28 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregarEntidad;
+    private javax.swing.JButton btnAvanzarTurno;
     private javax.swing.JButton btnCargarPartida;
     private javax.swing.JButton btnIniciarSimulacion;
+    private javax.swing.JComboBox<String> cmbAgregarEntidad;
     private javax.swing.JComboBox<String> cmbClimaInicial;
+    private javax.swing.JComboBox<String> cmbNuevoClima;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblClima;
     private javax.swing.JLabel lblContadorConejos;
     private javax.swing.JLabel lblContadorLobos;
     private javax.swing.JLabel lblContadorPlantas;
     private javax.swing.JLabel lblErrorConfiguracion;
+    private javax.swing.JLabel lblEstadoIntervencion;
     private javax.swing.JLabel lblTituloParametros;
     private javax.swing.JLabel lblTurno;
     private javax.swing.JPanel pnlBarraTurno;
@@ -318,13 +440,23 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     private javax.swing.JPanel pnlCentroSimulacion;
     private javax.swing.JPanel pnlConfiguracion;
     private javax.swing.JPanel pnlContadores;
+    private javax.swing.JPanel pnlDatosCentro;
+    private javax.swing.JPanel pnlFilaIntervencion;
     private javax.swing.JPanel pnlHeader;
+    private javax.swing.JPanel pnlIntervencion;
+    private javax.swing.JPanel pnlSeccionEventos;
+    private javax.swing.JPanel pnlSeccionTabla;
     private javax.swing.JPanel pnlSimulacion;
+    private javax.swing.JPanel pnlSurSimulacion;
     private javax.swing.JPanel pnlTarjetaParametros;
     private javax.swing.JTabbedPane tabPantallas;
+    private javax.swing.JScrollPane tblEntidades;
+    private javax.swing.JTable tblTablaEntidad;
     private javax.swing.JTextField txtCantidadConejos;
     private javax.swing.JTextField txtCantidadLobos;
     private javax.swing.JTextField txtCantidadPlantas;
+    private javax.swing.JScrollPane txtEventos;
+    private javax.swing.JTextArea txtEventosArea;
     private javax.swing.JTextField txtTurnosTotales;
     // End of variables declaration//GEN-END:variables
 }
