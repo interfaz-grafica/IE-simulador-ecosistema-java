@@ -29,6 +29,15 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     private void initComponents() {
 
         tabPantallas = new javax.swing.JTabbedPane();
+        pnlSimulacion = new javax.swing.JPanel();
+        pnlBarraTurno = new javax.swing.JPanel();
+        lblTurno = new javax.swing.JLabel();
+        lblClima = new javax.swing.JLabel();
+        pnlCentroSimulacion = new javax.swing.JPanel();
+        pnlContadores = new javax.swing.JPanel();
+        lblContadorPlantas = new javax.swing.JLabel();
+        lblContadorConejos = new javax.swing.JLabel();
+        lblContadorLobos = new javax.swing.JLabel();
         pnlConfiguracion = new javax.swing.JPanel();
         pnlBotonesConfiguracion = new javax.swing.JPanel();
         btnCargarPartida = new javax.swing.JButton();
@@ -53,6 +62,63 @@ public class VentanaEcosistema extends javax.swing.JFrame {
 
         tabPantallas.setPreferredSize(new java.awt.Dimension(480, 620));
         tabPantallas.setRequestFocusEnabled(false);
+
+        pnlSimulacion.setBackground(new java.awt.Color(239, 243, 248));
+        pnlSimulacion.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 20, 15, 20));
+        pnlSimulacion.setLayout(new java.awt.BorderLayout(0, 10));
+
+        pnlBarraTurno.setBackground(new java.awt.Color(239, 243, 248));
+        pnlBarraTurno.setPreferredSize(new java.awt.Dimension(800, 35));
+        pnlBarraTurno.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 35, 5));
+
+        lblTurno.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTurno.setForeground(new java.awt.Color(29, 42, 68));
+        lblTurno.setText("TURNO: 6 / 45");
+        pnlBarraTurno.add(lblTurno);
+
+        lblClima.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblClima.setForeground(new java.awt.Color(29, 42, 68));
+        lblClima.setText("CLIMA: SEQUÍA");
+        pnlBarraTurno.add(lblClima);
+
+        pnlSimulacion.add(pnlBarraTurno, java.awt.BorderLayout.NORTH);
+
+        pnlCentroSimulacion.setBackground(new java.awt.Color(226, 232, 240));
+        pnlCentroSimulacion.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        pnlCentroSimulacion.setLayout(new java.awt.BorderLayout(0, 12));
+        pnlSimulacion.add(pnlCentroSimulacion, java.awt.BorderLayout.CENTER);
+
+        pnlContadores.setBackground(new java.awt.Color(226, 232, 240));
+        pnlContadores.setPreferredSize(new java.awt.Dimension(780, 50));
+        pnlContadores.setLayout(new java.awt.GridLayout(1, 3, 20, 0));
+
+        lblContadorPlantas.setBackground(new java.awt.Color(110, 146, 119));
+        lblContadorPlantas.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        lblContadorPlantas.setForeground(new java.awt.Color(255, 255, 255));
+        lblContadorPlantas.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblContadorPlantas.setText("Plantas: 20");
+        lblContadorPlantas.setOpaque(true);
+        pnlContadores.add(lblContadorPlantas);
+
+        lblContadorConejos.setBackground(new java.awt.Color(122, 141, 155));
+        lblContadorConejos.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        lblContadorConejos.setForeground(new java.awt.Color(255, 255, 255));
+        lblContadorConejos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblContadorConejos.setText("Conejos: 0");
+        lblContadorConejos.setOpaque(true);
+        pnlContadores.add(lblContadorConejos);
+
+        lblContadorLobos.setBackground(new java.awt.Color(217, 119, 104));
+        lblContadorLobos.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
+        lblContadorLobos.setForeground(new java.awt.Color(255, 255, 255));
+        lblContadorLobos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblContadorLobos.setText("Lobos: 3");
+        lblContadorLobos.setOpaque(true);
+        pnlContadores.add(lblContadorLobos);
+
+        pnlSimulacion.add(pnlContadores, java.awt.BorderLayout.NORTH);
+
+        tabPantallas.addTab("Simulación", pnlSimulacion);
 
         pnlConfiguracion.setBackground(new java.awt.Color(239, 243, 248));
         pnlConfiguracion.setBorder(javax.swing.BorderFactory.createEmptyBorder(25, 35, 25, 35));
@@ -168,8 +234,6 @@ public class VentanaEcosistema extends javax.swing.JFrame {
 
         tabPantallas.addTab("Configuración Inicial", pnlConfiguracion);
 
-        getContentPane().add(tabPantallas, java.awt.BorderLayout.CENTER);
-
         pnlHeader.setBackground(new java.awt.Color(29, 42, 68));
         pnlHeader.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 15, 0, 15));
         pnlHeader.setPreferredSize(new java.awt.Dimension(480, 36));
@@ -181,7 +245,20 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         jLabel6.setToolTipText("");
         pnlHeader.add(jLabel6, java.awt.BorderLayout.EAST);
 
-        getContentPane().add(pnlHeader, java.awt.BorderLayout.NORTH);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(tabPantallas, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(tabPantallas, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -229,11 +306,20 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel lblClima;
+    private javax.swing.JLabel lblContadorConejos;
+    private javax.swing.JLabel lblContadorLobos;
+    private javax.swing.JLabel lblContadorPlantas;
     private javax.swing.JLabel lblErrorConfiguracion;
     private javax.swing.JLabel lblTituloParametros;
+    private javax.swing.JLabel lblTurno;
+    private javax.swing.JPanel pnlBarraTurno;
     private javax.swing.JPanel pnlBotonesConfiguracion;
+    private javax.swing.JPanel pnlCentroSimulacion;
     private javax.swing.JPanel pnlConfiguracion;
+    private javax.swing.JPanel pnlContadores;
     private javax.swing.JPanel pnlHeader;
+    private javax.swing.JPanel pnlSimulacion;
     private javax.swing.JPanel pnlTarjetaParametros;
     private javax.swing.JTabbedPane tabPantallas;
     private javax.swing.JTextField txtCantidadConejos;
