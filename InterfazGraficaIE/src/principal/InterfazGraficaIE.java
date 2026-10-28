@@ -1,5 +1,7 @@
-package interfazgraficaie;
+package principal;
 
+import modelo.Clima;
+import modelo.Ecosistema;
 import java.util.Scanner;
 
 public class InterfazGraficaIE {
@@ -28,15 +30,12 @@ public class InterfazGraficaIE {
         // El main toma el control del flujo del programa
         while (configuracionConfirmada == false) {
             
-            // 1. Solo recolecta datos
             ingresarDatosIniciales();
             
-            // 2. Solo muestra el resumen en pantalla
             mostrarConfiguracionInicial();
             
-            // 3. Evalúa la decisión
-            // Solicitud de confirmación de parámetros al usuario
-            boolean confirmacion = pedirConfirmacion("\nDeseas confirmar esta configuracion?"); 
+
+            boolean confirmacion = pedirConfirmacion("\nDeseas confirmar esta configuracion?"); // Solicitud de confirmación de parámetros al usuario
 
             if (confirmacion) { 
                 
@@ -45,6 +44,7 @@ public class InterfazGraficaIE {
                 
                 ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
                 
+                // 
                 ejecutarBuclePrincipal();
                 
             } else {
@@ -77,11 +77,11 @@ public class InterfazGraficaIE {
             
             System.out.print(mensaje + " [" + min + " - " + max + "]: ");
             
-            String inputUsuario = scanner.nextLine().trim(); // Sanitización del input eliminando espacios perimetrales
+            String inputUsuario = scanner.nextLine().trim(); // Eliminar espacios finales
 
             try {
                 
-                numero = Integer.parseInt(inputUsuario); //convertir el texto en número
+                numero = Integer.parseInt(inputUsuario); //Convertir el texto en número
                 
                 if (numero >= min && numero <= max) {
                     esValido = true;
@@ -89,8 +89,8 @@ public class InterfazGraficaIE {
                     System.out.println("(!) Error: El valor debe estar comprendido entre " + min + " y " + max + ".");
                 }
                 
-            } catch (NumberFormatException e) {
-                System.out.println("(!) Error: Debes ingresar un numero entero."); // Manejo de excepción por input no numérico
+            } catch (NumberFormatException e) { 
+                System.out.println("(!) Error: Debes ingresar un numero entero."); // Excepción por input no numérico
             }
         }
         

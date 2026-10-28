@@ -1,4 +1,4 @@
-package interfazgraficaie;
+package modelo;
 
 public abstract class Entidad {
 
