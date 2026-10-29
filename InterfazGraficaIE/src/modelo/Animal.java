@@ -1,4 +1,4 @@
-package interfazgraficaie;
+package modelo;
 
 public abstract class Animal extends Entidad implements Mortal {
 
@@ -15,8 +15,9 @@ public abstract class Animal extends Entidad implements Mortal {
     
     public abstract void comer(Ecosistema eco);
   
-    public void moverse() {
-        System.out.println(getNombre() + " se desplazo a " + getVelocidad() + " km/h.");
+    // MVC: Retorna el texto de desplazamiento en lugar de imprimirlo por consola
+    public String moverse() {
+        return getNombre() + " se desplazo a " + getVelocidad() + " km/h.";
     }
     
     @Override
@@ -47,6 +48,4 @@ public abstract class Animal extends Entidad implements Mortal {
     public void setPeso(double peso) {
         this.peso = peso;
     }  
-
-    
 }

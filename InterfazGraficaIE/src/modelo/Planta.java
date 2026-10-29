@@ -1,4 +1,4 @@
-package interfazgraficaie;
+package modelo;
 
 public class Planta extends Entidad implements Reproducible {
 
@@ -22,8 +22,7 @@ public class Planta extends Entidad implements Reproducible {
         return valorNutritivo;
     }
     
-    
-@Override
+    @Override
     public boolean puedeReproducirse() {
         // Devuelve verdadero si la planta está viva y tiene la energía mínima requerida
         return isViva() && getEnergia() >= 20.0;
@@ -76,6 +75,11 @@ public class Planta extends Entidad implements Reproducible {
             eco.agregarEntidad("planta", 10.0); 
         }
         
+        if (brotes > 0) {
+            // MVC: Registro del evento de reproducción de la planta
+            eco.registrarEvento("Planta '" + getNombre() + "' genero " + brotes + " brote(s).");
+        }
+        
         // 5. Penalización biológica
         // A la planta original se le descuenta energía por el esfuerzo de intentar reproducirse,
         // sin importar cuántos brotes hayan nacido finalmente.
@@ -89,7 +93,7 @@ public class Planta extends Entidad implements Reproducible {
             envejecer(); 
             
             /* --> Comentado para evitar reproducción extra en el mismo turno
-             la validacion del clima la va a manejar Ecosistema
+              la validacion del clima la va a manejar Ecosistema
             if (puedeReproducirse()) {
                 reproducirse(eco);
             }
@@ -98,8 +102,8 @@ public class Planta extends Entidad implements Reproducible {
     }
     
     @Override
-    public void mostrarEstado() {
-        System.out.println("Planta: " + getNombre() + " Tamanio: " + this.tamanio + " Energia: " + getEnergia());
+    public String mostrarEstado() {
+        return "Planta: " + getNombre() + " Tamanio: " + this.tamanio + " Energia: " + getEnergia();
     }
     
     //-----------------------------------------------------------------------//
@@ -119,6 +123,3 @@ public class Planta extends Entidad implements Reproducible {
         }
     }
 }
-
-    
-    
