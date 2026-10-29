@@ -6,7 +6,7 @@ import java.util.Random;
 public class Lobo extends Animal implements Peligroso {
 
     private int exitosCaza;  
-       
+        
     public Lobo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso, int exitosCaza) {
         
         super(nombre, energia, edad, viva, velocidad, peso);
@@ -21,6 +21,8 @@ public class Lobo extends Animal implements Peligroso {
         // Si no puede comer, pierde energía
         if (conejosVivos.isEmpty()) {
             setEnergia(getEnergia() - 15);
+            // MVC: Se guarda en la lista de eventos del ecosistema
+            eco.registrarEvento("Lobo '" + getNombre() + "' no encontro conejos vivos (-15 energia)");
             return;
         }
 
@@ -58,12 +60,14 @@ public class Lobo extends Animal implements Peligroso {
             presa.morir();
             setEnergia(getEnergia() + 40);
             this.exitosCaza++;
+            // MVC: Registro del evento de caza exitosa
+            eco.registrarEvento("Lobo '" + getNombre() + "' cazo a Conejo '" + presa.getNombre() + "' (+40.0 energia) [cacerias: " + this.exitosCaza + "]");
         } else {
             setEnergia(getEnergia() - 10);
+            // MVC: Registro del evento de caza fallida
+            eco.registrarEvento("Lobo '" + getNombre() + "' fallo la caza (-10.0 energia)");
         }
     }
-    
-
     
     @Override
     public void actuar(Ecosistema eco) {
@@ -73,8 +77,10 @@ public class Lobo extends Animal implements Peligroso {
     }
     
     @Override
-    public void mostrarEstado() {
+    public String mostrarEstado() {
         
+        // Mostramos el nombre, estado y cantidad de cazas exitosas de un lobo
+        return "Lobo '" + getNombre() + "' (Energia: " + getEnergia() + ") [Cacerias exitosas: " + this.exitosCaza + "]";
     }
     
     @Override

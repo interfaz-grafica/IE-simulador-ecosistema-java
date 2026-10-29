@@ -18,7 +18,8 @@ public abstract class Entidad {
     
     public abstract void actuar(Ecosistema eco); 
     
-    public abstract void mostrarEstado();
+    // MVC: Pasa de void a String para devolver el estado sin usar System.out.println
+    public abstract String mostrarEstado();
     
     public void envejecer() {
         this.edad++;
@@ -39,13 +40,12 @@ public abstract class Entidad {
     public double getEnergia() {
         return energia;
     }
+
     //modificacion: Se agrego la validacion recomendada en clase para que la energia nunca sea negativa
     public void setEnergia(double energia) {
         if (energia <= 0) {
-            // Registro de evento de muerte por inanición en consola
-            // validando this.viva para que NO se imprima falsamente si fueron comidos/cazados.
-            if (this.viva) {
-            }
+            // El evento de muerte por inanición se registra en Ecosistema al limpiar las entidades muertas
+            // para respetar que el modelo no imprima en consola.
             this.energia = 0;
             this.viva = false; // Muere automaticamente por inanicion
         } else {

@@ -23,8 +23,11 @@ public class Conejo extends Animal implements Reproducible {
 
                 // El formato del signo en la energía se añade manualmente si el aporte es positivo
                 String signo = (valorNutritivoObtenido >= 0) ? "+" : "";
+                // MVC: Se registra el evento en el ecosistema en vez de imprimir en consola
+                eco.registrarEvento("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (" + signo + valorNutritivoObtenido + " energia)");
 
                 if (nuevaEnergia <= 0 && valorNutritivoObtenido < 0) {
+                    eco.registrarEvento(getNombre() + " murio intoxicado.");
                     setViva(false); // Para evitar el print genérico de 'inanición'
                 }
                 
@@ -39,9 +42,13 @@ public class Conejo extends Animal implements Reproducible {
         // Si el conejo no encontró comida en este turno pierde energía
         if(!conejoEncontroComida) {
             setEnergia(getEnergia() - 15);
-            // Anexo del estado de alerta en consola para advertir peligro inminente
+            // Anexo del estado de alerta para advertir peligro inminente
+            String mensajeEvento = "Conejo '" + getNombre() + "' no encontro comida (-15.0 energia)";
             if (getEnergia() < 20 && getEnergia() > 0) {
+                mensajeEvento += " [PELIGRO: energia=" + getEnergia() + "]";
             }
+            // MVC: Se guarda en la lista de eventos del ecosistema
+            eco.registrarEvento(mensajeEvento);
         }
     }
 
@@ -55,10 +62,14 @@ public class Conejo extends Animal implements Reproducible {
     }
     
     @Override
-    public void mostrarEstado() {
+    public String mostrarEstado() {
         
+        // Mostramos el nombre del conejo y su estado según su energía
+        String estado = "Conejo '" + getNombre() + "' (Energia: " + getEnergia() + ")";
         if (getEnergia() < 20) {
+            estado += " [EN PELIGRO]";
         }
+        return estado;
         
     }
     
@@ -95,6 +106,8 @@ public class Conejo extends Animal implements Reproducible {
                 // Restamos energía al padre por el esfuerzo de reproducirse
                 this.setEnergia(this.getEnergia() - 20);
                 
+                // MVC: Se registra el evento en el ecosistema
+                eco.registrarEvento(this.getNombre() + " se ha reproducido con " + pareja.getNombre() + ". Nacio: " + cria.getNombre());
             }
         }
         
