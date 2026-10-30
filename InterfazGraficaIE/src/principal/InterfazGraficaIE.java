@@ -1,13 +1,15 @@
 package principal;
 
 import controlador.Controlador;
+import vista.VentanaEcosistema;
 
 public class InterfazGraficaIE {
 
     public static void main(String[] args) {
         // Inicializa el controlador principal de la aplicación
         Controlador controlador = new Controlador();
-        
-        // Aquí se instanciará el DAO y la Vista (JFrame) cuando los agregues
+
+        // La vista recibe el controlador y se muestra en el hilo de eventos de Swing
+        java.awt.EventQueue.invokeLater(() -> new VentanaEcosistema(controlador).setVisible(true));
     }
 }
