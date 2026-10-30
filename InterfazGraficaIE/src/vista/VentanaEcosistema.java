@@ -13,8 +13,11 @@ import controlador.Controlador;
 public class VentanaEcosistema extends javax.swing.JFrame {
 
     // Nombres de las cartas del CardLayout (deben coincidir con los de initComponents)
+    private static final String CARTA_CONFIGURACION = "cardConfiguracion";
     private static final String CARTA_SIMULACION = "cardSimulacion";
+    private static final String CARTA_REPORTE = "cardReporte";
 
+    // Todavía sin uso: se usará cuando se conecte la lógica a las pantallas
     private final Controlador controlador;
 
     /**
@@ -23,7 +26,11 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     public VentanaEcosistema(Controlador controlador) {
         this.controlador = controlador;
         initComponents();
-        btnIniciarSimulacion.addActionListener(evt -> iniciarSimulacion());
+
+        // Solo navegación entre pantallas, sin validaciones ni lógica
+        btnIniciarSimulacion.addActionListener(evt -> mostrarCarta(CARTA_SIMULACION));
+        btnAvanzarTurno.addActionListener(evt -> mostrarCarta(CARTA_REPORTE)); // provisorio
+        btnVolverMenu.addActionListener(evt -> mostrarCarta(CARTA_CONFIGURACION));
     }
 
     /**
@@ -502,21 +509,6 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     private void btnCargarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPartidaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCargarPartidaActionPerformed
-
-    // Pantalla de configuración: la validación y la creación del ecosistema las hace el controlador
-    private void iniciarSimulacion() {
-        String error = controlador.configurarSimulacion(
-                txtCantidadPlantas.getText(),
-                txtCantidadConejos.getText(),
-                txtCantidadLobos.getText(),
-                cmbClimaInicial.getSelectedIndex() + 1, // el controlador espera 1=Soleado ... 4=Invierno
-                txtTurnosTotales.getText());
-
-        lblErrorConfiguracion.setText(error == null ? "" : error);
-        if (error == null) {
-            mostrarCarta(CARTA_SIMULACION);
-        }
-    }
 
     private void mostrarCarta(String nombreCarta) {
         ((java.awt.CardLayout) pnlContenedorPantallas.getLayout()).show(pnlContenedorPantallas, nombreCarta);
