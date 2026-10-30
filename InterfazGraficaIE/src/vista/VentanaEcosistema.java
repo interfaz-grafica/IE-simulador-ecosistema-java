@@ -149,6 +149,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         btnIniciarSimulacion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnIniciarSimulacion.setForeground(new java.awt.Color(255, 255, 255));
         btnIniciarSimulacion.setText("Iniciar Simulación");
+        btnIniciarSimulacion.addActionListener(this::btnIniciarSimulacionActionPerformed);
         pnlBotonesConfiguracion.add(btnIniciarSimulacion);
         btnIniciarSimulacion.getAccessibleContext().setAccessibleName("");
 
@@ -334,6 +335,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         btnVolverMenu.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         btnVolverMenu.setForeground(new java.awt.Color(255, 255, 255));
         btnVolverMenu.setText("Volver al Menú");
+        btnVolverMenu.addActionListener(this::btnVolverMenuActionPerformed);
         pnlBotonesReporte.add(btnVolverMenu);
 
         pnlReporte.add(pnlBotonesReporte, java.awt.BorderLayout.SOUTH);
@@ -456,6 +458,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         btnAvanzarTurno.setForeground(new java.awt.Color(255, 255, 255));
         btnAvanzarTurno.setText("<html><center>AVANZAR TURNO<br>(Siguiente)</center></html>");
         btnAvanzarTurno.setPreferredSize(new java.awt.Dimension(160, 90));
+        btnAvanzarTurno.addActionListener(this::btnAvanzarTurnoActionPerformed);
         pnlSurSimulacion.add(btnAvanzarTurno, java.awt.BorderLayout.EAST);
 
         pnlIntervencion.setBackground(new java.awt.Color(239, 243, 248));
@@ -476,6 +479,7 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         btnAgregarEntidad.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarEntidad.setText("+");
         btnAgregarEntidad.setPreferredSize(new java.awt.Dimension(45, 32));
+        btnAgregarEntidad.addActionListener(this::btnAgregarEntidadActionPerformed);
         pnlFilaIntervencion.add(btnAgregarEntidad, java.awt.BorderLayout.EAST);
 
         pnlCombosIntervencion.setBackground(new java.awt.Color(239, 243, 248));
@@ -509,6 +513,22 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     private void btnCargarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPartidaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCargarPartidaActionPerformed
+
+    private void btnIniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSimulacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
+
+    private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnVolverMenuActionPerformed
+
+    private void btnAvanzarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvanzarTurnoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAvanzarTurnoActionPerformed
+
+    private void btnAgregarEntidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarEntidadActionPerformed
 
     private void mostrarCarta(String nombreCarta) {
         ((java.awt.CardLayout) pnlContenedorPantallas.getLayout()).show(pnlContenedorPantallas, nombreCarta);
