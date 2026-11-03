@@ -33,7 +33,10 @@ public class Ecosistema {
     private int turnoMayorActividad = 1;
     private int maxBajasEnUnTurno = 0;
     
-    public Ecosistema(int cantPlantas, int cantConejos, int cantLobos, Clima climaInicial) {
+    // Constructor limpio: crea un ecosistema vacío (sin entidades aleatorias).
+    // Lo usa el DAO para reconstruir una partida guardada, cargando después
+    // las listas y las métricas con los setters.
+    public Ecosistema(Clima climaInicial) {
         this.plantas = new ArrayList<>();
         this.conejos = new ArrayList<>();
         this.lobos = new ArrayList<>();
@@ -43,7 +46,12 @@ public class Ecosistema {
         this.eventosTurno = new ArrayList<>();
         this.climaActual = climaInicial;
         this.turnoActual = 1;
-        
+    }
+
+    // Constructor para una partida nueva: crea las poblaciones iniciales.
+    public Ecosistema(int cantPlantas, int cantConejos, int cantLobos, Clima climaInicial) {
+        this(climaInicial);
+
         // Instanciación inicial de las poblaciones base
         for (int i = 0; i < cantPlantas; i++) { agregarEntidad("planta"); }
         for (int i = 0; i < cantConejos; i++) { agregarEntidad("conejo"); }
