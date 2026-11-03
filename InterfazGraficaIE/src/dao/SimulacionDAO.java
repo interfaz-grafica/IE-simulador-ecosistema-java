@@ -9,6 +9,10 @@ import modelo.Ecosistema;
 import modelo.Lobo;
 import modelo.Planta;
 import modelo.PlantaVenenosa;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import modelo.Clima;
 import java.io.File;
 
 /**
