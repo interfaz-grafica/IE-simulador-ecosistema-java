@@ -605,6 +605,39 @@ public void irAPantallaConfiguracion() {
     mostrarCarta(CARTA_CONFIGURACION);
 }
     
+public void actualizarContadores(int turno, int turnosMaximos, String clima, int cantPlantas, int cantConejos, int cantLobos) {
+    lblTurno.setText("TURNO: " + turno + " / " + turnosMaximos);
+    lblClima.setText("CLIMA: " + clima.toUpperCase());
+    lblContadorPlantas.setText("Plantas: " + cantPlantas);
+    lblContadorConejos.setText("Conejos: " + cantConejos);
+    lblContadorLobos.setText("Lobos: " + cantLobos);
+}
+
+public void limpiarTablaEntidades() {
+    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
+    modelo.setRowCount(0);
+}
+
+public void agregarFilaEntidad(String nombre, String tipo, double energia, int edad, String detalle) {
+    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
+    modelo.addRow(new Object[]{nombre, tipo, energia, edad, detalle});
+}
+
+public void actualizarEventos(java.util.List<String> eventos) {
+    txtEventosArea.setText("");
+    for (String evento : eventos) {
+        txtEventosArea.append(evento + "\n");
+    }
+}
+
+public void mostrarErrorConfiguracion(String mensaje) {
+    lblErrorConfiguracion.setText(mensaje);
+}
+
+public void mostrarMensaje(String mensaje) {
+    javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Información", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+}
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarEntidad;
     private javax.swing.JButton btnAvanzarTurno;
