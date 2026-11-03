@@ -97,4 +97,97 @@ public class SimulacionDAO {
         escritor.write(texto);
         escritor.newLine();
     }
+    
+    public Ecosistema cargarEstado() {
+        if (!existePartidaGuardada()) {
+            return null; // no hay partida: el Controlador decide qué avisar
+        }
+
+        try (BufferedReader lector = new BufferedReader(new FileReader(rutaArchivo, StandardCharsets.UTF_8))) {
+            String cabecera = lector.readLine();
+            if (cabecera == null || !cabecera.startsWith("# SIMULACION-ECOSISTEMA")) {
+                return null; // el archivo no es de nuestra aplicación
+            }
+
+            int turnoActual = 0;
+            Clima clima = null;
+            ArrayList<Planta> plantas = new ArrayList<>();
+            ArrayList<Conejo> conejos = new ArrayList<>();
+            ArrayList<Lobo> lobos = new ArrayList<>();
+            ArrayList<String> eventos = new ArrayList<>();
+
+            String seccion = "";
+            String linea;
+            while ((linea = lector.readLine()) != null) { // readLine() devuelve null al final
+                if (linea.trim().isEmpty()) {
+                    continue;
+                }
+                if (linea.startsWith("[")) {
+                    seccion = linea; // empieza una sección nueva
+                    continue;
+                }
+
+                if (seccion.equals("[CONFIG]")) {
+                    String[] partes = linea.split("=", 2);
+                    if (partes[0].equals("turnoActual")) {
+                        turnoActual = Integer.parseInt(partes[1].trim());
+                    } else if (partes[0].equals("clima")) {
+                        clima = Clima.valueOf(partes[1].trim());
+                    }
+                } else if (seccion.equals("[ENTIDADES]")) {
+                    cargarEntidad(linea, plantas, conejos, lobos);
+                } else if (seccion.equals("[EVENTOS]")) {
+                    eventos.add(linea);
+                }
+            }
+
+            if (clima == null || turnoActual < 1) {
+                return null; // faltan datos obligatorios: el archivo está incompleto
+            }
+
+            // Ecosistema vacío (0, 0, 0): no genera entidades al azar.
+            Ecosistema eco = new Ecosistema(0, 0, 0, clima);
+            eco.setTurnoActual(turnoActual);
+            eco.setPlantas(plantas);
+            eco.setConejos(conejos);
+            eco.setLobos(lobos);
+            for (String evento : eventos) {
+                eco.registrarEvento(evento);
+            }
+            return eco;
+        } catch (IOException | IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+            // IllegalArgumentException incluye NumberFormatException y un clima inválido.
+            return null; // archivo ilegible o con datos inválidos: no se rompe el programa
+        }
+    }
+
+// Convierte una línea de texto en la entidad que corresponde y la suma a su lista.
+    private void cargarEntidad(String linea, ArrayList<Planta> plantas, ArrayList<Conejo> conejos,
+            ArrayList<Lobo> lobos) {
+        String[] c = linea.split(";");
+        String tipo = c[0];
+        String nombre = c[1];
+        double energia = Double.parseDouble(c[2]); // puede lanzar NumberFormatException
+        int edad = Integer.parseInt(c[3]);
+        boolean viva = Boolean.parseBoolean(c[4]);
+
+        switch (tipo) {
+            case "PLANTA":
+                plantas.add(new Planta(nombre, energia, edad, viva, Integer.parseInt(c[5])));
+                break;
+            case "PLANTA_VENENOSA":
+                plantas.add(new PlantaVenenosa(nombre, energia, edad, viva, Integer.parseInt(c[5])));
+                break;
+            case "CONEJO":
+                conejos.add(new Conejo(nombre, energia, edad, viva, Integer.parseInt(c[5]),
+                        Double.parseDouble(c[6])));
+                break;
+            case "LOBO":
+                lobos.add(new Lobo(nombre, energia, edad, viva, Integer.parseInt(c[5]),
+                        Double.parseDouble(c[6]), Integer.parseInt(c[7])));
+                break;
+            default:
+                throw new IllegalArgumentException("Tipo de entidad desconocido: " + tipo);
+        }
+    }
 }
