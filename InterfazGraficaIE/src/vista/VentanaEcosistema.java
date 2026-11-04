@@ -554,13 +554,19 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCantidadConejosActionPerformed
 
     private void btnCargarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPartidaActionPerformed
-        // TODO add your handling code here:
+         controlador.cargarPartidaGuardada();
     }//GEN-LAST:event_btnCargarPartidaActionPerformed
 
     private void btnIniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSimulacionActionPerformed
         if (confirmarNuevaPartida()) {
-            mostrarCarta(CARTA_SIMULACION);
-        }
+        String plantas = txtCantidadPlantas.getText();
+        String conejos = txtCantidadConejos.getText();
+        String lobos = txtCantidadLobos.getText();
+        String turnos = txtTurnosTotales.getText();
+        String clima = cmbClimaInicial.getSelectedItem().toString();
+        
+        controlador.iniciarNuevaSimulacion(plantas, conejos, lobos, turnos, clima);
+    }
     }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
 
     private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
@@ -570,17 +576,67 @@ public class VentanaEcosistema extends javax.swing.JFrame {
 
 
     private void btnAvanzarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvanzarTurnoActionPerformed
-        // TODO add your handling code here:
-        mostrarCarta(CARTA_REPORTE);
+        controlador.avanzarTurno();
     }//GEN-LAST:event_btnAvanzarTurnoActionPerformed
 
     private void btnAgregarEntidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntidadActionPerformed
-        // TODO add your handling code here:
+    String nuevoClima = cmbNuevoClima.getSelectedItem().toString();
+    String nuevaEntidad = cmbAgregarEntidad.getSelectedItem().toString();
+    
+    controlador.intervenir(nuevoClima, nuevaEntidad);
     }//GEN-LAST:event_btnAgregarEntidadActionPerformed
-
+//Maxi, ya dejé delegados los eventos en la vista. Para que se unan las capas y desaparezcan los errores de compilación,
+    //tenés que crear estos métodos públicos en tu clase Controlador: cargarPartidaGuardada(), iniciarNuevaSimulacion(String plantas, 
+    //String conejos, String lobos, String turnos, String clima), avanzarTurno(), e intervenir(String clima, String entidad). 
+    //Para moverte entre pantallas, llamá a vista.irAPantallaSimulacion() y los demás métodos de navegación que te dejé armados.
     private void mostrarCarta(String nombreCarta) {
         ((java.awt.CardLayout) pnlContenedorPantallas.getLayout()).show(pnlContenedorPantallas, nombreCarta);
     }
+
+    public void irAPantallaSimulacion() {
+    mostrarCarta(CARTA_SIMULACION);
+}
+
+public void irAPantallaReporte() {
+    mostrarCarta(CARTA_REPORTE);
+}
+
+public void irAPantallaConfiguracion() {
+    mostrarCarta(CARTA_CONFIGURACION);
+}
+    
+public void actualizarContadores(int turno, int turnosMaximos, String clima, int cantPlantas, int cantConejos, int cantLobos) {
+    lblTurno.setText("TURNO: " + turno + " / " + turnosMaximos);
+    lblClima.setText("CLIMA: " + clima.toUpperCase());
+    lblContadorPlantas.setText("Plantas: " + cantPlantas);
+    lblContadorConejos.setText("Conejos: " + cantConejos);
+    lblContadorLobos.setText("Lobos: " + cantLobos);
+}
+
+public void limpiarTablaEntidades() {
+    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
+    modelo.setRowCount(0);
+}
+
+public void agregarFilaEntidad(String nombre, String tipo, double energia, int edad, String detalle) {
+    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
+    modelo.addRow(new Object[]{nombre, tipo, energia, edad, detalle});
+}
+
+public void actualizarEventos(java.util.List<String> eventos) {
+    txtEventosArea.setText("");
+    for (String evento : eventos) {
+        txtEventosArea.append(evento + "\n");
+    }
+}
+
+public void mostrarErrorConfiguracion(String mensaje) {
+    lblErrorConfiguracion.setText(mensaje);
+}
+
+public void mostrarMensaje(String mensaje) {
+    javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Información", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarEntidad;
