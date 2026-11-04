@@ -58,7 +58,6 @@ public class Controlador {
         this.dao = dao;
     }
     
-   
     //=======================================================================//
     // CONFIGURACIÓN Y CICLO DE VIDA DE LA SIMULACIÓN
     //=======================================================================//
@@ -85,6 +84,7 @@ public class Controlador {
         return null;
     }
 
+    
     /*
         Valida la configuración, borra la partida guardada anterior y crea una
         simulación nueva. La vista debe llamarlo DESPUÉS de que el usuario
@@ -168,6 +168,7 @@ public class Controlador {
         }
     }
 
+    
     // Arma el mensaje de error distinguiendo formato inválido de fuera de rango.
     private String mensajeRango(String campo, String valor, int min, int max) {
         String texto = (valor == null) ? "" : valor.trim();
@@ -182,6 +183,7 @@ public class Controlador {
         }
     }
 
+    
     /**
      * Convierte el texto de un combo en un Clima. Acepta mayúsculas/minúsculas,
      * con o sin tilde, y "Lluvia" como sinónimo de "Lluvioso". Devuelve null si
@@ -209,6 +211,7 @@ public class Controlador {
         }
     }
 
+    
     /** Nombres de climas para mostrar en combos, en el orden del enum. */
     public String[] obtenerNombresClimas() {
         Clima[] climas = Clima.values();
@@ -219,6 +222,7 @@ public class Controlador {
         return nombres;
     }
 
+    
     private String nombreClima(Clima clima) {
         if (clima == null) {
             return "-";
@@ -243,6 +247,7 @@ public class Controlador {
         return dao != null && dao.existePartidaGuardada();
     }
 
+    
     /**
      * Pide al DAO la partida guardada y la deja lista para seguir jugando.
      *
@@ -269,6 +274,7 @@ public class Controlador {
         return null;
     }
 
+    
     /**
      * Ordena al modelo procesar un turno y al DAO guardar el progreso. Si la
      * simulación terminó, borra la partida guardada (ya no hay nada que
@@ -297,6 +303,7 @@ public class Controlador {
         return null;
     }
 
+    
     // Guarda el estado actual con el DAO y recuerda si falló.
     private void guardarProgreso() {
         if (dao == null) {
@@ -308,11 +315,13 @@ public class Controlador {
         }
     }
 
+    
     /** Mensaje del último guardado automático, o null si se guardó bien. */
     public String getMensajeGuardado() {
         return mensajeGuardado;
     }
 
+    
     /** Evalúa las condiciones de fin: se alcanzó el límite de turnos o colapsó el ecosistema. */
     public boolean simulacionTerminada() {
         if (ecosistema == null) {
@@ -337,11 +346,13 @@ public class Controlador {
                 && !simulacionTerminada();
     }
 
+    
     /** true si ahora se puede intervenir (es turno de intervención y todavía no se usó). */
     public boolean puedeIntervenir() {
         return esTurnoDeIntervencion() && !intervencionRealizada;
     }
 
+    
     /** Texto para lblEstadoIntervencion. */
     public String obtenerEstadoIntervencion() {
         if (ecosistema == null || simulacionTerminada()) {
@@ -358,6 +369,7 @@ public class Controlador {
         return "Próxima intervención en " + faltan + (faltan == 1 ? " turno." : " turnos.");
     }
 
+    
     /**
      * Aplica la intervención del turno: un cambio de clima, una entidad nueva o
      * ambos. Los valores que no sean válidos (por ejemplo "Selecciona nuevo
@@ -398,6 +410,7 @@ public class Controlador {
         return resultado.toString().trim();
     }
 
+    
     /** Intervención solo de clima. */
     public String intervenirCambiarClima(String climaTexto) {
         if (obtenerClimaPorNombre(climaTexto) == null) {
@@ -406,6 +419,7 @@ public class Controlador {
         return intervenir(climaTexto, null);
     }
 
+    
     /** Intervención solo de entidad ("Planta", "Conejo" o "Lobo"). */
     public String intervenirAgregarEntidad(String entidadTexto) {
         if (normalizarTipoEntidad(entidadTexto) == null) {
@@ -414,11 +428,13 @@ public class Controlador {
         return intervenir(null, entidadTexto);
     }
 
+    
     /** true si agregar un lobo más superaría el tope de 5 lobos en el ecosistema. */
     public boolean superaTopeLobos() {
         return ecosistema != null && ecosistema.getLobos().size() >= TOPE_LOBOS;
     }
 
+    
     private String mensajeTopeLobos() {
         return "(!) Límite máximo de " + TOPE_LOBOS + " lobos alcanzado. No puedes agregar más lobos.";
     }
@@ -450,15 +466,18 @@ public class Controlador {
         return "Turno " + turno + " / " + turnosTotales;
     }
 
+    
     public int getTurnoActual() {
         return ecosistema == null ? 0 : ecosistema.getTurnoActual();
     }
 
+    
     /** Clima actual para lblClima (ej: "Soleado"). */
     public String obtenerTextoClima() {
         return ecosistema == null ? "-" : nombreClima(ecosistema.getClimaActual());
     }
 
+    
     /** Contadores para los labels superiores: {plantas, conejos, lobos}. */
     public int[] obtenerContadores() {
         if (ecosistema == null) {
@@ -494,10 +513,12 @@ public class Controlador {
         return filas.toArray(new String[0][]);
     }
 
+    
     private String[] fila(String nombre, String tipo, double energia, int edad, String detalle) {
         return new String[]{nombre, tipo, String.format("%.1f", energia), String.valueOf(edad), detalle};
     }
 
+    
     /** Eventos del último turno, uno por línea, para txtEventosArea. */
     public String obtenerEventosTurno() {
         if (ecosistema == null) {
@@ -506,6 +527,7 @@ public class Controlador {
         return String.join("\n", ecosistema.getEventosTurno());
     }
 
+    
     //=======================================================================//
     // REPORTE FINAL (datos que calcula el modelo, empaquetados como texto)
     //=======================================================================//
@@ -518,16 +540,19 @@ public class Controlador {
         return ecosistema.ecosistemaColapsado() ? "Colapso del ecosistema" : "Ecosistema en equilibrio";
     }
 
+    
     /** Causa de fin para lblCausaFin (ej: "LIMITE DE TURNOS ALCANZADO"). */
     public String obtenerCausaFin() {
         return ecosistema == null ? "" : ecosistema.getCausaFin();
     }
 
+    
     /** Detalle de la causa para lblDetalleCausa (ej: "Se extinguieron: conejos"). */
     public String obtenerDetalleCausa() {
         return ecosistema == null ? "" : ecosistema.getDetalleCausaFin();
     }
 
+    
     /** Texto para lblRecordActividad: el turno con más bajas. */
     public String obtenerRecordActividad() {
         if (ecosistema == null) {
@@ -540,6 +565,7 @@ public class Controlador {
                 + " (" + ecosistema.getMaxBajasEnUnTurno() + " bajas)";
     }
 
+    
     /** Texto para lblRecordCazador: el lobo con más cacerías (vivo o muerto). */
     public String obtenerRecordCazador() {
         if (ecosistema == null) {
@@ -552,6 +578,7 @@ public class Controlador {
                 + " (" + ecosistema.getRecordCazadorCacerias() + " presas)";
     }
 
+    
     /**
      * Filas para tblBalanceVital, en el orden de columnas de la tabla:
      * "", Plantas, Lobos, Conejos, Plantas Venenosas.
@@ -589,6 +616,7 @@ public class Controlador {
         return new String[][]{filaNacimientos, filaMuertes, filaLongevas};
     }
 
+    
     // Arma "Nombre (N turnos)", o "-" si todavía no hay récord para ese tipo.
     private String textoRecord(String nombre, int edad) {
         if (nombre == null || nombre.isEmpty()) {
@@ -597,6 +625,7 @@ public class Controlador {
         return nombre + " (" + edad + " turnos)";
     }
 
+    
     /** Reporte completo en texto, para el botón "Exportar / Copiar". */
     public String obtenerReporteFinal() {
         return ecosistema == null ? "" : ecosistema.generarReporteFinal();
