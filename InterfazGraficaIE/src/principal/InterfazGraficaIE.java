@@ -1,15 +1,20 @@
 package principal;
 
+import dao.SimulacionDAO;
 import controlador.Controlador;
 import vista.VentanaEcosistema;
 
 public class InterfazGraficaIE {
 
     public static void main(String[] args) {
-        // Inicializa el controlador principal de la aplicación
-        Controlador controlador = new Controlador();
+        
+        // Capa de persistencia: guarda y lee la partida en un .txt
+        SimulacionDAO dao = new SimulacionDAO();
 
-        // La vista recibe el controlador y se muestra en el hilo de eventos de Swing
-        java.awt.EventQueue.invokeLater(() -> new VentanaEcosistema(controlador).setVisible(true));
+        // Inicializa el controlador principal inyectándole el DAO.
+        // El modelo (Ecosistema) lo crea el Controlador cuando se inicia o retoma
+        // una simulación, porque necesita la configuración inicial para construirse.
+        Controlador controlador = new Controlador(dao);
+
     }
 }

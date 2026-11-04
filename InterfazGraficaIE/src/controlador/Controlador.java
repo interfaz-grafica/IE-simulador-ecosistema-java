@@ -1,11 +1,27 @@
 package controlador;
 
+/*
+    Coordina la comunicación entre la vista (VentanaEcosistema), el modelo
+    (Ecosistema) y la persistencia (SimulacionDAO).
+
+    Reglas que respeta: 
+    - No importa ni usa nada de Swing (ni JOptionPane ni
+    listeners). 
+    - La vista nunca recibe objetos del modelo: todo lo que le
+    entrega son String, int, boolean o String[][] ya armados. 
+    - Los métodos que pueden fallar devuelven un String con el mensaje de error, 
+    o null si todo salió bien (la vista decide cómo mostrarlo).
+*/
+
+import dao.SimulacionDAO;
 import modelo.Clima;
 import modelo.Ecosistema;
 
 public class Controlador {
 
     // Atributos que antes eran estáticos en InterfazGraficaIE
+    
+    private SimulacionDAO dao;
     private Ecosistema ecosistema;
     
     private int cantidadInicialPlantas;
@@ -16,7 +32,8 @@ public class Controlador {
     
     private int lobosAgregados = 0;
 
-    public Controlador() {
+    public Controlador(SimulacionDAO dao) {
+        this.dao = dao;
     }
 
     // Recibe y valida la configuración inicial (Reemplaza a ingresarDatosIniciales)
