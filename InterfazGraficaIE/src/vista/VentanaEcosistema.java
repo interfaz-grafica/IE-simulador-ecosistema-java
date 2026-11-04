@@ -598,14 +598,24 @@ public class VentanaEcosistema
     }//GEN-LAST:event_btnCargarPartidaActionPerformed
 
     private void btnIniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSimulacionActionPerformed
-        if (confirmarNuevaPartida()) {
+       if (confirmarNuevaPartida()) {
             String plantas = txtCantidadPlantas.getText();
             String conejos = txtCantidadConejos.getText();
             String lobos = txtCantidadLobos.getText();
             String turnos = txtTurnosTotales.getText();
-            String clima = cmbClimaInicial.getSelectedItem().toString();
 
-            controlador.iniciarNuevaSimulacion(plantas, conejos, lobos, turnos, clima);
+            // El nuevo backend pide el texto exacto del JComboBox en vez del número
+            String climaTexto = cmbClimaInicial.getSelectedItem().toString();
+
+            // Llamamos al método nuevo respetando el nuevo orden (turnos antes que clima)
+            String error = controlador.iniciarNuevaSimulacion(plantas, conejos, lobos, turnos, climaTexto);
+
+            if (error == null) {
+                irAPantallaSimulacion();
+                actualizarVistaSimulacion();
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, error, "Error de datos", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
 
@@ -616,14 +626,34 @@ public class VentanaEcosistema
 
 
     private void btnAvanzarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvanzarTurnoActionPerformed
-        controlador.avanzarTurno();
+            String error = controlador.avanzarTurno();
+            if (error != null) {
+                javax.swing.JOptionPane.showMessageDialog(this, error, "Atención", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return; 
+            }
+
+            actualizarVistaSimulacion();
+
+            // Verifica si el turno que acaba de pasar provocó el fin (por límite o extinción)
+            if (controlador.simulacionTerminada()) {
+                String mensajeFin = controlador.obtenerCausaFin() + "\n" + controlador.obtenerDetalleCausa();
+                javax.swing.JOptionPane.showMessageDialog(this, mensajeFin, "Fin de la Simulación", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                actualizarVistaReporte(); 
+                irAPantallaReporte();
+            }
     }//GEN-LAST:event_btnAvanzarTurnoActionPerformed
 
     private void btnAgregarEntidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntidadActionPerformed
-        String nuevoClima = cmbNuevoClima.getSelectedItem().toString();
-        String nuevaEntidad = cmbAgregarEntidad.getSelectedItem().toString();
+        // Obtenemos el texto directo de los combos solo si no están en el título inicial (índice 0)
+            String climaTexto = cmbNuevoClima.getSelectedIndex() > 0 ? cmbNuevoClima.getSelectedItem().toString() : null;
+            String entidadTexto = cmbAgregarEntidad.getSelectedIndex() > 0 ? cmbAgregarEntidad.getSelectedItem().toString() : null;
 
-        controlador.intervenir(nuevoClima, nuevaEntidad);
+            if (climaTexto != null || entidadTexto != null) {
+                // Usamos el método unificado de Maxi que maneja la intervención completa
+                String mensaje = controlador.intervenir(climaTexto, entidadTexto);
+                javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Intervención", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                actualizarVistaSimulacion();
+            }
     }//GEN-LAST:event_btnAgregarEntidadActionPerformed
 
     private void lblMinimizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMinimizarMouseClicked
@@ -649,6 +679,49 @@ public class VentanaEcosistema
     //String conejos, String lobos, String turnos, String clima), avanzarTurno(), e intervenir(String clima, String entidad). 
     //Para moverte entre pantallas, llamá a vista.irAPantallaSimulacion() y los demás métodos de navegación que te dejé armados.
 
+    
+        public void actualizarVistaSimulacion() {
+        // 1. Textos superiores
+        lblTurno.setText(controlador.obtenerTextoTurno());
+        lblClima.setText(controlador.obtenerTextoClima());
+
+        // 2. Contadores de colores
+        int[] contadores = controlador.obtenerContadores();
+        lblContadorPlantas.setText("Plantas: " + contadores[0]);
+        lblContadorConejos.setText("Conejos: " + contadores[1]);
+        lblContadorLobos.setText("Lobos: " + contadores[2]);
+
+        // 3. Panel de eventos
+        txtEventosArea.setText(controlador.obtenerEventosTurno());
+
+        // 4. Llenado de tabla
+        javax.swing.table.DefaultTableModel modeloTabla = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
+        modeloTabla.setRowCount(0);
+
+        String[][] filas = controlador.obtenerFilasEntidades();
+        for (String[] fila : filas) {
+            modeloTabla.addRow(fila);
+        }
+    }
+        
+        public void actualizarVistaReporte() {
+       // 1. Carteles de causa de fin
+       lblCausaFin.setText(controlador.obtenerCausaFin());
+       lblDetalleCausa.setText(controlador.obtenerDetalleCausa());
+
+       // 2. Récords inferiores
+       lblRecordActividad.setText(controlador.obtenerRecordActividad());
+       lblRecordCazador.setText(controlador.obtenerRecordCazador());
+
+       // 3. Llenado de tabla de balance vital
+       javax.swing.table.DefaultTableModel modeloTabla = (javax.swing.table.DefaultTableModel) tblBalanceVital.getModel();
+       modeloTabla.setRowCount(0);
+
+       String[][] filasBalance = controlador.obtenerFilasBalanceVital();
+       for (String[] fila : filasBalance) {
+           modeloTabla.addRow(fila);
+       }
+    }
     private void mostrarCarta(String nombreCarta) {
         ((java.awt.CardLayout) pnlContenedorPantallas.getLayout()).show(pnlContenedorPantallas, nombreCarta);
     }
