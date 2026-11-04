@@ -9,11 +9,14 @@ public abstract class Entidad {
     
     public Entidad(String nombre, double energia, int edad, boolean viva)
     {
+        // Los valores se fijan tal cual vienen (sirve para crear entidades nuevas
+        // y también para reconstruirlas exactas desde el archivo guardado).
         this.nombre = nombre;
-        // Modificacion: usamos el setter en vez de this.energia para asegurar que la validación se aplique desde la creación del objeto
+        setEdad(edad);
+        this.viva = viva;
+        // Se llama al final a propósito: si la energía es 0 o menos, el setter
+        // marca a la entidad como muerta. Así nunca queda "viva con 0 de energía".
         setEnergia(energia);
-        this.edad = edad;
-        this.viva = viva; 
     }
     
     public abstract void actuar(Ecosistema eco); 
@@ -57,8 +60,13 @@ public abstract class Entidad {
         return edad;
     }
 
+    // La edad no puede ser negativa
     public void setEdad(int edad) {
-        this.edad = edad;
+        if (edad < 0) {
+            this.edad = 0;
+        } else {
+            this.edad = edad;
+        }
     }
     
     public boolean isViva() {

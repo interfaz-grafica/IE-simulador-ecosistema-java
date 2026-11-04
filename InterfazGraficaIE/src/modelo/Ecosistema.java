@@ -30,10 +30,38 @@ public class Ecosistema {
     private int muertesConejos = 0;
     private int muertesLobos = 0;
 
+    // Las plantas venenosas también cuentan dentro de los totales de plantas;
+    // estos contadores indican cuántas de ese total eran venenosas.
+    private int nacimientosPlantasVenenosas = 0;
+    private int muertesPlantasVenenosas = 0;
+
     private int turnoMayorActividad = 1;
     private int maxBajasEnUnTurno = 0;
-    
-    public Ecosistema(int cantPlantas, int cantConejos, int cantLobos, Clima climaInicial) {
+
+    // Duración total de la simulación elegida por el usuario
+    private int turnosMaximos = 0;
+
+    // Cantidad de lobos agregados por intervención del usuario (tope: 5)
+    private int lobosAgregados = 0;
+
+    // RÉCORDS HISTÓRICOS
+    // Se guardan como atributos porque una entidad muerta ya no está en las listas.
+    // Los nombres arrancan en "" (vacío) y los números en 0 hasta que exista un récord.
+    private String recordPlantaNombre = "";
+    private int recordPlantaEdad = 0;
+    private String recordPlantaVenenosaNombre = "";
+    private int recordPlantaVenenosaEdad = 0;
+    private String recordConejoNombre = "";
+    private int recordConejoEdad = 0;
+    private String recordLoboNombre = "";
+    private int recordLoboEdad = 0;
+    private String recordCazadorNombre = "";
+    private int recordCazadorCacerias = 0;
+
+    // Constructor limpio: crea un ecosistema vacío (sin entidades aleatorias).
+    // Lo usa el DAO para reconstruir una partida guardada, cargando después
+    // las listas y las métricas con los setters.
+    public Ecosistema(Clima climaInicial) {
         this.plantas = new ArrayList<>();
         this.conejos = new ArrayList<>();
         this.lobos = new ArrayList<>();
@@ -43,7 +71,12 @@ public class Ecosistema {
         this.eventosTurno = new ArrayList<>();
         this.climaActual = climaInicial;
         this.turnoActual = 1;
-        
+    }
+
+    // Constructor para una partida nueva: crea las poblaciones iniciales.
+    public Ecosistema(int cantPlantas, int cantConejos, int cantLobos, Clima climaInicial) {
+        this(climaInicial);
+
         // Instanciación inicial de las poblaciones base
         for (int i = 0; i < cantPlantas; i++) { agregarEntidad("planta"); }
         for (int i = 0; i < cantConejos; i++) { agregarEntidad("conejo"); }
@@ -53,6 +86,7 @@ public class Ecosistema {
         this.nacimientosPlantas = 0;
         this.nacimientosConejos = 0;
         this.nacimientosLobos = 0;
+        this.nacimientosPlantasVenenosas = 0;
         this.eventosTurno.clear();
     }
     
@@ -153,6 +187,9 @@ public class Ecosistema {
         // 6. LIMPIEZA DE MUERTOS
         int bajasEsteTurno = 0;
 
+        // Antes de borrar a los muertos, actualizamos los récords con todos los que existen
+        actualizarRecords();
+
         // Uso de copias defensivas para iterar y eliminar entidades de manera segura
         
         ArrayList<Planta> copiasPlantas = new ArrayList<>(plantas);
@@ -160,6 +197,9 @@ public class Ecosistema {
             if (!p.isViva()) {
                 plantas.remove(p);
                 muertesPlantas++;
+                if (p instanceof PlantaVenenosa) {
+                    muertesPlantasVenenosas++;
+                }
                 bajasEsteTurno++;
             }
         }
@@ -198,6 +238,41 @@ public class Ecosistema {
         turnoActual++;
     }
     
+    // Recorre todas las entidades y actualiza los récords históricos si alguna los supera
+    private void actualizarRecords() {
+        for (Planta p : plantas) {
+            if (p instanceof PlantaVenenosa) {
+                if (p.getEdad() > recordPlantaVenenosaEdad) {
+                    recordPlantaVenenosaEdad = p.getEdad();
+                    recordPlantaVenenosaNombre = p.getNombre();
+                }
+            } else {
+                if (p.getEdad() > recordPlantaEdad) {
+                    recordPlantaEdad = p.getEdad();
+                    recordPlantaNombre = p.getNombre();
+                }
+            }
+        }
+
+        for (Conejo c : conejos) {
+            if (c.getEdad() > recordConejoEdad) {
+                recordConejoEdad = c.getEdad();
+                recordConejoNombre = c.getNombre();
+            }
+        }
+
+        for (Lobo l : lobos) {
+            if (l.getEdad() > recordLoboEdad) {
+                recordLoboEdad = l.getEdad();
+                recordLoboNombre = l.getNombre();
+            }
+            if (l.getExitosCaza() > recordCazadorCacerias) {
+                recordCazadorCacerias = l.getExitosCaza();
+                recordCazadorNombre = l.getNombre();
+            }
+        }
+    }
+
     // MVC: Retorna el texto del estado en lugar de imprimirlo
     public String mostrarEstado() {
         // Formato de pie de turno
@@ -220,6 +295,7 @@ public class Ecosistema {
             if (Math.random() <= 0.15) {
                 PlantaVenenosa pv = new PlantaVenenosa("Venenosa-" + (plantas.size() + 1), e, 0, true, 2);
                 plantas.add(pv);
+                nacimientosPlantasVenenosas++;
             } else {
                 Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
                 plantas.add(p);
@@ -256,6 +332,46 @@ public class Ecosistema {
     
     public boolean ecosistemaColapsado() {
         return plantas.isEmpty() || conejos.isEmpty() || lobos.isEmpty();
+    }
+
+    // La simulación termina si se pasaron los turnos elegidos o si el ecosistema colapsó.
+    // Si turnosMaximos todavía no se configuró (0), solo se evalúa el colapso.
+    public boolean simulacionTerminada() {
+        boolean turnosCumplidos = turnosMaximos > 0 && turnoActual > turnosMaximos;
+        return turnosCumplidos || ecosistemaColapsado();
+    }
+
+    // Cada 3 turnos el usuario puede intervenir (turnoActual - 1 es el último turno procesado)
+    public boolean esTurnoIntervencion() {
+        int turnoRecienProcesado = turnoActual - 1;
+        return turnoRecienProcesado > 0 && (turnoRecienProcesado % 3 == 0) && !simulacionTerminada();
+    }
+
+    // Causa principal del fin de la simulación (para el título del reporte).
+    // Devuelve "" si la simulación todavía no terminó.
+    public String getCausaFin() {
+        if (!simulacionTerminada()) {
+            return "";
+        }
+        if (ecosistemaColapsado()) {
+            return "COLAPSO DEL ECOSISTEMA";
+        }
+        return "LIMITE DE TURNOS ALCANZADO";
+    }
+
+    // Detalle de la causa de fin (para el reporte). Ejemplo: "Se extinguieron conejos"
+    public String getDetalleCausaFin() {
+        if (!simulacionTerminada()) {
+            return "";
+        }
+        if (!ecosistemaColapsado()) {
+            return "Se completaron los " + turnosMaximos + " turnos";
+        }
+        String detalle = "Se extinguieron:";
+        if (plantas.isEmpty()) detalle += " plantas";
+        if (conejos.isEmpty()) detalle += " conejos";
+        if (lobos.isEmpty()) detalle += " lobos";
+        return detalle;
     }
     
     // MVC: Retorna todo el reporte como un String manteniendo exactamente el formato original
@@ -415,6 +531,215 @@ public class Ecosistema {
 
     public void setTurnoActual(int turnoActual) {
         this.turnoActual = turnoActual;
+    }
+
+    public void setEventosTurno(ArrayList<String> eventosTurno) {
+        this.eventosTurno = eventosTurno;
+    }
+
+    // Historiales de población
+    public ArrayList<Integer> getHistorialPlantas() {
+        return historialPlantas;
+    }
+
+    public void setHistorialPlantas(ArrayList<Integer> historialPlantas) {
+        this.historialPlantas = historialPlantas;
+    }
+
+    public ArrayList<Integer> getHistorialConejos() {
+        return historialConejos;
+    }
+
+    public void setHistorialConejos(ArrayList<Integer> historialConejos) {
+        this.historialConejos = historialConejos;
+    }
+
+    public ArrayList<Integer> getHistorialLobos() {
+        return historialLobos;
+    }
+
+    public void setHistorialLobos(ArrayList<Integer> historialLobos) {
+        this.historialLobos = historialLobos;
+    }
+
+    // Nacimientos
+    public int getNacimientosPlantas() {
+        return nacimientosPlantas;
+    }
+
+    public void setNacimientosPlantas(int nacimientosPlantas) {
+        this.nacimientosPlantas = nacimientosPlantas;
+    }
+
+    public int getNacimientosConejos() {
+        return nacimientosConejos;
+    }
+
+    public void setNacimientosConejos(int nacimientosConejos) {
+        this.nacimientosConejos = nacimientosConejos;
+    }
+
+    public int getNacimientosLobos() {
+        return nacimientosLobos;
+    }
+
+    public void setNacimientosLobos(int nacimientosLobos) {
+        this.nacimientosLobos = nacimientosLobos;
+    }
+
+    public int getNacimientosPlantasVenenosas() {
+        return nacimientosPlantasVenenosas;
+    }
+
+    public void setNacimientosPlantasVenenosas(int nacimientosPlantasVenenosas) {
+        this.nacimientosPlantasVenenosas = nacimientosPlantasVenenosas;
+    }
+
+    // Muertes
+    public int getMuertesPlantas() {
+        return muertesPlantas;
+    }
+
+    public void setMuertesPlantas(int muertesPlantas) {
+        this.muertesPlantas = muertesPlantas;
+    }
+
+    public int getMuertesConejos() {
+        return muertesConejos;
+    }
+
+    public void setMuertesConejos(int muertesConejos) {
+        this.muertesConejos = muertesConejos;
+    }
+
+    public int getMuertesLobos() {
+        return muertesLobos;
+    }
+
+    public void setMuertesLobos(int muertesLobos) {
+        this.muertesLobos = muertesLobos;
+    }
+
+    public int getMuertesPlantasVenenosas() {
+        return muertesPlantasVenenosas;
+    }
+
+    public void setMuertesPlantasVenenosas(int muertesPlantasVenenosas) {
+        this.muertesPlantasVenenosas = muertesPlantasVenenosas;
+    }
+
+    // Actividad, turnos y lobos agregados
+    public int getTurnoMayorActividad() {
+        return turnoMayorActividad;
+    }
+
+    public void setTurnoMayorActividad(int turnoMayorActividad) {
+        this.turnoMayorActividad = turnoMayorActividad;
+    }
+
+    public int getMaxBajasEnUnTurno() {
+        return maxBajasEnUnTurno;
+    }
+
+    public void setMaxBajasEnUnTurno(int maxBajasEnUnTurno) {
+        this.maxBajasEnUnTurno = maxBajasEnUnTurno;
+    }
+
+    public int getTurnosMaximos() {
+        return turnosMaximos;
+    }
+
+    public void setTurnosMaximos(int turnosMaximos) {
+        this.turnosMaximos = turnosMaximos;
+    }
+
+    public int getLobosAgregados() {
+        return lobosAgregados;
+    }
+
+    public void setLobosAgregados(int lobosAgregados) {
+        this.lobosAgregados = lobosAgregados;
+    }
+
+    // Récords históricos
+    public String getRecordPlantaNombre() {
+        return recordPlantaNombre;
+    }
+
+    public void setRecordPlantaNombre(String recordPlantaNombre) {
+        this.recordPlantaNombre = recordPlantaNombre;
+    }
+
+    public int getRecordPlantaEdad() {
+        return recordPlantaEdad;
+    }
+
+    public void setRecordPlantaEdad(int recordPlantaEdad) {
+        this.recordPlantaEdad = recordPlantaEdad;
+    }
+
+    public String getRecordPlantaVenenosaNombre() {
+        return recordPlantaVenenosaNombre;
+    }
+
+    public void setRecordPlantaVenenosaNombre(String recordPlantaVenenosaNombre) {
+        this.recordPlantaVenenosaNombre = recordPlantaVenenosaNombre;
+    }
+
+    public int getRecordPlantaVenenosaEdad() {
+        return recordPlantaVenenosaEdad;
+    }
+
+    public void setRecordPlantaVenenosaEdad(int recordPlantaVenenosaEdad) {
+        this.recordPlantaVenenosaEdad = recordPlantaVenenosaEdad;
+    }
+
+    public String getRecordConejoNombre() {
+        return recordConejoNombre;
+    }
+
+    public void setRecordConejoNombre(String recordConejoNombre) {
+        this.recordConejoNombre = recordConejoNombre;
+    }
+
+    public int getRecordConejoEdad() {
+        return recordConejoEdad;
+    }
+
+    public void setRecordConejoEdad(int recordConejoEdad) {
+        this.recordConejoEdad = recordConejoEdad;
+    }
+
+    public String getRecordLoboNombre() {
+        return recordLoboNombre;
+    }
+
+    public void setRecordLoboNombre(String recordLoboNombre) {
+        this.recordLoboNombre = recordLoboNombre;
+    }
+
+    public int getRecordLoboEdad() {
+        return recordLoboEdad;
+    }
+
+    public void setRecordLoboEdad(int recordLoboEdad) {
+        this.recordLoboEdad = recordLoboEdad;
+    }
+
+    public String getRecordCazadorNombre() {
+        return recordCazadorNombre;
+    }
+
+    public void setRecordCazadorNombre(String recordCazadorNombre) {
+        this.recordCazadorNombre = recordCazadorNombre;
+    }
+
+    public int getRecordCazadorCacerias() {
+        return recordCazadorCacerias;
+    }
+
+    public void setRecordCazadorCacerias(int recordCazadorCacerias) {
+        this.recordCazadorCacerias = recordCazadorCacerias;
     }
     
 }
