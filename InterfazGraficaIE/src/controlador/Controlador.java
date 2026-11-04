@@ -30,6 +30,8 @@ public class Controlador {
     public static int MAX_LOBOS = 5;
     public static int MIN_TURNOS = 10;
     public static int MAX_TURNOS = 50;
+    public static int TURNOS_ENTRE_INTERVENCIONES = 3;
+    public static int TOPE_LOBOS = 5;
     
     private SimulacionDAO dao;
     private Ecosistema ecosistema;
@@ -44,21 +46,13 @@ public class Controlador {
     // Resultado del último guardado automático (null = se guardó bien)
     private String mensajeGuardado = null;
 
-    
     private int lobosAgregados = 0;
+       // Se pone en true cuando el usuario ya intervino en la ventana actual (cada 3 turnos)
+    private boolean intervencionRealizada = false; 
 
     public Controlador(SimulacionDAO dao) {
         this.dao = dao;
     }
-
-
-    // Evalúa si corresponde intervenir cada 3 turnos (turnoActual - 1 es el turno recién procesado)
-    public boolean esTurnoDeIntervencion() {
-        if (ecosistema == null) return false;
-        int turnoRecienProcesado = ecosistema.getTurnoActual() - 1;
-        return turnoRecienProcesado > 0 && (turnoRecienProcesado % 3 == 0) && !simulacionTerminada();
-    }
-
 
     // Devuelve el mensaje de fin de simulación tal como estaba en ejecutarBuclePrincipal()
     public String obtenerMensajeFinSimulacion() {
@@ -67,36 +61,6 @@ public class Controlador {
         } else {
             return ">> FIN DE LA SIMULACION: Se alcanzo el limite maximo de " + turnosTotales + " turnos.";
         }
-    }
-
-    // Intervención Opción 1: Cambiar clima
-    public void intervenirCambiarClima(Clima nuevoClima) {
-        if (ecosistema != null && nuevoClima != null) {
-            ecosistema.cambiarClima(nuevoClima);
-        }
-    }
-
-    // Intervención Opción 2: Agregar entidad (Mantiene la validación de lobosAgregados >= 5)
-    public String intervenirAgregarEntidad(int opcionEntidad) {
-        String nombreEntidad = "";
-        if (opcionEntidad == 1) {
-            nombreEntidad = "Planta";
-        } else if (opcionEntidad == 2) {
-            nombreEntidad = "Conejo";
-        } else if (opcionEntidad == 3) {
-            if (lobosAgregados >= 5) {
-                return "(!) Limite maximo de lobos alcanzado. No puedes agregar mas lobos en esta simulacion.";
-            }
-            nombreEntidad = "Lobo";
-        } else {
-            return "(!) Opcion de entidad invalida.";
-        }
-
-        ecosistema.agregarEntidad(nombreEntidad);
-        if (opcionEntidad == 3) {
-            lobosAgregados++;
-        }
-        return "Se agrego '" + nombreEntidad + "' al ecosistema.";
     }
 
     // Obtiene el reporte final desde el modelo
@@ -161,6 +125,9 @@ public class Controlador {
         this.cantidadInicialLobos = validarEnteroEnRango(lobosStr, MIN_LOBOS, MAX_LOBOS);
         this.turnosTotales = validarEnteroEnRango(turnosStr, MIN_TURNOS, MAX_TURNOS);
         this.climaInicial = clima;
+        
+        this.lobosAgregados = 0;
+        this.intervencionRealizada = false;        
 
         this.ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
         
@@ -306,6 +273,10 @@ public class Controlador {
         // TODO(DAO): el archivo todavía no guarda los turnos totales. Hasta que lo haga,
         // se usa el máximo permitido para que la partida retomada pueda terminar.
         this.turnosTotales = MAX_TURNOS;
+        
+        this.lobosAgregados = 0;
+        this.intervencionRealizada = false;
+        
         return null;
     }
 
@@ -324,6 +295,7 @@ public class Controlador {
             return "(!) La simulación ya terminó.";
         }
         ecosistema.procesarTurno();
+        intervencionRealizada = false;
 
         if (simulacionTerminada()) {
             if (dao != null) {
@@ -360,7 +332,120 @@ public class Controlador {
         return (ecosistema.getTurnoActual() > turnosTotales) || ecosistema.ecosistemaColapsado();
     }
     
+    
+    //=======================================================================//
+    // INTERVENCIÓN (cada 3 turnos)
+    //=======================================================================//
 
+    /** true si el turno recién procesado es múltiplo de 3 y la simulación sigue. */
+    public boolean esTurnoDeIntervencion() {
+        if (ecosistema == null) {
+            return false;
+        }
+        int turnoRecienProcesado = ecosistema.getTurnoActual() - 1;
+        return turnoRecienProcesado > 0
+                && (turnoRecienProcesado % TURNOS_ENTRE_INTERVENCIONES == 0)
+                && !simulacionTerminada();
+    }
+
+    /** true si ahora se puede intervenir (es turno de intervención y todavía no se usó). */
+    public boolean puedeIntervenir() {
+        return esTurnoDeIntervencion() && !intervencionRealizada;
+    }
+
+    /** Texto para lblEstadoIntervencion. */
+    public String obtenerEstadoIntervencion() {
+        if (ecosistema == null || simulacionTerminada()) {
+            return "Intervención no disponible.";
+        }
+        if (puedeIntervenir()) {
+            return "¡Puedes intervenir este turno!";
+        }
+        if (esTurnoDeIntervencion()) {
+            return "Ya interviniste en este turno.";
+        }
+        int procesados = ecosistema.getTurnoActual() - 1;
+        int faltan = TURNOS_ENTRE_INTERVENCIONES - (procesados % TURNOS_ENTRE_INTERVENCIONES);
+        return "Próxima intervención en " + faltan + (faltan == 1 ? " turno." : " turnos.");
+    }
+
+    /**
+     * Aplica la intervención del turno: un cambio de clima, una entidad nueva o
+     * ambos. Los valores que no sean válidos (por ejemplo "Selecciona nuevo
+     * clima" o "Agregar Entidad") se ignoran.
+     *
+     * @return mensaje para mostrar al usuario (resultado o error).
+     */
+    public String aplicarIntervencion(String climaTexto, String entidadTexto) {
+        if (!puedeIntervenir()) {
+            return "(!) Solo puedes intervenir una vez cada " + TURNOS_ENTRE_INTERVENCIONES + " turnos.";
+        }
+        Clima nuevoClima = obtenerClimaPorNombre(climaTexto);
+        String tipo = normalizarTipoEntidad(entidadTexto);
+        if (nuevoClima == null && tipo == null) {
+            return "(!) Selecciona un clima o una entidad para intervenir.";
+        }
+
+        // Se valida el tope de lobos ANTES de aplicar cualquier cambio.
+        if ("lobo".equals(tipo) && superaTopeLobos()) {
+            return mensajeTopeLobos();
+        }
+
+        StringBuilder resultado = new StringBuilder();
+        if (nuevoClima != null) {
+            ecosistema.cambiarClima(nuevoClima);
+            resultado.append("El clima cambió a ").append(nombreClima(nuevoClima)).append(". ");
+        }
+        if (tipo != null) {
+            ecosistema.agregarEntidad(tipo);
+            if ("lobo".equals(tipo)) {
+                lobosAgregados++;
+            }
+            resultado.append("Se agregó un/a ").append(tipo).append(" al ecosistema.");
+        }
+        intervencionRealizada = true;
+        guardarProgreso();
+        return resultado.toString().trim();
+    }
+
+    /** Intervención solo de clima. */
+    public String intervenirCambiarClima(String climaTexto) {
+        if (obtenerClimaPorNombre(climaTexto) == null) {
+            return "(!) Selecciona un clima válido.";
+        }
+        return aplicarIntervencion(climaTexto, null);
+    }
+
+    /** Intervención solo de entidad ("Planta", "Conejo" o "Lobo"). */
+    public String intervenirAgregarEntidad(String entidadTexto) {
+        if (normalizarTipoEntidad(entidadTexto) == null) {
+            return "(!) Opción de entidad inválida.";
+        }
+        return aplicarIntervencion(null, entidadTexto);
+    }
+
+    /** true si agregar un lobo más superaría el tope de 5 lobos en el ecosistema. */
+    public boolean superaTopeLobos() {
+        return ecosistema != null && ecosistema.getLobos().size() >= TOPE_LOBOS;
+    }
+
+    private String mensajeTopeLobos() {
+        return "(!) Límite máximo de " + TOPE_LOBOS + " lobos alcanzado. No puedes agregar más lobos.";
+    }
+    
+    
+    // Devuelve "planta", "conejo" o "lobo", o null si el texto no es una entidad.
+    private String normalizarTipoEntidad(String texto) {
+        if (texto == null) {
+            return null;
+        }
+        String limpio = texto.trim().toLowerCase();
+        if (limpio.equals("planta") || limpio.equals("conejo") || limpio.equals("lobo")) {
+            return limpio;
+        }
+        return null;
+    }
+    
     //-----------------------------------------------------------------------//
     // Getters y Setters
     public Ecosistema getEcosistema() {
@@ -374,7 +459,7 @@ public class Controlador {
     public int getTurnosTotales() {
         return turnosTotales;
     }
-
+    
     public int getLobosAgregados() {
         return lobosAgregados;
     }
