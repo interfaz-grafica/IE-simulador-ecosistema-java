@@ -460,12 +460,12 @@ public class Controlador {
     /** Turno que se va a jugar a continuación, para lblTurno (ej: "Turno 4 / 20"). */
     public String obtenerTextoTurno() {
         if (ecosistema == null) {
-            return "Turno - / -";
+            return "TURNO: - / -";
         }
         int turno = Math.min(ecosistema.getTurnoActual(), turnosTotales);
-        return "Turno " + turno + " / " + turnosTotales;
+        return "TURNO: " + turno + " / " + turnosTotales;
     }
-
+    
     
     public int getTurnoActual() {
         return ecosistema == null ? 0 : ecosistema.getTurnoActual();
@@ -474,7 +474,7 @@ public class Controlador {
     
     /** Clima actual para lblClima (ej: "Soleado"). */
     public String obtenerTextoClima() {
-        return ecosistema == null ? "-" : nombreClima(ecosistema.getClimaActual());
+        return "CLIMA: " + (ecosistema == null ? "-" : nombreClima(ecosistema.getClimaActual()).toUpperCase());
     }
 
     
@@ -543,13 +543,13 @@ public class Controlador {
     
     /** Causa de fin para lblCausaFin (ej: "LIMITE DE TURNOS ALCANZADO"). */
     public String obtenerCausaFin() {
-        return ecosistema == null ? "" : ecosistema.getCausaFin();
+        return ecosistema == null ? "" : "Causa de Fin: " + ecosistema.getCausaFin();
     }
 
     
     /** Detalle de la causa para lblDetalleCausa (ej: "Se extinguieron: conejos"). */
     public String obtenerDetalleCausa() {
-        return ecosistema == null ? "" : ecosistema.getDetalleCausaFin();
+        return ecosistema == null ? "" : "(" + ecosistema.getDetalleCausaFin() + ")";
     }
 
     
