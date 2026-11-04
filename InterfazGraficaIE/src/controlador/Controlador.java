@@ -397,6 +397,12 @@ public class Controlador {
             ecosistema.cambiarClima(nuevoClima);
             resultado.append("El clima cambió a ").append(nombreClima(nuevoClima)).append(". ");
         }
+        
+        // Elegir el mismo clima que ya hay no es un cambio: se avisa sin gastar la intervención.
+        if (nuevoClima != null && nuevoClima == ecosistema.getClimaActual()) {
+            return "(!) El clima ya es " + nombreClima(nuevoClima) + ". Elige un clima distinto.";
+        }      
+        
         if (tipo != null) {
             ecosistema.agregarEntidad(tipo);
             if ("lobo".equals(tipo)) {
