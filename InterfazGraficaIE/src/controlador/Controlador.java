@@ -40,18 +40,17 @@ public class Controlador {
     private Clima climaInicial;
     private int turnosTotales;
     
+
+    // Resultado del último guardado automático (null = se guardó bien)
+    private String mensajeGuardado = null;
+
+    
     private int lobosAgregados = 0;
 
     public Controlador(SimulacionDAO dao) {
         this.dao = dao;
     }
 
-    // Avanza un turno de la simulación (reemplaza la iteración del bucle for de consola)
-    public void avanzarTurno() {
-        if (ecosistema != null && !simulacionTerminada()) {
-            ecosistema.procesarTurno(); // Llama a la lógica del ecosistema.
-        }
-    }
 
     // Evalúa si corresponde intervenir cada 3 turnos (turnoActual - 1 es el turno recién procesado)
     public boolean esTurnoDeIntervencion() {
@@ -60,11 +59,6 @@ public class Controlador {
         return turnoRecienProcesado > 0 && (turnoRecienProcesado % 3 == 0) && !simulacionTerminada();
     }
 
-    // Evalúa las condiciones de corte que tenía el bucle for en ejecutarBuclePrincipal()
-    public boolean simulacionTerminada() {
-        if (ecosistema == null) return true;
-        return (ecosistema.getTurnoActual() > turnosTotales) || ecosistema.ecosistemaColapsado();
-    }
 
     // Devuelve el mensaje de fin de simulación tal como estaba en ejecutarBuclePrincipal()
     public String obtenerMensajeFinSimulacion() {
@@ -156,6 +150,11 @@ public class Controlador {
         if (clima == null) {
             return "(!) Error: Selecciona un clima inicial válido.";
         }
+        
+        // Al empezar una partida nueva se descarta la guardada (el usuario ya confirmó).
+        if (dao != null) {
+            dao.borrarPartidaGuardada();
+        }
 
         this.cantidadInicialPlantas = validarEnteroEnRango(plantasStr, MIN_PLANTAS, MAX_PLANTAS);
         this.cantidadInicialConejos = validarEnteroEnRango(conejosStr, MIN_CONEJOS, MAX_CONEJOS);
@@ -166,6 +165,8 @@ public class Controlador {
         this.ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
         return null;
     }
+    
+        guardarProgreso();
 
     //Versión que recibe el índice del combo de clima (0 = Soleado ... 3 = Invierno).
     public String iniciarNuevaSimulacion(String plantasStr, String conejosStr, String lobosStr,
@@ -274,6 +275,88 @@ public class Controlador {
                 return clima.name();
         }
     }
+
+    
+    /** Indica si hay una partida guardada para habilitar "Retomar simulación". */
+    public boolean hayPartidaGuardada() {
+        return dao != null && dao.existePartidaGuardada();
+    }
+
+    /**
+     * Pide al DAO la partida guardada y la deja lista para seguir jugando.
+     *
+     * @return mensaje de error, o null si la partida se cargó.
+     */
+    public String retomarSimulacion() {
+        if (!hayPartidaGuardada()) {
+            return "(!) No hay ninguna simulación guardada para retomar.";
+        }
+        Ecosistema cargado = dao.cargarEstado();
+        if (cargado == null) {
+            return "(!) La simulación guardada está dañada o incompleta y no se pudo cargar.";
+        }
+        this.ecosistema = cargado;
+        this.climaInicial = cargado.getClimaActual();
+        this.cantidadInicialPlantas = cargado.getPlantas().size();
+        this.cantidadInicialConejos = cargado.getConejos().size();
+        this.cantidadInicialLobos = cargado.getLobos().size();
+        // TODO(DAO): el archivo todavía no guarda los turnos totales. Hasta que lo haga,
+        // se usa el máximo permitido para que la partida retomada pueda terminar.
+        this.turnosTotales = MAX_TURNOS;
+        return null;
+    }
+
+    /**
+     * Ordena al modelo procesar un turno y al DAO guardar el progreso. Si la
+     * simulación terminó, borra la partida guardada (ya no hay nada que
+     * retomar).
+     *
+     * @return mensaje de error, o null si el turno se procesó.
+     */
+    public String avanzarTurno() {
+        if (ecosistema == null) {
+            return "(!) No hay ninguna simulación en curso.";
+        }
+        if (simulacionTerminada()) {
+            return "(!) La simulación ya terminó.";
+        }
+        ecosistema.procesarTurno();
+
+        if (simulacionTerminada()) {
+            if (dao != null) {
+                dao.borrarPartidaGuardada();
+            }
+            mensajeGuardado = null;
+        } else {
+            guardarProgreso();
+        }
+        return null;
+    }
+
+    // Guarda el estado actual con el DAO y recuerda si falló.
+    private void guardarProgreso() {
+        if (dao == null) {
+            mensajeGuardado = "(!) No hay sistema de guardado configurado.";
+        } else if (dao.guardarEstado(ecosistema)) {
+            mensajeGuardado = null;
+        } else {
+            mensajeGuardado = "(!) No se pudo guardar el progreso de la simulación.";
+        }
+    }
+
+    /** Mensaje del último guardado automático, o null si se guardó bien. */
+    public String getMensajeGuardado() {
+        return mensajeGuardado;
+    }
+
+    /** Evalúa las condiciones de fin: se alcanzó el límite de turnos o colapsó el ecosistema. */
+    public boolean simulacionTerminada() {
+        if (ecosistema == null) {
+            return true;
+        }
+        return (ecosistema.getTurnoActual() > turnosTotales) || ecosistema.ecosistemaColapsado();
+    }
+    
 
     //-----------------------------------------------------------------------//
     // Getters y Setters
