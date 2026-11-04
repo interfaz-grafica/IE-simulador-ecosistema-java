@@ -532,14 +532,6 @@ public class Controlador {
     // REPORTE FINAL (datos que calcula el modelo, empaquetados como texto)
     //=======================================================================//
 
-    /** Título para lblTituloResultado. */
-    public String obtenerTituloResultado() {
-        if (ecosistema == null) {
-            return "";
-        }
-        return ecosistema.ecosistemaColapsado() ? "Colapso del ecosistema" : "Ecosistema en equilibrio";
-    }
-
     
     /** Causa de fin para lblCausaFin (ej: "LIMITE DE TURNOS ALCANZADO"). */
     public String obtenerCausaFin() {
