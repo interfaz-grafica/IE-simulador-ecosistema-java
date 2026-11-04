@@ -7,12 +7,6 @@ import vista.VentanaEcosistema;
 public class InterfazGraficaIE {
 
     public static void main(String[] args) {
-        // Look and Feel del sistema operativo (si falla, queda el de Java por defecto)
-        try {
-            javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            // se sigue con el Look and Feel por defecto
-        }
 
         // Capa de persistencia: guarda y lee la partida en un .txt
         SimulacionDAO dao = new SimulacionDAO();
