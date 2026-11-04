@@ -163,10 +163,13 @@ public class Controlador {
         this.climaInicial = clima;
 
         this.ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
+        
+        guardarProgreso();
+        
         return null;
+       
     }
     
-        guardarProgreso();
 
     //Versión que recibe el índice del combo de clima (0 = Soleado ... 3 = Invierno).
     public String iniciarNuevaSimulacion(String plantasStr, String conejosStr, String lobosStr,
