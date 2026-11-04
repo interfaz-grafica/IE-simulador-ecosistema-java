@@ -26,16 +26,16 @@ import modelo.PlantaVenenosa;
 public class Controlador {
     
     // Rangos válidos de la configuración inicial (consigna)
-    public static int MIN_PLANTAS = 5;
-    public static int MAX_PLANTAS = 30;
-    public static int MIN_CONEJOS = 2;
-    public static int MAX_CONEJOS = 15;
-    public static int MIN_LOBOS = 1;
-    public static int MAX_LOBOS = 5;
-    public static int MIN_TURNOS = 10;
-    public static int MAX_TURNOS = 50;
-    public static int TURNOS_ENTRE_INTERVENCIONES = 3;
-    public static int TOPE_LOBOS = 5;
+    public static final int MIN_PLANTAS = 5;
+    public static final int MAX_PLANTAS = 30;
+    public static final int MIN_CONEJOS = 2;
+    public static final int MAX_CONEJOS = 15;
+    public static final int MIN_LOBOS = 1;
+    public static final int MAX_LOBOS = 5;
+    public static final int MIN_TURNOS = 10;
+    public static final int MAX_TURNOS = 50;
+    public static final int TURNOS_ENTRE_INTERVENCIONES = 3;
+    public static final int TOPE_LOBOS = 5;
     
     private SimulacionDAO dao;
     private Ecosistema ecosistema;
@@ -130,14 +130,6 @@ public class Controlador {
     }
     
 
-    //Versión que recibe el índice del combo de clima (0 = Soleado ... 3 = Invierno).
-    public String iniciarNuevaSimulacion(String plantasStr, String conejosStr, String lobosStr, int indiceClima, String turnosStr) {
-        Clima[] climas = Clima.values();
-        String nombre = (indiceClima >= 0 && indiceClima < climas.length) ? climas[indiceClima].name() : null;
-        return iniciarNuevaSimulacion(plantasStr, conejosStr, lobosStr, turnosStr, nombre);
-    }
-    
-    
     //Resumen de la configuración inicial en texto.
     public String obtenerResumenConfiguracionInicial() {
         return "-------------------------------------------\n"
