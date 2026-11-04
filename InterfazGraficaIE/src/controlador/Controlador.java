@@ -458,12 +458,21 @@ public class Controlador {
     //=======================================================================//
 
     /** Turno que se va a jugar a continuación, para lblTurno (ej: "Turno 4 / 20"). */
+    /**
+     * Último turno jugado, para lblTurno (ej: "TURNO: 3 / 20").
+     * Muestra el mismo número que la cabecera de los eventos ("=== TURNO 3") y que la
+     * regla de intervención (se habilita cuando este número es 3, 6, 9...).
+     * Antes de jugar el primer turno muestra "INICIO / 20".
+     */
     public String obtenerTextoTurno() {
         if (ecosistema == null) {
             return "TURNO: - / -";
         }
-        int turno = Math.min(ecosistema.getTurnoActual(), turnosTotales);
-        return "TURNO: " + turno + " / " + turnosTotales;
+        int turnosJugados = Math.min(ecosistema.getTurnoActual() - 1, turnosTotales);
+        if (turnosJugados == 0) {
+            return "INICIO / " + turnosTotales;
+        }
+        return "TURNO: " + turnosJugados + " / " + turnosTotales;
     }
     
     
