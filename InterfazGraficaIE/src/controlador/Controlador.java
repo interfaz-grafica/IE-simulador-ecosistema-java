@@ -254,13 +254,21 @@ public class Controlador {
      * @return mensaje de error, o null si la partida se cargó.
      */
     public String cargarPartidaGuardada() {
+        
         if (!hayPartidaGuardada()) {
             return "(!) No hay ninguna simulación guardada para retomar.";
         }
+        
         Ecosistema cargado = dao.cargarEstado();
+        
         if (cargado == null) {
             return "(!) La simulación guardada está dañada o incompleta y no se pudo cargar.";
         }
+        
+        if (cargado.getTurnosMaximos() < MIN_TURNOS || cargado.getTurnosMaximos() > MAX_TURNOS) {
+            return "(!) La simulación guardada no tiene una cantidad de turnos válida.";
+        }
+        
         this.ecosistema = cargado;
         this.climaInicial = cargado.getClimaActual();
         this.cantidadInicialPlantas = cargado.getPlantas().size();
