@@ -17,7 +17,11 @@ import dao.SimulacionDAO;
 import modelo.Clima;
 import modelo.Ecosistema;
 import java.text.Normalizer;
-
+import java.util.ArrayList;
+import modelo.Conejo;
+import modelo.Lobo;
+import modelo.Planta;
+import modelo.PlantaVenenosa;
 
 public class Controlador {
     
@@ -445,16 +449,79 @@ public class Controlador {
         }
         return null;
     }
+
     
-    //-----------------------------------------------------------------------//
-    // Getters y Setters
-    public Ecosistema getEcosistema() {
-        return ecosistema;
+    //=======================================================================//
+    // DATOS EMPAQUETADOS PARA LA VISTA (sin exponer el modelo)
+    //=======================================================================//
+
+    /** Turno que se va a jugar a continuación, para lblTurno (ej: "Turno 4 / 20"). */
+    public String obtenerTextoTurno() {
+        if (ecosistema == null) {
+            return "Turno - / -";
+        }
+        int turno = Math.min(ecosistema.getTurnoActual(), turnosTotales);
+        return "Turno " + turno + " / " + turnosTotales;
     }
 
-    public void setEcosistema(Ecosistema ecosistema) {
-        this.ecosistema = ecosistema;
+    public int getTurnoActual() {
+        return ecosistema == null ? 0 : ecosistema.getTurnoActual();
     }
+
+    /** Clima actual para lblClima (ej: "Soleado"). */
+    public String obtenerTextoClima() {
+        return ecosistema == null ? "-" : nombreClima(ecosistema.getClimaActual());
+    }
+
+    /** Contadores para los labels superiores: {plantas, conejos, lobos}. */
+    public int[] obtenerContadores() {
+        if (ecosistema == null) {
+            return new int[]{0, 0, 0};
+        }
+        return new int[]{
+            ecosistema.getPlantas().size(),
+            ecosistema.getConejos().size(),
+            ecosistema.getLobos().size()
+        };
+    }
+
+    /**
+     * Filas para tblTablaEntidad. Cada fila respeta el orden de columnas:
+     * Nombre, Tipo, Energía, Edad, Detalle.
+     */
+    public String[][] obtenerFilasEntidades() {
+        ArrayList<String[]> filas = new ArrayList<>();
+        if (ecosistema != null) {
+            for (Planta p : ecosistema.getPlantas()) {
+                String tipo = (p instanceof PlantaVenenosa) ? "Planta venenosa" : "Planta";
+                filas.add(fila(p.getNombre(), tipo, p.getEnergia(), p.getEdad(), "Tamaño: " + p.getTamanio()));
+            }
+            for (Conejo c : ecosistema.getConejos()) {
+                filas.add(fila(c.getNombre(), "Conejo", c.getEnergia(), c.getEdad(),
+                        "Velocidad: " + c.getVelocidad() + " | Peso: " + c.getPeso()));
+            }
+            for (Lobo l : ecosistema.getLobos()) {
+                filas.add(fila(l.getNombre(), "Lobo", l.getEnergia(), l.getEdad(),
+                        "Cacerías: " + l.getExitosCaza()));
+            }
+        }
+        return filas.toArray(new String[0][]);
+    }
+
+    private String[] fila(String nombre, String tipo, double energia, int edad, String detalle) {
+        return new String[]{nombre, tipo, String.format("%.1f", energia), String.valueOf(edad), detalle};
+    }
+
+    /** Eventos del último turno, uno por línea, para txtEventosArea. */
+    public String obtenerEventosTurno() {
+        if (ecosistema == null) {
+            return "";
+        }
+        return String.join("\n", ecosistema.getEventosTurno());
+    }
+
+    //-----------------------------------------------------------------------//
+    // Getters y Setters
 
     public int getTurnosTotales() {
         return turnosTotales;
