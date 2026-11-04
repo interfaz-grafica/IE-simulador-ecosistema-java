@@ -10,7 +10,8 @@ import controlador.Controlador;
  *
  * @author GZ TIENDA
  */
-public class VentanaEcosistema extends javax.swing.JFrame {
+public class VentanaEcosistema
+        extends javax.swing.JFrame {
 
     // Nombres de las cartas del CardLayout (deben coincidir con los de initComponents)
     private static final String CARTA_CONFIGURACION = "cardConfiguracion";
@@ -53,7 +54,10 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     private void initComponents() {
 
         pnlHeader = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
+        pnlControlesVentana = new javax.swing.JPanel();
+        lblMinimizar = new javax.swing.JLabel();
+        lblMaximizar = new javax.swing.JLabel();
+        lblCerrar = new javax.swing.JLabel();
         pnlContenedorPantallas = new javax.swing.JPanel();
         pnlConfiguracion = new javax.swing.JPanel();
         pnlBotonesConfiguracion = new javax.swing.JPanel();
@@ -127,11 +131,47 @@ public class VentanaEcosistema extends javax.swing.JFrame {
         pnlHeader.setPreferredSize(new java.awt.Dimension(480, 36));
         pnlHeader.setLayout(new java.awt.BorderLayout());
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("—    □    X");
-        jLabel6.setToolTipText("");
-        pnlHeader.add(jLabel6, java.awt.BorderLayout.EAST);
+        pnlControlesVentana.setBackground(new java.awt.Color(29, 42, 68));
+        pnlControlesVentana.setPreferredSize(new java.awt.Dimension(105, 36));
+        pnlControlesVentana.setLayout(new java.awt.GridLayout(1, 3, 5, 0));
+
+        lblMinimizar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblMinimizar.setForeground(new java.awt.Color(255, 255, 255));
+        lblMinimizar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMinimizar.setText("—");
+        lblMinimizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblMinimizar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblMinimizarMouseClicked(evt);
+            }
+        });
+        pnlControlesVentana.add(lblMinimizar);
+
+        lblMaximizar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblMaximizar.setForeground(new java.awt.Color(255, 255, 255));
+        lblMaximizar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMaximizar.setText("□");
+        lblMaximizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblMaximizar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblMaximizarMouseClicked(evt);
+            }
+        });
+        pnlControlesVentana.add(lblMaximizar);
+
+        lblCerrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        lblCerrar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCerrar.setText("X");
+        lblCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCerrarMouseClicked(evt);
+            }
+        });
+        pnlControlesVentana.add(lblCerrar);
+
+        pnlHeader.add(pnlControlesVentana, java.awt.BorderLayout.EAST);
 
         getContentPane().add(pnlHeader, java.awt.BorderLayout.NORTH);
 
@@ -554,19 +594,19 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCantidadConejosActionPerformed
 
     private void btnCargarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPartidaActionPerformed
-         controlador.cargarPartidaGuardada();
+        controlador.cargarPartidaGuardada();
     }//GEN-LAST:event_btnCargarPartidaActionPerformed
 
     private void btnIniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSimulacionActionPerformed
         if (confirmarNuevaPartida()) {
-        String plantas = txtCantidadPlantas.getText();
-        String conejos = txtCantidadConejos.getText();
-        String lobos = txtCantidadLobos.getText();
-        String turnos = txtTurnosTotales.getText();
-        String clima = cmbClimaInicial.getSelectedItem().toString();
-        
-        controlador.iniciarNuevaSimulacion(plantas, conejos, lobos, turnos, clima);
-    }
+            String plantas = txtCantidadPlantas.getText();
+            String conejos = txtCantidadConejos.getText();
+            String lobos = txtCantidadLobos.getText();
+            String turnos = txtTurnosTotales.getText();
+            String clima = cmbClimaInicial.getSelectedItem().toString();
+
+            controlador.iniciarNuevaSimulacion(plantas, conejos, lobos, turnos, clima);
+        }
     }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
 
     private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
@@ -580,63 +620,83 @@ public class VentanaEcosistema extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAvanzarTurnoActionPerformed
 
     private void btnAgregarEntidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntidadActionPerformed
-    String nuevoClima = cmbNuevoClima.getSelectedItem().toString();
-    String nuevaEntidad = cmbAgregarEntidad.getSelectedItem().toString();
-    
-    controlador.intervenir(nuevoClima, nuevaEntidad);
+        String nuevoClima = cmbNuevoClima.getSelectedItem().toString();
+        String nuevaEntidad = cmbAgregarEntidad.getSelectedItem().toString();
+
+        controlador.intervenir(nuevoClima, nuevaEntidad);
     }//GEN-LAST:event_btnAgregarEntidadActionPerformed
+
+    private void lblMinimizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMinimizarMouseClicked
+        // TODO add your handling code here:
+        this.setExtendedState(javax.swing.JFrame.ICONIFIED);
+    }//GEN-LAST:event_lblMinimizarMouseClicked
+
+    private void lblMaximizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMaximizarMouseClicked
+        // TODO add your handling code here:
+        if (this.getExtendedState() == javax.swing.JFrame.MAXIMIZED_BOTH) {
+            this.setExtendedState(javax.swing.JFrame.NORMAL);
+        } else {
+            this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        }
+    }//GEN-LAST:event_lblMaximizarMouseClicked
+
+    private void lblCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCerrarMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_lblCerrarMouseClicked
 //Maxi, ya dejé delegados los eventos en la vista. Para que se unan las capas y desaparezcan los errores de compilación,
     //tenés que crear estos métodos públicos en tu clase Controlador: cargarPartidaGuardada(), iniciarNuevaSimulacion(String plantas, 
     //String conejos, String lobos, String turnos, String clima), avanzarTurno(), e intervenir(String clima, String entidad). 
     //Para moverte entre pantallas, llamá a vista.irAPantallaSimulacion() y los demás métodos de navegación que te dejé armados.
+
     private void mostrarCarta(String nombreCarta) {
         ((java.awt.CardLayout) pnlContenedorPantallas.getLayout()).show(pnlContenedorPantallas, nombreCarta);
     }
 
     public void irAPantallaSimulacion() {
-    mostrarCarta(CARTA_SIMULACION);
-}
-
-public void irAPantallaReporte() {
-    mostrarCarta(CARTA_REPORTE);
-}
-
-public void irAPantallaConfiguracion() {
-    mostrarCarta(CARTA_CONFIGURACION);
-}
-    
-public void actualizarContadores(int turno, int turnosMaximos, String clima, int cantPlantas, int cantConejos, int cantLobos) {
-    lblTurno.setText("TURNO: " + turno + " / " + turnosMaximos);
-    lblClima.setText("CLIMA: " + clima.toUpperCase());
-    lblContadorPlantas.setText("Plantas: " + cantPlantas);
-    lblContadorConejos.setText("Conejos: " + cantConejos);
-    lblContadorLobos.setText("Lobos: " + cantLobos);
-}
-
-public void limpiarTablaEntidades() {
-    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
-    modelo.setRowCount(0);
-}
-
-public void agregarFilaEntidad(String nombre, String tipo, double energia, int edad, String detalle) {
-    javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
-    modelo.addRow(new Object[]{nombre, tipo, energia, edad, detalle});
-}
-
-public void actualizarEventos(java.util.List<String> eventos) {
-    txtEventosArea.setText("");
-    for (String evento : eventos) {
-        txtEventosArea.append(evento + "\n");
+        mostrarCarta(CARTA_SIMULACION);
     }
-}
 
-public void mostrarErrorConfiguracion(String mensaje) {
-    lblErrorConfiguracion.setText(mensaje);
-}
+    public void irAPantallaReporte() {
+        mostrarCarta(CARTA_REPORTE);
+    }
 
-public void mostrarMensaje(String mensaje) {
-    javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Información", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-}
+    public void irAPantallaConfiguracion() {
+        mostrarCarta(CARTA_CONFIGURACION);
+    }
+
+    public void actualizarContadores(int turno, int turnosMaximos, String clima, int cantPlantas, int cantConejos, int cantLobos) {
+        lblTurno.setText("TURNO: " + turno + " / " + turnosMaximos);
+        lblClima.setText("CLIMA: " + clima.toUpperCase());
+        lblContadorPlantas.setText("Plantas: " + cantPlantas);
+        lblContadorConejos.setText("Conejos: " + cantConejos);
+        lblContadorLobos.setText("Lobos: " + cantLobos);
+    }
+
+    public void limpiarTablaEntidades() {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
+        modelo.setRowCount(0);
+    }
+
+    public void agregarFilaEntidad(String nombre, String tipo, double energia, int edad, String detalle) {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
+        modelo.addRow(new Object[]{nombre, tipo, energia, edad, detalle});
+    }
+
+    public void actualizarEventos(java.util.List<String> eventos) {
+        txtEventosArea.setText("");
+        for (String evento : eventos) {
+            txtEventosArea.append(evento + "\n");
+        }
+    }
+
+    public void mostrarErrorConfiguracion(String mensaje) {
+        lblErrorConfiguracion.setText(mensaje);
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Información", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarEntidad;
@@ -653,12 +713,12 @@ public void mostrarMensaje(String mensaje) {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblCausaFin;
+    private javax.swing.JLabel lblCerrar;
     private javax.swing.JLabel lblClima;
     private javax.swing.JLabel lblContadorConejos;
     private javax.swing.JLabel lblContadorLobos;
@@ -666,6 +726,8 @@ public void mostrarMensaje(String mensaje) {
     private javax.swing.JLabel lblDetalleCausa;
     private javax.swing.JLabel lblErrorConfiguracion;
     private javax.swing.JLabel lblEstadoIntervencion;
+    private javax.swing.JLabel lblMaximizar;
+    private javax.swing.JLabel lblMinimizar;
     private javax.swing.JLabel lblRecordActividad;
     private javax.swing.JLabel lblRecordCazador;
     private javax.swing.JLabel lblTituloBalance;
@@ -683,6 +745,7 @@ public void mostrarMensaje(String mensaje) {
     private javax.swing.JPanel pnlConfiguracion;
     private javax.swing.JPanel pnlContadores;
     private javax.swing.JPanel pnlContenedorPantallas;
+    private javax.swing.JPanel pnlControlesVentana;
     private javax.swing.JPanel pnlDatosCentro;
     private javax.swing.JPanel pnlDatosRecord;
     private javax.swing.JPanel pnlFilaIntervencion;
