@@ -57,11 +57,8 @@ public class Controlador {
     public Controlador(SimulacionDAO dao) {
         this.dao = dao;
     }
-
-    // Devuelve el mensaje de fin de simulación tal como estaba en ejecutarBuclePrincipal()
     
-    
-    
+   
     //=======================================================================//
     // CONFIGURACIÓN Y CICLO DE VIDA DE LA SIMULACIÓN
     //=======================================================================//
@@ -122,6 +119,9 @@ public class Controlador {
         this.intervencionRealizada = false;        
 
         this.ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
+        
+        // El modelo necesita saber cuántos turnos dura la simulación (y el DAO lo guarda)
+        ecosistema.setTurnosMaximos(turnosTotales);
         
         guardarProgreso();
         
@@ -261,11 +261,9 @@ public class Controlador {
         this.cantidadInicialPlantas = cargado.getPlantas().size();
         this.cantidadInicialConejos = cargado.getConejos().size();
         this.cantidadInicialLobos = cargado.getLobos().size();
-        // TODO(DAO): el archivo todavía no guarda los turnos totales. Hasta que lo haga,
-        // se usa el máximo permitido para que la partida retomada pueda terminar.
-        this.turnosTotales = MAX_TURNOS;
-        
-        this.lobosAgregados = 0;
+        // El DAO guarda los turnos totales y los lobos agregados dentro del ecosistema
+        this.turnosTotales = cargado.getTurnosMaximos();
+        this.lobosAgregados = cargado.getLobosAgregados();
         this.intervencionRealizada = false;
         
         return null;
@@ -391,6 +389,7 @@ public class Controlador {
             ecosistema.agregarEntidad(tipo);
             if ("lobo".equals(tipo)) {
                 lobosAgregados++;
+                ecosistema.setLobosAgregados(lobosAgregados); // para que el DAO lo guarde
             }
             resultado.append("Se agregó un/a ").append(tipo).append(" al ecosistema.");
         }
@@ -507,7 +506,102 @@ public class Controlador {
         return String.join("\n", ecosistema.getEventosTurno());
     }
 
-    
+    //=======================================================================//
+    // REPORTE FINAL (datos que calcula el modelo, empaquetados como texto)
+    //=======================================================================//
+
+    /** Título para lblTituloResultado. */
+    public String obtenerTituloResultado() {
+        if (ecosistema == null) {
+            return "";
+        }
+        return ecosistema.ecosistemaColapsado() ? "Colapso del ecosistema" : "Ecosistema en equilibrio";
+    }
+
+    /** Causa de fin para lblCausaFin (ej: "LIMITE DE TURNOS ALCANZADO"). */
+    public String obtenerCausaFin() {
+        return ecosistema == null ? "" : ecosistema.getCausaFin();
+    }
+
+    /** Detalle de la causa para lblDetalleCausa (ej: "Se extinguieron: conejos"). */
+    public String obtenerDetalleCausa() {
+        return ecosistema == null ? "" : ecosistema.getDetalleCausaFin();
+    }
+
+    /** Texto para lblRecordActividad: el turno con más bajas. */
+    public String obtenerRecordActividad() {
+        if (ecosistema == null) {
+            return "";
+        }
+        if (ecosistema.getMaxBajasEnUnTurno() == 0) {
+            return "Turno de mayor actividad: no hubo bajas.";
+        }
+        return "Turno de mayor actividad: Turno " + ecosistema.getTurnoMayorActividad()
+                + " (" + ecosistema.getMaxBajasEnUnTurno() + " bajas)";
+    }
+
+    /** Texto para lblRecordCazador: el lobo con más cacerías (vivo o muerto). */
+    public String obtenerRecordCazador() {
+        if (ecosistema == null) {
+            return "";
+        }
+        if (ecosistema.getRecordCazadorCacerias() == 0) {
+            return "Lobo con más cacerías: ningún lobo cazó.";
+        }
+        return "Lobo con más cacerías: " + ecosistema.getRecordCazadorNombre()
+                + " (" + ecosistema.getRecordCazadorCacerias() + " presas)";
+    }
+
+    /**
+     * Filas para tblBalanceVital, en el orden de columnas de la tabla:
+     * "", Plantas, Lobos, Conejos, Plantas Venenosas.
+     * Filas: Total nacimientos, Total muertes, Más longeva.
+     */
+    public String[][] obtenerFilasBalanceVital() {
+        if (ecosistema == null) {
+            return new String[0][];
+        }
+        // En el modelo, las plantas venenosas están incluidas en el total de plantas
+        int nacPlantasNormales = ecosistema.getNacimientosPlantas() - ecosistema.getNacimientosPlantasVenenosas();
+        int muertesPlantasNormales = ecosistema.getMuertesPlantas() - ecosistema.getMuertesPlantasVenenosas();
+
+        String[] filaNacimientos = {
+            "Total nacimientos",
+            String.valueOf(nacPlantasNormales),
+            String.valueOf(ecosistema.getNacimientosLobos()),
+            String.valueOf(ecosistema.getNacimientosConejos()),
+            String.valueOf(ecosistema.getNacimientosPlantasVenenosas())
+        };
+        String[] filaMuertes = {
+            "Total muertes",
+            String.valueOf(muertesPlantasNormales),
+            String.valueOf(ecosistema.getMuertesLobos()),
+            String.valueOf(ecosistema.getMuertesConejos()),
+            String.valueOf(ecosistema.getMuertesPlantasVenenosas())
+        };
+        String[] filaLongevas = {
+            "Más longeva",
+            textoRecord(ecosistema.getRecordPlantaNombre(), ecosistema.getRecordPlantaEdad()),
+            textoRecord(ecosistema.getRecordLoboNombre(), ecosistema.getRecordLoboEdad()),
+            textoRecord(ecosistema.getRecordConejoNombre(), ecosistema.getRecordConejoEdad()),
+            textoRecord(ecosistema.getRecordPlantaVenenosaNombre(), ecosistema.getRecordPlantaVenenosaEdad())
+        };
+        return new String[][]{filaNacimientos, filaMuertes, filaLongevas};
+    }
+
+    // Arma "Nombre (N turnos)", o "-" si todavía no hay récord para ese tipo.
+    private String textoRecord(String nombre, int edad) {
+        if (nombre == null || nombre.isEmpty()) {
+            return "-";
+        }
+        return nombre + " (" + edad + " turnos)";
+    }
+
+    /** Reporte completo en texto, para el botón "Exportar / Copiar". */
+    public String obtenerReporteFinal() {
+        return ecosistema == null ? "" : ecosistema.generarReporteFinal();
+    }
+
     //-----------------------------------------------------------------------//
     // Getters y Setters
 
