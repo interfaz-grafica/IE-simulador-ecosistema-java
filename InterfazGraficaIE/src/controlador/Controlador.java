@@ -59,19 +59,7 @@ public class Controlador {
     }
 
     // Devuelve el mensaje de fin de simulación tal como estaba en ejecutarBuclePrincipal()
-    public String obtenerMensajeFinSimulacion() {
-        if (ecosistema.ecosistemaColapsado()) {
-            return ">> FIN DE LA SIMULACION: El ecosistema ha colapsado (una poblacion se extinguio).";
-        } else {
-            return ">> FIN DE LA SIMULACION: Se alcanzo el limite maximo de " + turnosTotales + " turnos.";
-        }
-    }
-
-    // Obtiene el reporte final desde el modelo
-    public String obtenerReporteFinal() {
-        if (ecosistema == null) return "";
-        return ecosistema.generarReporteFinal();
-    }
+    
     
     
     //=======================================================================//
@@ -109,7 +97,7 @@ public class Controlador {
         @return mensaje de error, o null si la simulación se creó.
      */
     public String iniciarNuevaSimulacion(String plantasStr, String conejosStr, String lobosStr,
-            String climaTexto, String turnosStr) {
+        String turnosStr, String climaTexto) {
         String error = validarConfiguracion(plantasStr, conejosStr, lobosStr, turnosStr);
         if (error != null) {
             return error;
@@ -143,11 +131,10 @@ public class Controlador {
     
 
     //Versión que recibe el índice del combo de clima (0 = Soleado ... 3 = Invierno).
-    public String iniciarNuevaSimulacion(String plantasStr, String conejosStr, String lobosStr,
-            int indiceClima, String turnosStr) {
+    public String iniciarNuevaSimulacion(String plantasStr, String conejosStr, String lobosStr, int indiceClima, String turnosStr) {
         Clima[] climas = Clima.values();
         String nombre = (indiceClima >= 0 && indiceClima < climas.length) ? climas[indiceClima].name() : null;
-        return iniciarNuevaSimulacion(plantasStr, conejosStr, lobosStr, nombre, turnosStr);
+        return iniciarNuevaSimulacion(plantasStr, conejosStr, lobosStr, turnosStr, nombre);
     }
     
     
@@ -261,7 +248,7 @@ public class Controlador {
      *
      * @return mensaje de error, o null si la partida se cargó.
      */
-    public String retomarSimulacion() {
+    public String cargarPartidaGuardada() {
         if (!hayPartidaGuardada()) {
             return "(!) No hay ninguna simulación guardada para retomar.";
         }
@@ -380,7 +367,7 @@ public class Controlador {
      *
      * @return mensaje para mostrar al usuario (resultado o error).
      */
-    public String aplicarIntervencion(String climaTexto, String entidadTexto) {
+    public String intervenir(String climaTexto, String entidadTexto) {
         if (!puedeIntervenir()) {
             return "(!) Solo puedes intervenir una vez cada " + TURNOS_ENTRE_INTERVENCIONES + " turnos.";
         }
@@ -417,7 +404,7 @@ public class Controlador {
         if (obtenerClimaPorNombre(climaTexto) == null) {
             return "(!) Selecciona un clima válido.";
         }
-        return aplicarIntervencion(climaTexto, null);
+        return intervenir(climaTexto, null);
     }
 
     /** Intervención solo de entidad ("Planta", "Conejo" o "Lobo"). */
@@ -425,7 +412,7 @@ public class Controlador {
         if (normalizarTipoEntidad(entidadTexto) == null) {
             return "(!) Opción de entidad inválida.";
         }
-        return aplicarIntervencion(null, entidadTexto);
+        return intervenir(null, entidadTexto);
     }
 
     /** true si agregar un lobo más superaría el tope de 5 lobos en el ecosistema. */
@@ -520,6 +507,7 @@ public class Controlador {
         return String.join("\n", ecosistema.getEventosTurno());
     }
 
+    
     //-----------------------------------------------------------------------//
     // Getters y Setters
 

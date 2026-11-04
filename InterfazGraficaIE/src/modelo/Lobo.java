@@ -10,7 +10,7 @@ public class Lobo extends Animal implements Peligroso {
     public Lobo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso, int exitosCaza) {
         
         super(nombre, energia, edad, viva, velocidad, peso);
-        this.exitosCaza = exitosCaza;
+        setExitosCaza(exitosCaza);
     }
     
     @Override
@@ -97,8 +97,13 @@ public class Lobo extends Animal implements Peligroso {
         return exitosCaza;
     }
 
+    // Las cacerías exitosas no pueden ser negativas
     public void setExitosCaza(int exitosCaza) {
-        this.exitosCaza = exitosCaza;
+        if (exitosCaza < 0) {
+            this.exitosCaza = 0;
+        } else {
+            this.exitosCaza = exitosCaza;
+        }
     }
     
 }
