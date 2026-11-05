@@ -18,6 +18,8 @@ import modelo.Clima;
 import modelo.Ecosistema;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import modelo.Conejo;
 import modelo.Lobo;
 import modelo.Planta;
@@ -589,7 +591,7 @@ public class Controlador {
     /**
      * Filas para tblBalanceVital, en el orden de columnas de la tabla:
      * "", Plantas, Lobos, Conejos, Plantas Venenosas.
-     * Filas: Total nacimientos, Total muertes, Más longeva.
+     * Filas: Total nacimientos, Total muertes, Más longeva, Pico máximo, Pico mínimo.
      */
     public String[][] obtenerFilasBalanceVital() {
         if (ecosistema == null) {
@@ -620,9 +622,35 @@ public class Controlador {
             textoRecord(ecosistema.getRecordConejoNombre(), ecosistema.getRecordConejoEdad()),
             textoRecord(ecosistema.getRecordPlantaVenenosaNombre(), ecosistema.getRecordPlantaVenenosaEdad())
         };
-        return new String[][]{filaNacimientos, filaMuertes, filaLongevas};
+        // Picos poblacionales: el historial del modelo guarda cuántos había al final de cada turno.
+        // El historial de plantas incluye a las venenosas (están en la misma lista).
+        String[] filaPicoMaximo = {
+            "Pico máximo",
+            textoPico(ecosistema.getHistorialPlantas(), true),
+            textoPico(ecosistema.getHistorialLobos(), true),
+            textoPico(ecosistema.getHistorialConejos(), true),
+            "-"
+        };
+        String[] filaPicoMinimo = {
+            "Pico mínimo",
+            textoPico(ecosistema.getHistorialPlantas(), false),
+            textoPico(ecosistema.getHistorialLobos(), false),
+            textoPico(ecosistema.getHistorialConejos(), false),
+            "-"
+        };
+        return new String[][]{filaNacimientos, filaMuertes, filaLongevas, filaPicoMaximo, filaPicoMinimo};
     }
 
+    // Arma "Valor (turno N)" con el máximo o el mínimo del historial, o "-" si está vacío.
+    // El índice 0 del historial corresponde al turno 1.
+    private String textoPico(List<Integer> historial, boolean maximo) {
+        if (historial == null || historial.isEmpty()) {
+            return "-";
+        }
+        int valor = maximo ? Collections.max(historial) : Collections.min(historial);
+        int turno = historial.indexOf(valor) + 1;
+        return valor + " (turno " + turno + ")";
+    }
     
     // Arma "Nombre (N turnos)", o "-" si todavía no hay récord para ese tipo.
     private String textoRecord(String nombre, int edad) {
@@ -630,12 +658,6 @@ public class Controlador {
             return "-";
         }
         return nombre + " (" + edad + " turnos)";
-    }
-
-    
-    /** Reporte completo en texto, para el botón "Exportar / Copiar". */
-    public String obtenerReporteFinal() {
-        return ecosistema == null ? "" : ecosistema.generarReporteFinal();
     }
 
     //-----------------------------------------------------------------------//
