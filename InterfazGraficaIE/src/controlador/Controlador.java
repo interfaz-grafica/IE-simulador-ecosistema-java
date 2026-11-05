@@ -54,6 +54,10 @@ public class Controlador {
 
     private int lobosAgregados = 0;
 
+    // Qué acciones ya se usaron en la ventana de intervención actual (se reinician al avanzar el turno)
+    private boolean climaCambiadoEnVentana = false;
+    private boolean entidadAgregadaEnVentana = false;
+
     public Controlador(SimulacionDAO dao) {
         this.dao = dao;
     }
@@ -116,6 +120,8 @@ public class Controlador {
         this.climaInicial = clima;
         
         this.lobosAgregados = 0;
+        this.climaCambiadoEnVentana = false;
+        this.entidadAgregadaEnVentana = false;
 
         this.ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
         
@@ -268,7 +274,11 @@ public class Controlador {
         // El DAO guarda los turnos totales y los lobos agregados dentro del ecosistema
         this.turnosTotales = cargado.getTurnosMaximos();
         this.lobosAgregados = cargado.getLobosAgregados();
-        
+        // El archivo solo guarda SI ya se intervino, no cuál acción: si ya se intervino,
+        // se toma la ventana como usada para no permitir intervenir de nuevo al retomar.
+        this.climaCambiadoEnVentana = cargado.isIntervencionRealizada();
+        this.entidadAgregadaEnVentana = cargado.isIntervencionRealizada();
+
         return null;
     }
 
@@ -288,6 +298,8 @@ public class Controlador {
             return "(!) La simulación ya terminó.";
         }
         ecosistema.procesarTurno();
+        climaCambiadoEnVentana = false;
+        entidadAgregadaEnVentana = false;
         ecosistema.setIntervencionRealizada(false);
 
         if (simulacionTerminada()) {
@@ -345,22 +357,40 @@ public class Controlador {
     }
 
     
-    /** true si ahora se puede intervenir (es turno de intervención y todavía no se usó). */
-    public boolean puedeIntervenir() {
-        return esTurnoDeIntervencion() && !ecosistema.isIntervencionRealizada();
+    /** true si todavía se puede cambiar el clima en esta ventana de intervención. */
+    public boolean puedeCambiarClima() {
+        return esTurnoDeIntervencion() && !climaCambiadoEnVentana;
     }
 
-    
+
+    /** true si todavía se puede agregar una entidad en esta ventana de intervención. */
+    public boolean puedeAgregarEntidad() {
+        return esTurnoDeIntervencion() && !entidadAgregadaEnVentana;
+    }
+
+
+    /** true si ahora se puede hacer alguna de las dos acciones de intervención. */
+    public boolean puedeIntervenir() {
+        return puedeCambiarClima() || puedeAgregarEntidad();
+    }
+
+
     /** Texto para lblEstadoIntervencion. */
     public String obtenerEstadoIntervencion() {
         if (ecosistema == null || simulacionTerminada()) {
             return "Intervención no disponible.";
         }
-        if (puedeIntervenir()) {
-            return "¡Puedes intervenir este turno!";
+        if (puedeCambiarClima() && puedeAgregarEntidad()) {
+            return "¡Puedes cambiar el clima y agregar una entidad este turno!";
+        }
+        if (puedeCambiarClima()) {
+            return "Ya agregaste una entidad. Todavía puedes cambiar el clima.";
+        }
+        if (puedeAgregarEntidad()) {
+            return "Ya cambiaste el clima. Todavía puedes agregar una entidad.";
         }
         if (esTurnoDeIntervencion()) {
-            return "Ya interviniste en este turno.";
+            return "Ya cambiaste el clima y agregaste una entidad en este turno.";
         }
         int procesados = ecosistema.getTurnoActual() - 1;
         int faltan = TURNOS_ENTRE_INTERVENCIONES - (procesados % TURNOS_ENTRE_INTERVENCIONES);
@@ -369,67 +399,97 @@ public class Controlador {
 
     
     /**
-     * Aplica la intervención del turno: un cambio de clima, una entidad nueva o
-     * ambos. Los valores que no sean válidos (por ejemplo "Selecciona nuevo
-     * clima" o "Agregar Entidad") se ignoran.
+     * Aplica la intervención del turno usando las dos acciones independientes:
+     * un cambio de clima, una entidad nueva o ambas. Los valores que no sean
+     * válidos (por ejemplo "Selecciona nuevo clima" o "Agregar Entidad") se ignoran.
      *
      * @return mensaje para mostrar al usuario (resultado o error).
      */
     public String intervenir(String climaTexto, String entidadTexto) {
-        if (!puedeIntervenir()) {
-            return "(!) Solo puedes intervenir una vez cada " + TURNOS_ENTRE_INTERVENCIONES + " turnos.";
+        if (!esTurnoDeIntervencion()) {
+            return mensajeFueraDeTurno();
         }
-        Clima nuevoClima = obtenerClimaPorNombre(climaTexto);
-        String tipo = normalizarTipoEntidad(entidadTexto);
-        if (nuevoClima == null && tipo == null) {
+        boolean hayClima = obtenerClimaPorNombre(climaTexto) != null;
+        boolean hayEntidad = normalizarTipoEntidad(entidadTexto) != null;
+        if (!hayClima && !hayEntidad) {
             return "(!) Selecciona un clima o una entidad para intervenir.";
         }
 
-        // Elegir el mismo clima que ya hay no es un cambio: se avisa sin gastar la intervención.
-        if (nuevoClima != null && nuevoClima == ecosistema.getClimaActual()) {
+        StringBuilder resultado = new StringBuilder();
+        if (hayClima) {
+            resultado.append(intervenirCambiarClima(climaTexto));
+        }
+        if (hayEntidad) {
+            if (resultado.length() > 0) {
+                resultado.append(" ");
+            }
+            resultado.append(intervenirAgregarEntidad(entidadTexto));
+        }
+        return resultado.toString();
+    }
+
+
+    /** Intervención solo de clima: no afecta a la acción de agregar entidad. */
+    public String intervenirCambiarClima(String climaTexto) {
+        if (!esTurnoDeIntervencion()) {
+            return mensajeFueraDeTurno();
+        }
+        if (climaCambiadoEnVentana) {
+            return "(!) Ya cambiaste el clima en esta intervención.";
+        }
+        Clima nuevoClima = obtenerClimaPorNombre(climaTexto);
+        if (nuevoClima == null) {
+            return "(!) Selecciona un clima válido.";
+        }
+        // Elegir el mismo clima que ya hay no es un cambio: se avisa sin gastar la acción.
+        if (nuevoClima == ecosistema.getClimaActual()) {
             return "(!) El clima ya es " + nombreClima(nuevoClima) + ". Elige un clima distinto.";
         }
 
+        ecosistema.cambiarClima(nuevoClima);
+        climaCambiadoEnVentana = true;
+        registrarIntervencion();
+        return "El clima cambió a " + nombreClima(nuevoClima) + ".";
+    }
+
+
+    /** Intervención solo de entidad ("Planta", "Conejo" o "Lobo"): no afecta al cambio de clima. */
+    public String intervenirAgregarEntidad(String entidadTexto) {
+        if (!esTurnoDeIntervencion()) {
+            return mensajeFueraDeTurno();
+        }
+        if (entidadAgregadaEnVentana) {
+            return "(!) Ya agregaste una entidad en esta intervención.";
+        }
+        String tipo = normalizarTipoEntidad(entidadTexto);
+        if (tipo == null) {
+            return "(!) Opción de entidad inválida.";
+        }
         // Se valida el tope de lobos ANTES de aplicar cualquier cambio.
         if ("lobo".equals(tipo) && superaTopeLobos()) {
             return mensajeTopeLobos();
         }
 
-        StringBuilder resultado = new StringBuilder();
-        if (nuevoClima != null) {
-            ecosistema.cambiarClima(nuevoClima);
-            resultado.append("El clima cambió a ").append(nombreClima(nuevoClima)).append(". ");
+        ecosistema.agregarEntidad(tipo);
+        if ("lobo".equals(tipo)) {
+            lobosAgregados++;
+            ecosistema.setLobosAgregados(lobosAgregados); // para que el DAO lo guarde
         }
+        entidadAgregadaEnVentana = true;
+        registrarIntervencion();
+        return "Se agregó un/a " + tipo + " al ecosistema.";
+    }
 
-        if (tipo != null) {
-            ecosistema.agregarEntidad(tipo);
-            if ("lobo".equals(tipo)) {
-                lobosAgregados++;
-                ecosistema.setLobosAgregados(lobosAgregados); // para que el DAO lo guarde
-            }
-            resultado.append("Se agregó un/a ").append(tipo).append(" al ecosistema.");
-        }
-        ecosistema.setIntervencionRealizada(true);
+
+    private String mensajeFueraDeTurno() {
+        return "(!) Solo puedes intervenir una vez cada " + TURNOS_ENTRE_INTERVENCIONES + " turnos.";
+    }
+
+
+    // Deja en el modelo si ya se intervino (el DAO lo guarda en el archivo) y guarda el progreso.
+    private void registrarIntervencion() {
+        ecosistema.setIntervencionRealizada(climaCambiadoEnVentana || entidadAgregadaEnVentana);
         guardarProgreso();
-        return resultado.toString().trim();
-    }
-
-    
-    /** Intervención solo de clima. */
-    public String intervenirCambiarClima(String climaTexto) {
-        if (obtenerClimaPorNombre(climaTexto) == null) {
-            return "(!) Selecciona un clima válido.";
-        }
-        return intervenir(climaTexto, null);
-    }
-
-    
-    /** Intervención solo de entidad ("Planta", "Conejo" o "Lobo"). */
-    public String intervenirAgregarEntidad(String entidadTexto) {
-        if (normalizarTipoEntidad(entidadTexto) == null) {
-            return "(!) Opción de entidad inválida.";
-        }
-        return intervenir(null, entidadTexto);
     }
 
     

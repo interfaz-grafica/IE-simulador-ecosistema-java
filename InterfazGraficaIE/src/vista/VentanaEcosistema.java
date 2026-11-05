@@ -726,11 +726,13 @@ public class VentanaEcosistema
         // 5. Estado de la intervención (cuántos turnos faltan, o si se puede intervenir)
         lblEstadoIntervencion.setText(controlador.obtenerEstadoIntervencion());
 
-        boolean puedeIntervenir = controlador.puedeIntervenir();
-        cmbNuevoClima.setEnabled(puedeIntervenir);
-        btnCambiarClima.setEnabled(puedeIntervenir);
-        cmbAgregarEntidad.setEnabled(puedeIntervenir);
-        btnAgregarEntidad.setEnabled(puedeIntervenir);
+        boolean puedeCambiarClima = controlador.puedeCambiarClima();
+        cmbNuevoClima.setEnabled(puedeCambiarClima);
+        btnCambiarClima.setEnabled(puedeCambiarClima);
+
+        boolean puedeAgregarEntidad = controlador.puedeAgregarEntidad();
+        cmbAgregarEntidad.setEnabled(puedeAgregarEntidad);
+        btnAgregarEntidad.setEnabled(puedeAgregarEntidad);
     }
 
     public void actualizarVistaReporte() {
