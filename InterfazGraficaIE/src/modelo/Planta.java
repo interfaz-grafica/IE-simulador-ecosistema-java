@@ -2,6 +2,9 @@ package modelo;
 
 public class Planta extends Entidad implements Reproducible {
 
+    private static final double ENERGIA_BROTE = 20.0;          // alcanza el mínimo para reproducirse
+    private static final double COSTO_REPRODUCCION = 2.0;
+
     private int tamanio;
 
     public Planta(String nombre, double energia, int edad, boolean viva, int tamanio) {
@@ -72,7 +75,7 @@ public class Planta extends Entidad implements Reproducible {
         // Al usar el método "agregarEntidad" del ecosistema, nos aseguramos de que
         // la variable interna de "nacimientosPlantas" se incremente correctamente para el reporte.
         for (int i = 0; i < brotes; i++) {
-            eco.agregarEntidad("planta", 10.0); 
+            eco.agregarEntidad("planta", ENERGIA_BROTE);
         }
         
         if (brotes > 0) {
@@ -83,7 +86,7 @@ public class Planta extends Entidad implements Reproducible {
         // 5. Penalización biológica
         // A la planta original se le descuenta energía por el esfuerzo de intentar reproducirse,
         // sin importar cuántos brotes hayan nacido finalmente.
-        setEnergia(getEnergia() - 10.0);
+        setEnergia(getEnergia() - COSTO_REPRODUCCION);
     }
 
     //intenta reproducirse si tiene suficiente energía y el clima lo permite

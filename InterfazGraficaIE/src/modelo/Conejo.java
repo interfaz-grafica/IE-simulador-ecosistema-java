@@ -2,6 +2,9 @@ package modelo;
 
 public class Conejo extends Animal implements Reproducible {
 
+    // La consigna dice que el conejo "puede" reproducirse (no que siempre lo hace).
+    private static final double PROBABILIDAD_REPRODUCCION = 0.2;
+
     public Conejo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso) {
         
         super(nombre, energia, edad, viva, velocidad, peso);
@@ -90,14 +93,14 @@ public class Conejo extends Animal implements Reproducible {
                 }
             }
             
-            if (!posiblesParejas.isEmpty())
+            if (!posiblesParejas.isEmpty() && Math.random() < PROBABILIDAD_REPRODUCCION)
             {
                 // Elegimos una pareja al azar
                 java.util.Random rand = new java.util.Random();
                 Conejo pareja = posiblesParejas.get(rand.nextInt(posiblesParejas.size()));
                 
                 // Nace un nuevo conejo. Hereda el nombre del padre y su sufijo, inicia con 30 de energía, edad 0, vivo, misma velocidad y peso.
-                Conejo cria = new Conejo(this.getNombre() + "-Cria", 30.0, 0, true, this.getVelocidad(), this.getPeso());
+                Conejo cria = new Conejo(eco.nuevoNombreConejo(), 30.0, 0, true, this.getVelocidad(), this.getPeso());
                 
                 // Agregamos la cría a la lista de conejos del ecosistema
                 eco.getConejos().add(cria);

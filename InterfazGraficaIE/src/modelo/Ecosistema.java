@@ -36,6 +36,7 @@ public class Ecosistema {
     private int muertesPlantasVenenosas = 0;
 
     private int turnoMayorActividad = 1;
+    // Ahora guarda la mayor cantidad de eventos en un turno (se conserva el nombre por el DAO).
     private int maxBajasEnUnTurno = 0;
 
     // Duración total de la simulación elegida por el usuario
@@ -43,6 +44,14 @@ public class Ecosistema {
 
     // Cantidad de lobos agregados por intervención del usuario (tope: 5)
     private int lobosAgregados = 0;
+
+    // Contadores de nombres: solo suben, así nunca hay dos entidades con el mismo nombre
+    private int contadorPlantas = 0;
+    private int contadorConejos = 0;
+    private int contadorLobos = 0;
+
+    // true si el usuario ya intervino en el turno actual (se guarda para poder retomar)
+    private boolean intervencionRealizada = false;
 
     // RÉCORDS HISTÓRICOS
     // Se guardan como atributos porque una entidad muerta ya no está en las listas.
@@ -106,31 +115,7 @@ public class Ecosistema {
         registrarEvento("Plantas: " + plantas.size() + "  Conejos: " + conejos.size() + "  Lobos: " + lobos.size());
         registrarEvento("-- Eventos --");
 
-        // 1. TURNO PLANTAS
-        for (int i = 0; i < plantas.size(); i++) {
-            Planta p = plantas.get(i);
-            if (p.isViva()) {
-                p.actuar(this);
-            }
-        }
-
-        // 2. TURNO CONEJOS
-        for (int i = 0; i < conejos.size(); i++) {
-            Conejo c = conejos.get(i);
-            if (c.isViva()) {
-                c.actuar(this);
-            }
-        }
-
-        // 3. TURNO LOBOS
-        for (int i = 0; i < lobos.size(); i++) {
-            Lobo l = lobos.get(i);
-            if (l.isViva()) {
-                l.actuar(this);
-            }
-        }
-
-        // 4. Fase 4: Procesamiento polimórfico de entidades reproducibles
+        // 1. REPRODUCCION: procesamiento polimórfico de entidades reproducibles
         ArrayList<Reproducible> listaReproduccion = new ArrayList<>();
         for (int i = 0; i < plantas.size(); i++) {
             listaReproduccion.add(plantas.get(i));
@@ -141,6 +126,30 @@ public class Ecosistema {
 
         for (int i = 0; i < listaReproduccion.size(); i++) {
             listaReproduccion.get(i).intentarReproduccion(this);
+        }
+
+        // 2. TURNO PLANTAS
+        for (int i = 0; i < plantas.size(); i++) {
+            Planta p = plantas.get(i);
+            if (p.isViva()) {
+                p.actuar(this);
+            }
+        }
+
+        // 3. TURNO CONEJOS
+        for (int i = 0; i < conejos.size(); i++) {
+            Conejo c = conejos.get(i);
+            if (c.isViva()) {
+                c.actuar(this);
+            }
+        }
+
+        // 4. TURNO LOBOS
+        for (int i = 0; i < lobos.size(); i++) {
+            Lobo l = lobos.get(i);
+            if (l.isViva()) {
+                l.actuar(this);
+            }
         }
 
         // 5. ENVEJECIMIENTO Y EFECTOS CLIMATICOS
@@ -185,8 +194,6 @@ public class Ecosistema {
         }
 
         // 6. LIMPIEZA DE MUERTOS
-        int bajasEsteTurno = 0;
-
         // Antes de borrar a los muertos, actualizamos los récords con todos los que existen
         actualizarRecords();
 
@@ -200,7 +207,6 @@ public class Ecosistema {
                 if (p instanceof PlantaVenenosa) {
                     muertesPlantasVenenosas++;
                 }
-                bajasEsteTurno++;
             }
         }
 
@@ -209,7 +215,6 @@ public class Ecosistema {
             if (!c.isViva()) {
                 conejos.remove(c);
                 muertesConejos++;
-                bajasEsteTurno++;
             }
         }
 
@@ -218,16 +223,17 @@ public class Ecosistema {
             if (!l.isViva()) {
                 lobos.remove(l);
                 muertesLobos++;
-                bajasEsteTurno++;
             }
         }
 
-        if (bajasEsteTurno > maxBajasEnUnTurno) {
-            maxBajasEnUnTurno = bajasEsteTurno;
+        // 7. MOSTRAR ESTADO
+        // Turno de mayor actividad: el que más eventos registró (sin contar las 3 líneas de cabecera).
+        int eventosEsteTurno = eventosTurno.size() - 3;
+        if (eventosEsteTurno > maxBajasEnUnTurno) {
+            maxBajasEnUnTurno = eventosEsteTurno;
             turnoMayorActividad = turnoActual;
         }
 
-        // 7. MOSTRAR ESTADO
         registrarEvento(mostrarEstado());
         
         // --- GUARDAR HISTORIAL PARA ESTADÍSTICAS ---
@@ -293,18 +299,18 @@ public class Ecosistema {
             // Probabilidad del 15% de instanciar una PlantaVenenosa (Polimorfismo)
             // Así, convive polimórficamente en la lista con las plantas normales.
             if (Math.random() <= 0.15) {
-                PlantaVenenosa pv = new PlantaVenenosa("Venenosa-" + (plantas.size() + 1), e, 0, true, 2);
+                PlantaVenenosa pv = new PlantaVenenosa("Venenosa-" + (++contadorPlantas), e, 0, true, 2);
                 plantas.add(pv);
                 nacimientosPlantasVenenosas++;
             } else {
-                Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
+                Planta p = new Planta("Planta-" + (++contadorPlantas), e, 0, true, 2);
                 plantas.add(p);
             }
             
             nacimientosPlantas++;
         } else if (tipo.equalsIgnoreCase("conejo")) {
             double e = (energia > 0) ? energia : 50.0;
-            Conejo c = new Conejo("Conejo-" + (conejos.size() + 1), e, 0, true, 5, 2.0);
+            Conejo c = new Conejo(nuevoNombreConejo(), e, 0, true, 5, 2.0);
             conejos.add(c);
             nacimientosConejos++;
         } else if (tipo.equalsIgnoreCase("lobo")) {
@@ -313,7 +319,7 @@ public class Ecosistema {
                 return;
             }
             double e = (energia > 0) ? energia : 70.0;
-            Lobo l = new Lobo("Lobo-" + (lobos.size() + 1), e, 0, true, 10, 20.0, 0);
+            Lobo l = new Lobo("Lobo-" + (++contadorLobos), e, 0, true, 10, 20.0, 0);
             lobos.add(l);
             nacimientosLobos++;
         } else {
@@ -321,6 +327,12 @@ public class Ecosistema {
         }
     }
     
+    // Nombre único para un conejo nuevo (también lo usan las crías).
+    public String nuevoNombreConejo() {
+        contadorConejos++;
+        return "Conejo-" + contadorConejos;
+    }
+
     public void registrarNacimientoConejo() {
         this.nacimientosConejos++;
     }
@@ -659,6 +671,38 @@ public class Ecosistema {
 
     public void setLobosAgregados(int lobosAgregados) {
         this.lobosAgregados = lobosAgregados;
+    }
+
+    public int getContadorPlantas() {
+        return contadorPlantas;
+    }
+
+    public void setContadorPlantas(int contadorPlantas) {
+        this.contadorPlantas = contadorPlantas;
+    }
+
+    public int getContadorConejos() {
+        return contadorConejos;
+    }
+
+    public void setContadorConejos(int contadorConejos) {
+        this.contadorConejos = contadorConejos;
+    }
+
+    public int getContadorLobos() {
+        return contadorLobos;
+    }
+
+    public void setContadorLobos(int contadorLobos) {
+        this.contadorLobos = contadorLobos;
+    }
+
+    public boolean isIntervencionRealizada() {
+        return intervencionRealizada;
+    }
+
+    public void setIntervencionRealizada(boolean intervencionRealizada) {
+        this.intervencionRealizada = intervencionRealizada;
     }
 
     // Récords históricos

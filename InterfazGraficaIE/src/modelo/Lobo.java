@@ -46,7 +46,8 @@ public class Lobo extends Animal implements Peligroso {
     }
 
     private void ejecutarAtaque(Ecosistema eco, Conejo presa, Random generador) {
-        double probabilidadExitoCaza = getEnergia() / 100.0;
+        // La probabilidad sigue subiendo con la energía (70 de energía = 35%, 140 = 70%).
+        double probabilidadExitoCaza = getEnergia() / 200.0;
         
         // Bonificación del 20% en probabilidad de caza durante clima invernal
         if (eco.getClimaActual() == Clima.INVIERNO) {

@@ -22,7 +22,7 @@ import modelo.PlantaVenenosa;
  *
  * Estructura del archivo (una sección por bloque, "clave=valor" por línea):
  *   # SIMULACION-ECOSISTEMA v1
- *   [CONFIG]     turnoActual, turnosMaximos, clima, lobosAgregados
+ *   [CONFIG]     turnoActual, turnosMaximos, clima, lobosAgregados, contadores de nombres, intervencionRealizada
  *   [METRICAS]   nacimientos y muertes por tipo (incluye plantas venenosas),
  *                turnoMayorActividad, maxBajasEnUnTurno
  *   [HISTORIAL]  población de cada especie al final de cada turno (valores separados por coma)
@@ -61,6 +61,10 @@ public class SimulacionDAO {
             escribirLinea(escritor, "turnosMaximos=" + eco.getTurnosMaximos());
             escribirLinea(escritor, "clima=" + eco.getClimaActual().name());
             escribirLinea(escritor, "lobosAgregados=" + eco.getLobosAgregados());
+            escribirLinea(escritor, "contadorPlantas=" + eco.getContadorPlantas());
+            escribirLinea(escritor, "contadorConejos=" + eco.getContadorConejos());
+            escribirLinea(escritor, "contadorLobos=" + eco.getContadorLobos());
+            escribirLinea(escritor, "intervencionRealizada=" + eco.isIntervencionRealizada());
 
             escribirLinea(escritor, "[METRICAS]");
             escribirLinea(escritor, "nacimientosPlantas=" + eco.getNacimientosPlantas());
@@ -175,6 +179,10 @@ public class SimulacionDAO {
             eco.setTurnoActual(turnoActual);
             eco.setTurnosMaximos(entero(datos, "turnosMaximos"));
             eco.setLobosAgregados(entero(datos, "lobosAgregados"));
+            eco.setContadorPlantas(enteroOpcional(datos, "contadorPlantas"));
+            eco.setContadorConejos(enteroOpcional(datos, "contadorConejos"));
+            eco.setContadorLobos(enteroOpcional(datos, "contadorLobos"));
+            eco.setIntervencionRealizada(Boolean.parseBoolean(datos.get("intervencionRealizada")));
 
             eco.setNacimientosPlantas(entero(datos, "nacimientosPlantas"));
             eco.setNacimientosConejos(entero(datos, "nacimientosConejos"));
@@ -261,6 +269,15 @@ public class SimulacionDAO {
 
     private int entero(HashMap<String, String> datos, String clave) {
         return Integer.parseInt(texto(datos, clave).trim());
+    }
+
+    // Igual que entero, pero devuelve 0 si la clave no está (archivos guardados antes de agregarla).
+    private int enteroOpcional(HashMap<String, String> datos, String clave) {
+        String valor = datos.get(clave);
+        if (valor == null) {
+            return 0;
+        }
+        return Integer.parseInt(valor.trim());
     }
 
     // "10,12,15" -> [10, 12, 15]. Un valor vacío es una lista vacía.
