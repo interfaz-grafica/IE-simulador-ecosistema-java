@@ -22,7 +22,7 @@ import modelo.PlantaVenenosa;
  *
  * Estructura del archivo (una sección por bloque, "clave=valor" por línea):
  *   # SIMULACION-ECOSISTEMA v1
- *   [CONFIG]     turnoActual, turnosMaximos, clima, lobosAgregados, contadores de nombres
+ *   [CONFIG]     turnoActual, turnosMaximos, clima, lobosAgregados, contadores de nombres, intervencionRealizada
  *   [METRICAS]   nacimientos y muertes por tipo (incluye plantas venenosas),
  *                turnoMayorActividad, maxBajasEnUnTurno
  *   [HISTORIAL]  población de cada especie al final de cada turno (valores separados por coma)
@@ -64,6 +64,7 @@ public class SimulacionDAO {
             escribirLinea(escritor, "contadorPlantas=" + eco.getContadorPlantas());
             escribirLinea(escritor, "contadorConejos=" + eco.getContadorConejos());
             escribirLinea(escritor, "contadorLobos=" + eco.getContadorLobos());
+            escribirLinea(escritor, "intervencionRealizada=" + eco.isIntervencionRealizada());
 
             escribirLinea(escritor, "[METRICAS]");
             escribirLinea(escritor, "nacimientosPlantas=" + eco.getNacimientosPlantas());
@@ -181,6 +182,7 @@ public class SimulacionDAO {
             eco.setContadorPlantas(enteroOpcional(datos, "contadorPlantas"));
             eco.setContadorConejos(enteroOpcional(datos, "contadorConejos"));
             eco.setContadorLobos(enteroOpcional(datos, "contadorLobos"));
+            eco.setIntervencionRealizada(Boolean.parseBoolean(datos.get("intervencionRealizada")));
 
             eco.setNacimientosPlantas(entero(datos, "nacimientosPlantas"));
             eco.setNacimientosConejos(entero(datos, "nacimientosConejos"));

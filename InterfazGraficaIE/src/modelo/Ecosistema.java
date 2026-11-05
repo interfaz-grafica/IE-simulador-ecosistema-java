@@ -50,6 +50,9 @@ public class Ecosistema {
     private int contadorConejos = 0;
     private int contadorLobos = 0;
 
+    // true si el usuario ya intervino en el turno actual (se guarda para poder retomar)
+    private boolean intervencionRealizada = false;
+
     // RÉCORDS HISTÓRICOS
     // Se guardan como atributos porque una entidad muerta ya no está en las listas.
     // Los nombres arrancan en "" (vacío) y los números en 0 hasta que exista un récord.
@@ -692,6 +695,14 @@ public class Ecosistema {
 
     public void setContadorLobos(int contadorLobos) {
         this.contadorLobos = contadorLobos;
+    }
+
+    public boolean isIntervencionRealizada() {
+        return intervencionRealizada;
+    }
+
+    public void setIntervencionRealizada(boolean intervencionRealizada) {
+        this.intervencionRealizada = intervencionRealizada;
     }
 
     // Récords históricos

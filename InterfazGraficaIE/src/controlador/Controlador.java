@@ -53,8 +53,6 @@ public class Controlador {
     private String mensajeGuardado = null;
 
     private int lobosAgregados = 0;
-       // Se pone en true cuando el usuario ya intervino en la ventana actual (cada 3 turnos)
-    private boolean intervencionRealizada = false; 
 
     public Controlador(SimulacionDAO dao) {
         this.dao = dao;
@@ -118,7 +116,6 @@ public class Controlador {
         this.climaInicial = clima;
         
         this.lobosAgregados = 0;
-        this.intervencionRealizada = false;        
 
         this.ecosistema = new Ecosistema(cantidadInicialPlantas, cantidadInicialConejos, cantidadInicialLobos, climaInicial);
         
@@ -271,7 +268,6 @@ public class Controlador {
         // El DAO guarda los turnos totales y los lobos agregados dentro del ecosistema
         this.turnosTotales = cargado.getTurnosMaximos();
         this.lobosAgregados = cargado.getLobosAgregados();
-        this.intervencionRealizada = false;
         
         return null;
     }
@@ -292,7 +288,7 @@ public class Controlador {
             return "(!) La simulación ya terminó.";
         }
         ecosistema.procesarTurno();
-        intervencionRealizada = false;
+        ecosistema.setIntervencionRealizada(false);
 
         if (simulacionTerminada()) {
             if (dao != null) {
@@ -351,7 +347,7 @@ public class Controlador {
     
     /** true si ahora se puede intervenir (es turno de intervención y todavía no se usó). */
     public boolean puedeIntervenir() {
-        return esTurnoDeIntervencion() && !intervencionRealizada;
+        return esTurnoDeIntervencion() && !ecosistema.isIntervencionRealizada();
     }
 
     
@@ -413,7 +409,7 @@ public class Controlador {
             }
             resultado.append("Se agregó un/a ").append(tipo).append(" al ecosistema.");
         }
-        intervencionRealizada = true;
+        ecosistema.setIntervencionRealizada(true);
         guardarProgreso();
         return resultado.toString().trim();
     }
