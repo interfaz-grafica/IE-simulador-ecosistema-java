@@ -94,7 +94,6 @@ public class VentanaEcosistema
         jScrollPane2 = new javax.swing.JScrollPane();
         tblBalanceVital = new javax.swing.JTable();
         pnlBotonesReporte = new javax.swing.JPanel();
-        btnExportarReporte = new javax.swing.JButton();
         btnVolverMenu = new javax.swing.JButton();
         pnlSimulacion = new javax.swing.JPanel();
         pnlBarraTurno = new javax.swing.JPanel();
@@ -392,13 +391,6 @@ public class VentanaEcosistema
         pnlBotonesReporte.setBackground(new java.awt.Color(239, 243, 248));
         pnlBotonesReporte.setPreferredSize(new java.awt.Dimension(500, 42));
         pnlBotonesReporte.setLayout(new java.awt.GridLayout(1, 2, 20, 0));
-
-        btnExportarReporte.setBackground(new java.awt.Color(176, 192, 208));
-        btnExportarReporte.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        btnExportarReporte.setForeground(new java.awt.Color(29, 42, 68));
-        btnExportarReporte.setText("Exportar / Copiar");
-        btnExportarReporte.setPreferredSize(new java.awt.Dimension(240, 42));
-        pnlBotonesReporte.add(btnExportarReporte);
 
         btnVolverMenu.setBackground(new java.awt.Color(110, 146, 119));
         btnVolverMenu.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -770,7 +762,6 @@ public class VentanaEcosistema
     private javax.swing.JButton btnAgregarEntidad;
     private javax.swing.JButton btnAvanzarTurno;
     private javax.swing.JButton btnCargarPartida;
-    private javax.swing.JButton btnExportarReporte;
     private javax.swing.JButton btnIniciarSimulacion;
     private javax.swing.JButton btnVolverMenu;
     private javax.swing.JComboBox<String> cmbAgregarEntidad;
