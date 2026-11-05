@@ -633,7 +633,13 @@ public class VentanaEcosistema
     }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
 
     private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
-        // TODO add your handling code here:
+        txtCantidadPlantas.setText("");
+        txtCantidadConejos.setText("");
+        txtCantidadLobos.setText("");
+        txtTurnosTotales.setText("");
+        cmbClimaInicial.setSelectedIndex(0);
+        lblErrorConfiguracion.setText("");
+        btnCargarPartida.setEnabled(controlador.hayPartidaGuardada());
         mostrarCarta(CARTA_CONFIGURACION);
     }//GEN-LAST:event_btnVolverMenuActionPerformed
 
