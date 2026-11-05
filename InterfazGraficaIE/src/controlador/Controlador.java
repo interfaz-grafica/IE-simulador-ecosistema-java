@@ -389,6 +389,11 @@ public class Controlador {
             return "(!) Selecciona un clima o una entidad para intervenir.";
         }
 
+        // Elegir el mismo clima que ya hay no es un cambio: se avisa sin gastar la intervención.
+        if (nuevoClima != null && nuevoClima == ecosistema.getClimaActual()) {
+            return "(!) El clima ya es " + nombreClima(nuevoClima) + ". Elige un clima distinto.";
+        }
+
         // Se valida el tope de lobos ANTES de aplicar cualquier cambio.
         if ("lobo".equals(tipo) && superaTopeLobos()) {
             return mensajeTopeLobos();
@@ -399,12 +404,7 @@ public class Controlador {
             ecosistema.cambiarClima(nuevoClima);
             resultado.append("El clima cambió a ").append(nombreClima(nuevoClima)).append(". ");
         }
-        
-        // Elegir el mismo clima que ya hay no es un cambio: se avisa sin gastar la intervención.
-        if (nuevoClima != null && nuevoClima == ecosistema.getClimaActual()) {
-            return "(!) El clima ya es " + nombreClima(nuevoClima) + ". Elige un clima distinto.";
-        }      
-        
+
         if (tipo != null) {
             ecosistema.agregarEntidad(tipo);
             if ("lobo".equals(tipo)) {
@@ -465,7 +465,6 @@ public class Controlador {
     // DATOS EMPAQUETADOS PARA LA VISTA (sin exponer el modelo)
     //=======================================================================//
 
-    /** Turno que se va a jugar a continuación, para lblTurno (ej: "Turno 4 / 20"). */
     /**
      * Último turno jugado, para lblTurno (ej: "TURNO: 3 / 20").
      * Muestra el mismo número que la cabecera de los eventos ("=== TURNO 3") y que la
