@@ -668,10 +668,20 @@ public class VentanaEcosistema
             if (climaTexto != null || entidadTexto != null) {
                 // Usamos el método unificado de Maxi que maneja la intervención completa
                 String mensaje = controlador.intervenir(climaTexto, entidadTexto);
-                javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Intervención", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-                actualizarVistaSimulacion();
+                mostrarResultadoIntervencion(mensaje);
             }
     }//GEN-LAST:event_btnAgregarEntidadActionPerformed
+
+    // Muestra el resultado de la intervención, limpia los combos y refresca la pantalla.
+    private void mostrarResultadoIntervencion(String mensaje) {
+        int tipoMensaje = mensaje.startsWith("(!)")
+                ? javax.swing.JOptionPane.WARNING_MESSAGE
+                : javax.swing.JOptionPane.INFORMATION_MESSAGE;
+        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Intervención", tipoMensaje);
+        cmbNuevoClima.setSelectedIndex(0);
+        cmbAgregarEntidad.setSelectedIndex(0);
+        actualizarVistaSimulacion();
+    }
 
     private void lblMinimizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMinimizarMouseClicked
         // TODO add your handling code here:
@@ -722,6 +732,11 @@ public class VentanaEcosistema
 
         // 5. Estado de la intervención (cuántos turnos faltan, o si se puede intervenir)
         lblEstadoIntervencion.setText(controlador.obtenerEstadoIntervencion());
+
+        boolean puedeIntervenir = controlador.puedeIntervenir();
+        cmbNuevoClima.setEnabled(puedeIntervenir);
+        cmbAgregarEntidad.setEnabled(puedeIntervenir);
+        btnAgregarEntidad.setEnabled(puedeIntervenir);
     }
 
         public void actualizarVistaReporte() {
