@@ -565,16 +565,16 @@ public class Controlador {
     }
 
     
-    /** Texto para lblRecordActividad: el turno con más bajas. */
+    /** Texto para lblRecordActividad: el turno con más eventos. */
     public String obtenerRecordActividad() {
         if (ecosistema == null) {
             return "";
         }
         if (ecosistema.getMaxBajasEnUnTurno() == 0) {
-            return "Turno de mayor actividad: no hubo bajas.";
+            return "Turno de mayor actividad: no hubo eventos.";
         }
         return "Turno de mayor actividad: Turno " + ecosistema.getTurnoMayorActividad()
-                + " (" + ecosistema.getMaxBajasEnUnTurno() + " bajas)";
+                + " (" + ecosistema.getMaxBajasEnUnTurno() + " eventos)";
     }
 
     

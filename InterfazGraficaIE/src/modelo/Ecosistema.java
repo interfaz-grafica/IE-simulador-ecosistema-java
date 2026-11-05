@@ -36,6 +36,7 @@ public class Ecosistema {
     private int muertesPlantasVenenosas = 0;
 
     private int turnoMayorActividad = 1;
+    // Ahora guarda la mayor cantidad de eventos en un turno (se conserva el nombre por el DAO).
     private int maxBajasEnUnTurno = 0;
 
     // Duración total de la simulación elegida por el usuario
@@ -190,8 +191,6 @@ public class Ecosistema {
         }
 
         // 6. LIMPIEZA DE MUERTOS
-        int bajasEsteTurno = 0;
-
         // Antes de borrar a los muertos, actualizamos los récords con todos los que existen
         actualizarRecords();
 
@@ -205,7 +204,6 @@ public class Ecosistema {
                 if (p instanceof PlantaVenenosa) {
                     muertesPlantasVenenosas++;
                 }
-                bajasEsteTurno++;
             }
         }
 
@@ -214,7 +212,6 @@ public class Ecosistema {
             if (!c.isViva()) {
                 conejos.remove(c);
                 muertesConejos++;
-                bajasEsteTurno++;
             }
         }
 
@@ -223,16 +220,17 @@ public class Ecosistema {
             if (!l.isViva()) {
                 lobos.remove(l);
                 muertesLobos++;
-                bajasEsteTurno++;
             }
         }
 
-        if (bajasEsteTurno > maxBajasEnUnTurno) {
-            maxBajasEnUnTurno = bajasEsteTurno;
+        // 7. MOSTRAR ESTADO
+        // Turno de mayor actividad: el que más eventos registró (sin contar las 3 líneas de cabecera).
+        int eventosEsteTurno = eventosTurno.size() - 3;
+        if (eventosEsteTurno > maxBajasEnUnTurno) {
+            maxBajasEnUnTurno = eventosEsteTurno;
             turnoMayorActividad = turnoActual;
         }
 
-        // 7. MOSTRAR ESTADO
         registrarEvento(mostrarEstado());
         
         // --- GUARDAR HISTORIAL PARA ESTADÍSTICAS ---

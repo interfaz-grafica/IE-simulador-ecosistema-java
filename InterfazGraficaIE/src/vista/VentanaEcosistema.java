@@ -27,6 +27,7 @@ public class VentanaEcosistema
     public VentanaEcosistema(Controlador controlador) {
         this.controlador = controlador;
         initComponents();
+        btnCargarPartida.setEnabled(controlador.hayPartidaGuardada());
     }
 
     public boolean confirmarNuevaPartida() {
