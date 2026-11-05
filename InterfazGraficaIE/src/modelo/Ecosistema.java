@@ -106,31 +106,7 @@ public class Ecosistema {
         registrarEvento("Plantas: " + plantas.size() + "  Conejos: " + conejos.size() + "  Lobos: " + lobos.size());
         registrarEvento("-- Eventos --");
 
-        // 1. TURNO PLANTAS
-        for (int i = 0; i < plantas.size(); i++) {
-            Planta p = plantas.get(i);
-            if (p.isViva()) {
-                p.actuar(this);
-            }
-        }
-
-        // 2. TURNO CONEJOS
-        for (int i = 0; i < conejos.size(); i++) {
-            Conejo c = conejos.get(i);
-            if (c.isViva()) {
-                c.actuar(this);
-            }
-        }
-
-        // 3. TURNO LOBOS
-        for (int i = 0; i < lobos.size(); i++) {
-            Lobo l = lobos.get(i);
-            if (l.isViva()) {
-                l.actuar(this);
-            }
-        }
-
-        // 4. Fase 4: Procesamiento polimórfico de entidades reproducibles
+        // 1. REPRODUCCION: procesamiento polimórfico de entidades reproducibles
         ArrayList<Reproducible> listaReproduccion = new ArrayList<>();
         for (int i = 0; i < plantas.size(); i++) {
             listaReproduccion.add(plantas.get(i));
@@ -141,6 +117,30 @@ public class Ecosistema {
 
         for (int i = 0; i < listaReproduccion.size(); i++) {
             listaReproduccion.get(i).intentarReproduccion(this);
+        }
+
+        // 2. TURNO PLANTAS
+        for (int i = 0; i < plantas.size(); i++) {
+            Planta p = plantas.get(i);
+            if (p.isViva()) {
+                p.actuar(this);
+            }
+        }
+
+        // 3. TURNO CONEJOS
+        for (int i = 0; i < conejos.size(); i++) {
+            Conejo c = conejos.get(i);
+            if (c.isViva()) {
+                c.actuar(this);
+            }
+        }
+
+        // 4. TURNO LOBOS
+        for (int i = 0; i < lobos.size(); i++) {
+            Lobo l = lobos.get(i);
+            if (l.isViva()) {
+                l.actuar(this);
+            }
         }
 
         // 5. ENVEJECIMIENTO Y EFECTOS CLIMATICOS
