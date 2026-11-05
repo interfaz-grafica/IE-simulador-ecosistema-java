@@ -604,25 +604,31 @@ public class VentanaEcosistema
     }//GEN-LAST:event_btnCargarPartidaActionPerformed
 
     private void btnIniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSimulacionActionPerformed
-       if (confirmarNuevaPartida()) {
-            String plantas = txtCantidadPlantas.getText();
-            String conejos = txtCantidadConejos.getText();
-            String lobos = txtCantidadLobos.getText();
-            String turnos = txtTurnosTotales.getText();
+        String plantas = txtCantidadPlantas.getText();
+        String conejos = txtCantidadConejos.getText();
+        String lobos = txtCantidadLobos.getText();
+        String turnos = txtTurnosTotales.getText();
+        String climaTexto = cmbClimaInicial.getSelectedItem().toString();
 
-            // El nuevo backend pide el texto exacto del JComboBox en vez del número
-            String climaTexto = cmbClimaInicial.getSelectedItem().toString();
-
-            // Llamamos al método nuevo respetando el nuevo orden (turnos antes que clima)
-            String error = controlador.iniciarNuevaSimulacion(plantas, conejos, lobos, turnos, climaTexto);
-
-            if (error == null) {
-                irAPantallaSimulacion();
-                actualizarVistaSimulacion();
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, error, "Error de datos", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
+        // Primero se validan los datos (en el Controlador) y recién después se pide confirmación.
+        String error = controlador.validarConfiguracion(plantas, conejos, lobos, turnos);
+        if (error != null) {
+            lblErrorConfiguracion.setText(error);
+            return;
         }
+        lblErrorConfiguracion.setText("");
+
+        if (!confirmarNuevaPartida()) {
+            return;
+        }
+
+        error = controlador.iniciarNuevaSimulacion(plantas, conejos, lobos, turnos, climaTexto);
+        if (error != null) {
+            lblErrorConfiguracion.setText(error);
+            return;
+        }
+        irAPantallaSimulacion();
+        actualizarVistaSimulacion();
     }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
 
     private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
