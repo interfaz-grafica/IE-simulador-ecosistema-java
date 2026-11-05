@@ -118,10 +118,11 @@ public class VentanaEcosistema
         pnlIntervencion = new javax.swing.JPanel();
         lblEstadoIntervencion = new javax.swing.JLabel();
         pnlFilaIntervencion = new javax.swing.JPanel();
-        btnAgregarEntidad = new javax.swing.JButton();
         pnlCombosIntervencion = new javax.swing.JPanel();
         cmbNuevoClima = new javax.swing.JComboBox<>();
+        btnCambiarClima = new javax.swing.JButton();
         cmbAgregarEntidad = new javax.swing.JComboBox<>();
+        btnAgregarEntidad = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -520,7 +521,7 @@ public class VentanaEcosistema
         btnAvanzarTurno.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAvanzarTurno.setForeground(new java.awt.Color(255, 255, 255));
         btnAvanzarTurno.setText("<html><center>AVANZAR TURNO<br>(Siguiente)</center></html>");
-        btnAvanzarTurno.setPreferredSize(new java.awt.Dimension(160, 90));
+        btnAvanzarTurno.setPreferredSize(new java.awt.Dimension(135, 90));
         btnAvanzarTurno.addActionListener(this::btnAvanzarTurnoActionPerformed);
         pnlSurSimulacion.add(btnAvanzarTurno, java.awt.BorderLayout.EAST);
 
@@ -536,29 +537,38 @@ public class VentanaEcosistema
         pnlFilaIntervencion.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 8, 6, 8));
         pnlFilaIntervencion.setLayout(new java.awt.BorderLayout(10, 0));
 
-        btnAgregarEntidad.setBackground(new java.awt.Color(110, 146, 119));
-        btnAgregarEntidad.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnAgregarEntidad.setForeground(new java.awt.Color(255, 255, 255));
-        btnAgregarEntidad.setText("+");
-        btnAgregarEntidad.setPreferredSize(new java.awt.Dimension(45, 32));
-        btnAgregarEntidad.addActionListener(this::btnAgregarEntidadActionPerformed);
-        pnlFilaIntervencion.add(btnAgregarEntidad, java.awt.BorderLayout.EAST);
-
         pnlCombosIntervencion.setBackground(new java.awt.Color(239, 243, 248));
-        pnlCombosIntervencion.setLayout(new java.awt.GridLayout(1, 2, 10, 0));
+        pnlCombosIntervencion.setLayout(new java.awt.GridLayout(1, 4, 10, 0));
 
-        cmbNuevoClima.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona nuevo clima", "Soleado", "Lluvioso", "Sequía", "Invierno" }));
+        cmbNuevoClima.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar clima", "Soleado", "Lluvioso", "Sequía", "Invierno" }));
         cmbNuevoClima.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         cmbNuevoClima.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         cmbNuevoClima.setFocusable(false);
         cmbNuevoClima.setOpaque(true);
         pnlCombosIntervencion.add(cmbNuevoClima);
 
-        cmbAgregarEntidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Agregar Entidad", "Planta", "Conejo", "Lobo" }));
+        btnCambiarClima.setBackground(new java.awt.Color(110, 146, 119));
+        btnCambiarClima.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCambiarClima.setForeground(new java.awt.Color(255, 255, 255));
+        btnCambiarClima.setText("Cambiar clima");
+        btnCambiarClima.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        btnCambiarClima.addActionListener(this::btnCambiarClimaActionPerformed);
+        pnlCombosIntervencion.add(btnCambiarClima);
+
+        cmbAgregarEntidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar entidad", "Planta", "Conejo", "Lobo" }));
         cmbAgregarEntidad.setBorder(null);
         cmbAgregarEntidad.setFocusable(false);
         cmbAgregarEntidad.setOpaque(true);
         pnlCombosIntervencion.add(cmbAgregarEntidad);
+
+        btnAgregarEntidad.setBackground(new java.awt.Color(110, 146, 119));
+        btnAgregarEntidad.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnAgregarEntidad.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarEntidad.setText("+ Agregar entidad");
+        btnAgregarEntidad.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        btnAgregarEntidad.setPreferredSize(new java.awt.Dimension(155, 40));
+        btnAgregarEntidad.addActionListener(this::btnAgregarEntidadActionPerformed);
+        pnlCombosIntervencion.add(btnAgregarEntidad);
 
         pnlFilaIntervencion.add(pnlCombosIntervencion, java.awt.BorderLayout.CENTER);
 
@@ -640,15 +650,8 @@ public class VentanaEcosistema
     }//GEN-LAST:event_btnAvanzarTurnoActionPerformed
 
     private void btnAgregarEntidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarEntidadActionPerformed
-        // Obtenemos el texto directo de los combos solo si no están en el título inicial (índice 0)
-            String climaTexto = cmbNuevoClima.getSelectedIndex() > 0 ? cmbNuevoClima.getSelectedItem().toString() : null;
-            String entidadTexto = cmbAgregarEntidad.getSelectedIndex() > 0 ? cmbAgregarEntidad.getSelectedItem().toString() : null;
-
-            if (climaTexto != null || entidadTexto != null) {
-                // Usamos el método unificado de Maxi que maneja la intervención completa
-                String mensaje = controlador.intervenir(climaTexto, entidadTexto);
-                mostrarResultadoIntervencion(mensaje);
-            }
+        String mensaje = controlador.intervenirAgregarEntidad(cmbAgregarEntidad.getSelectedItem().toString());
+        mostrarResultadoIntervencion(mensaje);
     }//GEN-LAST:event_btnAgregarEntidadActionPerformed
 
     // Muestra el resultado de la intervención, limpia los combos y refresca la pantalla.
@@ -692,6 +695,11 @@ public class VentanaEcosistema
         mostrarCarta(CARTA_CONFIGURACION);
     }//GEN-LAST:event_btnVolverMenuActionPerformed
 
+    private void btnCambiarClimaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarClimaActionPerformed
+        String mensaje = controlador.intervenirCambiarClima(cmbNuevoClima.getSelectedItem().toString());
+        mostrarResultadoIntervencion(mensaje);
+    }//GEN-LAST:event_btnCambiarClimaActionPerformed
+
     public void actualizarVistaSimulacion() {
         // 1. Textos superiores
         lblTurno.setText(controlador.obtenerTextoTurno());
@@ -720,6 +728,7 @@ public class VentanaEcosistema
 
         boolean puedeIntervenir = controlador.puedeIntervenir();
         cmbNuevoClima.setEnabled(puedeIntervenir);
+        btnCambiarClima.setEnabled(puedeIntervenir);
         cmbAgregarEntidad.setEnabled(puedeIntervenir);
         btnAgregarEntidad.setEnabled(puedeIntervenir);
     }
@@ -761,6 +770,7 @@ public class VentanaEcosistema
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarEntidad;
     private javax.swing.JButton btnAvanzarTurno;
+    private javax.swing.JButton btnCambiarClima;
     private javax.swing.JButton btnCargarPartida;
     private javax.swing.JButton btnIniciarSimulacion;
     private javax.swing.JButton btnVolverMenu;
