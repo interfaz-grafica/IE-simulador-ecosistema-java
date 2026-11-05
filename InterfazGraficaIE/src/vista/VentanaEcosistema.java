@@ -176,6 +176,7 @@ public class VentanaEcosistema
 
         getContentPane().add(pnlHeader, java.awt.BorderLayout.NORTH);
 
+        pnlContenedorPantallas.setPreferredSize(new java.awt.Dimension(1000, 680));
         pnlContenedorPantallas.setLayout(new java.awt.CardLayout());
 
         pnlConfiguracion.setBackground(new java.awt.Color(239, 243, 248));
@@ -466,7 +467,7 @@ public class VentanaEcosistema
         pnlDatosCentro.add(pnlSeccionTabla, java.awt.BorderLayout.CENTER);
 
         pnlSeccionEventos.setBackground(new java.awt.Color(226, 232, 240));
-        pnlSeccionEventos.setPreferredSize(new java.awt.Dimension(250, 200));
+        pnlSeccionEventos.setPreferredSize(new java.awt.Dimension(380, 200));
         pnlSeccionEventos.setLayout(new java.awt.BorderLayout(0, 6));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -474,8 +475,11 @@ public class VentanaEcosistema
         jLabel8.setText("Eventos del Turno");
         pnlSeccionEventos.add(jLabel8, java.awt.BorderLayout.NORTH);
 
+        txtEventosArea.setEditable(false);
         txtEventosArea.setColumns(20);
+        txtEventosArea.setLineWrap(true);
         txtEventosArea.setRows(5);
+        txtEventosArea.setWrapStyleWord(true);
         txtEventos.setViewportView(txtEventosArea);
 
         pnlSeccionEventos.add(txtEventos, java.awt.BorderLayout.CENTER);
