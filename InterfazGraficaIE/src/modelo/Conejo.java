@@ -1,6 +1,9 @@
-package interfazgraficaie;
+package modelo;
 
 public class Conejo extends Animal implements Reproducible {
+
+    // La consigna dice que el conejo "puede" reproducirse (no que siempre lo hace).
+    private static final double PROBABILIDAD_REPRODUCCION = 0.2;
 
     public Conejo(String nombre, double energia, int edad, boolean viva, int velocidad, double peso) {
         
@@ -23,10 +26,11 @@ public class Conejo extends Animal implements Reproducible {
 
                 // El formato del signo en la energía se añade manualmente si el aporte es positivo
                 String signo = (valorNutritivoObtenido >= 0) ? "+" : "";
-                System.out.println("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (" + signo + valorNutritivoObtenido + " energia)");
+                // MVC: Se registra el evento en el ecosistema en vez de imprimir en consola
+                eco.registrarEvento("Conejo '" + getNombre() + "' comio '" + plantaActual.getNombre() + "' (" + signo + valorNutritivoObtenido + " energia)");
 
                 if (nuevaEnergia <= 0 && valorNutritivoObtenido < 0) {
-                    System.out.println(getNombre() + " murio intoxicado.");
+                    eco.registrarEvento(getNombre() + " murio intoxicado.");
                     setViva(false); // Para evitar el print genérico de 'inanición'
                 }
                 
@@ -41,12 +45,13 @@ public class Conejo extends Animal implements Reproducible {
         // Si el conejo no encontró comida en este turno pierde energía
         if(!conejoEncontroComida) {
             setEnergia(getEnergia() - 15);
-            // Anexo del estado de alerta en consola para advertir peligro inminente
-            System.out.print("Conejo '" + getNombre() + "' no encontro comida (-15.0 energia)");
+            // Anexo del estado de alerta para advertir peligro inminente
+            String mensajeEvento = "Conejo '" + getNombre() + "' no encontro comida (-15.0 energia)";
             if (getEnergia() < 20 && getEnergia() > 0) {
-                System.out.print(" [PELIGRO: energia=" + getEnergia() + "]");
+                mensajeEvento += " [PELIGRO: energia=" + getEnergia() + "]";
             }
-            System.out.println(); // Salto de línea final
+            // MVC: Se guarda en la lista de eventos del ecosistema
+            eco.registrarEvento(mensajeEvento);
         }
     }
 
@@ -60,14 +65,14 @@ public class Conejo extends Animal implements Reproducible {
     }
     
     @Override
-    public void mostrarEstado() {
+    public String mostrarEstado() {
         
         // Mostramos el nombre del conejo y su estado según su energía
-        System.out.print("Conejo '" + getNombre() + "' (Energia: " + getEnergia() + ")");
+        String estado = "Conejo '" + getNombre() + "' (Energia: " + getEnergia() + ")";
         if (getEnergia() < 20) {
-            System.out.print(" [EN PELIGRO]");
+            estado += " [EN PELIGRO]";
         }
-        System.out.println();
+        return estado;
         
     }
     
@@ -88,14 +93,14 @@ public class Conejo extends Animal implements Reproducible {
                 }
             }
             
-            if (!posiblesParejas.isEmpty())
+            if (!posiblesParejas.isEmpty() && Math.random() < PROBABILIDAD_REPRODUCCION)
             {
                 // Elegimos una pareja al azar
                 java.util.Random rand = new java.util.Random();
                 Conejo pareja = posiblesParejas.get(rand.nextInt(posiblesParejas.size()));
                 
                 // Nace un nuevo conejo. Hereda el nombre del padre y su sufijo, inicia con 30 de energía, edad 0, vivo, misma velocidad y peso.
-                Conejo cria = new Conejo(this.getNombre() + "-Cria", 30.0, 0, true, this.getVelocidad(), this.getPeso());
+                Conejo cria = new Conejo(eco.nuevoNombreConejo(), 30.0, 0, true, this.getVelocidad(), this.getPeso());
                 
                 // Agregamos la cría a la lista de conejos del ecosistema
                 eco.getConejos().add(cria);
@@ -104,7 +109,8 @@ public class Conejo extends Animal implements Reproducible {
                 // Restamos energía al padre por el esfuerzo de reproducirse
                 this.setEnergia(this.getEnergia() - 20);
                 
-                System.out.println(this.getNombre() + " se ha reproducido con " + pareja.getNombre() + ". Nacio: " + cria.getNombre());
+                // MVC: Se registra el evento en el ecosistema
+                eco.registrarEvento(this.getNombre() + " se ha reproducido con " + pareja.getNombre() + ". Nacio: " + cria.getNombre());
             }
         }
         

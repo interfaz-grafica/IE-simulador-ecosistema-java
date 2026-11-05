@@ -1,4 +1,4 @@
-package interfazgraficaie;
+package modelo;
 
 public abstract class Animal extends Entidad implements Mortal {
 
@@ -9,14 +9,16 @@ public abstract class Animal extends Entidad implements Mortal {
     {
         super(nombre, energia, edad, viva);
         
-        this.velocidad = velocidad;
-        this.peso = peso;   
+        // Se usan los setters para que la validación también se aplique al crear o cargar
+        setVelocidad(velocidad);
+        setPeso(peso);
     }
     
     public abstract void comer(Ecosistema eco);
   
-    public void moverse() {
-        System.out.println(getNombre() + " se desplazo a " + getVelocidad() + " km/h.");
+    // MVC: Retorna el texto de desplazamiento en lugar de imprimirlo por consola
+    public String moverse() {
+        return getNombre() + " se desplazo a " + getVelocidad() + " km/h.";
     }
     
     @Override
@@ -37,16 +39,24 @@ public abstract class Animal extends Entidad implements Mortal {
     public int getVelocidad() {
       return velocidad;
     }
+    // La velocidad no puede ser negativa
     public void setVelocidad(int velocidad) {
-        this.velocidad = velocidad;
+        if (velocidad < 0) {
+            this.velocidad = 0;
+        } else {
+            this.velocidad = velocidad;
+        }
     }
 
     public double getPeso() {
         return peso;
     }
+    // El peso no puede ser negativo
     public void setPeso(double peso) {
-        this.peso = peso;
-    }  
-
-    
+        if (peso < 0) {
+            this.peso = 0;
+        } else {
+            this.peso = peso;
+        }
+    }
 }

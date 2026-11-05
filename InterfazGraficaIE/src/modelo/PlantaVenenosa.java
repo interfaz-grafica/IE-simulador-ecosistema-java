@@ -1,4 +1,4 @@
-package interfazgraficaie;
+package modelo;
 
 public class PlantaVenenosa extends Planta implements Peligroso {
     
@@ -25,7 +25,7 @@ public class PlantaVenenosa extends Planta implements Peligroso {
     }
     
     @Override
-    public void mostrarEstado() {
-        System.out.println("Planta: " + getNombre() + " Tamaño: " + getTamanio() + " Energía: " + getEnergia());
+    public String mostrarEstado() {
+        return "Planta: " + getNombre() + " Tamaño: " + getTamanio() + " Energía: " + getEnergia();
     }
 }
