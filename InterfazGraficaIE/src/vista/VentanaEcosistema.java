@@ -241,7 +241,6 @@ public class VentanaEcosistema
         pnlTarjetaParametros.add(jLabel2);
 
         txtCantidadConejos.setPreferredSize(new java.awt.Dimension(360, 32));
-        txtCantidadConejos.addActionListener(this::txtCantidadConejosActionPerformed);
         pnlTarjetaParametros.add(txtCantidadConejos);
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -590,10 +589,6 @@ public class VentanaEcosistema
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtCantidadConejosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadConejosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCantidadConejosActionPerformed
-
     private void btnCargarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPartidaActionPerformed
         String error = controlador.cargarPartidaGuardada();
         if (error != null) {
@@ -708,13 +703,8 @@ public class VentanaEcosistema
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_lblCerrarMouseClicked
-//Maxi, ya dejé delegados los eventos en la vista. Para que se unan las capas y desaparezcan los errores de compilación,
-    //tenés que crear estos métodos públicos en tu clase Controlador: cargarPartidaGuardada(), iniciarNuevaSimulacion(String plantas, 
-    //String conejos, String lobos, String turnos, String clima), avanzarTurno(), e intervenir(String clima, String entidad). 
-    //Para moverte entre pantallas, llamá a vista.irAPantallaSimulacion() y los demás métodos de navegación que te dejé armados.
 
-    
-        public void actualizarVistaSimulacion() {
+    public void actualizarVistaSimulacion() {
         // 1. Textos superiores
         lblTurno.setText(controlador.obtenerTextoTurno());
         lblClima.setText(controlador.obtenerTextoClima());
@@ -746,23 +736,23 @@ public class VentanaEcosistema
         btnAgregarEntidad.setEnabled(puedeIntervenir);
     }
 
-        public void actualizarVistaReporte() {
-       // 1. Carteles de causa de fin
-       lblCausaFin.setText(controlador.obtenerCausaFin());
-       lblDetalleCausa.setText(controlador.obtenerDetalleCausa());
+    public void actualizarVistaReporte() {
+        // 1. Carteles de causa de fin
+        lblCausaFin.setText(controlador.obtenerCausaFin());
+        lblDetalleCausa.setText(controlador.obtenerDetalleCausa());
 
-       // 2. Récords inferiores
-       lblRecordActividad.setText(controlador.obtenerRecordActividad());
-       lblRecordCazador.setText(controlador.obtenerRecordCazador());
+        // 2. Récords inferiores
+        lblRecordActividad.setText(controlador.obtenerRecordActividad());
+        lblRecordCazador.setText(controlador.obtenerRecordCazador());
 
-       // 3. Llenado de tabla de balance vital
-       javax.swing.table.DefaultTableModel modeloTabla = (javax.swing.table.DefaultTableModel) tblBalanceVital.getModel();
-       modeloTabla.setRowCount(0);
+        // 3. Llenado de tabla de balance vital
+        javax.swing.table.DefaultTableModel modeloTabla = (javax.swing.table.DefaultTableModel) tblBalanceVital.getModel();
+        modeloTabla.setRowCount(0);
 
-       String[][] filasBalance = controlador.obtenerFilasBalanceVital();
-       for (String[] fila : filasBalance) {
-           modeloTabla.addRow(fila);
-       }
+        String[][] filasBalance = controlador.obtenerFilasBalanceVital();
+        for (String[] fila : filasBalance) {
+            modeloTabla.addRow(fila);
+        }
     }
     private void mostrarCarta(String nombreCarta) {
         ((java.awt.CardLayout) pnlContenedorPantallas.getLayout()).show(pnlContenedorPantallas, nombreCarta);
@@ -778,39 +768,6 @@ public class VentanaEcosistema
 
     public void irAPantallaConfiguracion() {
         mostrarCarta(CARTA_CONFIGURACION);
-    }
-
-    public void actualizarContadores(int turno, int turnosMaximos, String clima, int cantPlantas, int cantConejos, int cantLobos) {
-        lblTurno.setText("TURNO: " + turno + " / " + turnosMaximos);
-        lblClima.setText("CLIMA: " + clima.toUpperCase());
-        lblContadorPlantas.setText("Plantas: " + cantPlantas);
-        lblContadorConejos.setText("Conejos: " + cantConejos);
-        lblContadorLobos.setText("Lobos: " + cantLobos);
-    }
-
-    public void limpiarTablaEntidades() {
-        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
-        modelo.setRowCount(0);
-    }
-
-    public void agregarFilaEntidad(String nombre, String tipo, double energia, int edad, String detalle) {
-        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) tblTablaEntidad.getModel();
-        modelo.addRow(new Object[]{nombre, tipo, energia, edad, detalle});
-    }
-
-    public void actualizarEventos(java.util.List<String> eventos) {
-        txtEventosArea.setText("");
-        for (String evento : eventos) {
-            txtEventosArea.append(evento + "\n");
-        }
-    }
-
-    public void mostrarErrorConfiguracion(String mensaje) {
-        lblErrorConfiguracion.setText(mensaje);
-    }
-
-    public void mostrarMensaje(String mensaje) {
-        javax.swing.JOptionPane.showMessageDialog(this, mensaje, "Información", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
