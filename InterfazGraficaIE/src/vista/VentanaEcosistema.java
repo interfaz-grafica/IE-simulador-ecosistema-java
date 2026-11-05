@@ -547,7 +547,7 @@ public class VentanaEcosistema
         pnlCombosIntervencion.setBackground(new java.awt.Color(239, 243, 248));
         pnlCombosIntervencion.setLayout(new java.awt.GridLayout(1, 2, 10, 0));
 
-        cmbNuevoClima.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona nuevo clima", "Soleado", "Lluvia", "Sequía" }));
+        cmbNuevoClima.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona nuevo clima", "Soleado", "Lluvioso", "Sequía", "Invierno" }));
         cmbNuevoClima.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         cmbNuevoClima.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         cmbNuevoClima.setFocusable(false);

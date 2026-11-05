@@ -1177,11 +1177,12 @@
                             <Component class="javax.swing.JComboBox" name="cmbNuevoClima">
                               <Properties>
                                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                                  <StringArray count="4">
+                                  <StringArray count="5">
                                     <StringItem index="0" value="Selecciona nuevo clima"/>
                                     <StringItem index="1" value="Soleado"/>
-                                    <StringItem index="2" value="Lluvia"/>
+                                    <StringItem index="2" value="Lluvioso"/>
                                     <StringItem index="3" value="Sequ&#xed;a"/>
+                                    <StringItem index="4" value="Invierno"/>
                                   </StringArray>
                                 </Property>
                                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
