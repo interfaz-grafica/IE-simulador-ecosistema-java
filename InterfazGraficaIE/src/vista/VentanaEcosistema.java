@@ -223,7 +223,6 @@ public class VentanaEcosistema
         jLabel1.setForeground(new java.awt.Color(44, 62, 80));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("Cantidad de Plantas (5 - 30)");
-        jLabel1.setToolTipText("");
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         pnlTarjetaParametros.add(jLabel1);
 
@@ -236,7 +235,6 @@ public class VentanaEcosistema
         jLabel2.setForeground(new java.awt.Color(44, 62, 80));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("Cantidad de Conejos (2-15)");
-        jLabel2.setToolTipText("");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         pnlTarjetaParametros.add(jLabel2);
 
@@ -248,7 +246,6 @@ public class VentanaEcosistema
         jLabel5.setForeground(new java.awt.Color(44, 62, 80));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel5.setText("Cantidad de Lobos (1 - 5)");
-        jLabel5.setToolTipText("");
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         pnlTarjetaParametros.add(jLabel5);
 
@@ -260,7 +257,6 @@ public class VentanaEcosistema
         jLabel3.setForeground(new java.awt.Color(44, 62, 80));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("Turnos Totales (10 - 50)");
-        jLabel3.setToolTipText("");
         jLabel3.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         pnlTarjetaParametros.add(jLabel3);
 
@@ -272,7 +268,6 @@ public class VentanaEcosistema
         jLabel4.setForeground(new java.awt.Color(44, 62, 80));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("Clima Inicial");
-        jLabel4.setToolTipText("");
         jLabel4.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         pnlTarjetaParametros.add(jLabel4);
 
@@ -308,7 +303,6 @@ public class VentanaEcosistema
         lblCausaFin.setForeground(new java.awt.Color(29, 42, 68));
         lblCausaFin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCausaFin.setText("Causa de Fin: COLAPSO DEL ECOSISTEMA");
-        lblCausaFin.setToolTipText("");
         pnlResultadoGlobal.add(lblCausaFin);
 
         lblDetalleCausa.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -449,7 +443,6 @@ public class VentanaEcosistema
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(29, 42, 68));
         jLabel7.setText("Tabla de Entidades");
-        jLabel7.setToolTipText("");
         pnlSeccionTabla.add(jLabel7, java.awt.BorderLayout.NORTH);
 
         tblTablaEntidad.setModel(new javax.swing.table.DefaultTableModel(
@@ -559,7 +552,6 @@ public class VentanaEcosistema
         pnlCombosIntervencion.setLayout(new java.awt.GridLayout(1, 2, 10, 0));
 
         cmbNuevoClima.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecciona nuevo clima", "Soleado", "Lluvia", "Sequía" }));
-        cmbNuevoClima.setToolTipText("");
         cmbNuevoClima.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         cmbNuevoClima.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         cmbNuevoClima.setFocusable(false);

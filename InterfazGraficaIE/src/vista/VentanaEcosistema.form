@@ -278,7 +278,6 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="Cantidad de Plantas (5 - 30)"/>
-                    <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="verticalAlignment" type="int" value="3"/>
                   </Properties>
                 </Component>
@@ -305,7 +304,6 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="Cantidad de Conejos (2-15)"/>
-                    <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="verticalAlignment" type="int" value="3"/>
                   </Properties>
                 </Component>
@@ -329,7 +327,6 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="Cantidad de Lobos (1 - 5)"/>
-                    <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="verticalAlignment" type="int" value="3"/>
                   </Properties>
                 </Component>
@@ -353,7 +350,6 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="Turnos Totales (10 - 50)"/>
-                    <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="verticalAlignment" type="int" value="3"/>
                   </Properties>
                 </Component>
@@ -377,7 +373,6 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="2"/>
                     <Property name="text" type="java.lang.String" value="Clima Inicial"/>
-                    <Property name="toolTipText" type="java.lang.String" value=""/>
                     <Property name="verticalAlignment" type="int" value="3"/>
                   </Properties>
                 </Component>
@@ -482,7 +477,6 @@
                     </Property>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="text" type="java.lang.String" value="Causa de Fin: COLAPSO DEL ECOSISTEMA"/>
-                    <Property name="toolTipText" type="java.lang.String" value=""/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblDetalleCausa">
@@ -860,7 +854,6 @@
                               <Color blue="44" green="2a" red="1d" type="rgb"/>
                             </Property>
                             <Property name="text" type="java.lang.String" value="Tabla de Entidades"/>
-                            <Property name="toolTipText" type="java.lang.String" value=""/>
                           </Properties>
                           <Constraints>
                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
@@ -1200,7 +1193,6 @@
                                     <StringItem index="3" value="Sequ&#xed;a"/>
                                   </StringArray>
                                 </Property>
-                                <Property name="toolTipText" type="java.lang.String" value=""/>
                                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                                   <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
                                     <LineBorder>
