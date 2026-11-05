@@ -100,7 +100,7 @@ public class Conejo extends Animal implements Reproducible {
                 Conejo pareja = posiblesParejas.get(rand.nextInt(posiblesParejas.size()));
                 
                 // Nace un nuevo conejo. Hereda el nombre del padre y su sufijo, inicia con 30 de energía, edad 0, vivo, misma velocidad y peso.
-                Conejo cria = new Conejo(this.getNombre() + "-Cria", 30.0, 0, true, this.getVelocidad(), this.getPeso());
+                Conejo cria = new Conejo(eco.nuevoNombreConejo(), 30.0, 0, true, this.getVelocidad(), this.getPeso());
                 
                 // Agregamos la cría a la lista de conejos del ecosistema
                 eco.getConejos().add(cria);

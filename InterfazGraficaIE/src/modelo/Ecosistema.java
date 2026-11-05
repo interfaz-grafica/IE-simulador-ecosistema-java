@@ -44,6 +44,11 @@ public class Ecosistema {
     // Cantidad de lobos agregados por intervención del usuario (tope: 5)
     private int lobosAgregados = 0;
 
+    // Contadores de nombres: solo suben, así nunca hay dos entidades con el mismo nombre
+    private int contadorPlantas = 0;
+    private int contadorConejos = 0;
+    private int contadorLobos = 0;
+
     // RÉCORDS HISTÓRICOS
     // Se guardan como atributos porque una entidad muerta ya no está en las listas.
     // Los nombres arrancan en "" (vacío) y los números en 0 hasta que exista un récord.
@@ -293,18 +298,18 @@ public class Ecosistema {
             // Probabilidad del 15% de instanciar una PlantaVenenosa (Polimorfismo)
             // Así, convive polimórficamente en la lista con las plantas normales.
             if (Math.random() <= 0.15) {
-                PlantaVenenosa pv = new PlantaVenenosa("Venenosa-" + (plantas.size() + 1), e, 0, true, 2);
+                PlantaVenenosa pv = new PlantaVenenosa("Venenosa-" + (++contadorPlantas), e, 0, true, 2);
                 plantas.add(pv);
                 nacimientosPlantasVenenosas++;
             } else {
-                Planta p = new Planta("Planta-" + (plantas.size() + 1), e, 0, true, 2);
+                Planta p = new Planta("Planta-" + (++contadorPlantas), e, 0, true, 2);
                 plantas.add(p);
             }
             
             nacimientosPlantas++;
         } else if (tipo.equalsIgnoreCase("conejo")) {
             double e = (energia > 0) ? energia : 50.0;
-            Conejo c = new Conejo("Conejo-" + (conejos.size() + 1), e, 0, true, 5, 2.0);
+            Conejo c = new Conejo(nuevoNombreConejo(), e, 0, true, 5, 2.0);
             conejos.add(c);
             nacimientosConejos++;
         } else if (tipo.equalsIgnoreCase("lobo")) {
@@ -313,7 +318,7 @@ public class Ecosistema {
                 return;
             }
             double e = (energia > 0) ? energia : 70.0;
-            Lobo l = new Lobo("Lobo-" + (lobos.size() + 1), e, 0, true, 10, 20.0, 0);
+            Lobo l = new Lobo("Lobo-" + (++contadorLobos), e, 0, true, 10, 20.0, 0);
             lobos.add(l);
             nacimientosLobos++;
         } else {
@@ -321,6 +326,12 @@ public class Ecosistema {
         }
     }
     
+    // Nombre único para un conejo nuevo (también lo usan las crías).
+    public String nuevoNombreConejo() {
+        contadorConejos++;
+        return "Conejo-" + contadorConejos;
+    }
+
     public void registrarNacimientoConejo() {
         this.nacimientosConejos++;
     }
@@ -659,6 +670,30 @@ public class Ecosistema {
 
     public void setLobosAgregados(int lobosAgregados) {
         this.lobosAgregados = lobosAgregados;
+    }
+
+    public int getContadorPlantas() {
+        return contadorPlantas;
+    }
+
+    public void setContadorPlantas(int contadorPlantas) {
+        this.contadorPlantas = contadorPlantas;
+    }
+
+    public int getContadorConejos() {
+        return contadorConejos;
+    }
+
+    public void setContadorConejos(int contadorConejos) {
+        this.contadorConejos = contadorConejos;
+    }
+
+    public int getContadorLobos() {
+        return contadorLobos;
+    }
+
+    public void setContadorLobos(int contadorLobos) {
+        this.contadorLobos = contadorLobos;
     }
 
     // Récords históricos
