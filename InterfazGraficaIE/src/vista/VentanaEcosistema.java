@@ -618,7 +618,7 @@ public class VentanaEcosistema
         }
         lblErrorConfiguracion.setText("");
 
-        if (!confirmarNuevaPartida()) {
+        if (controlador.hayPartidaGuardada() && !confirmarNuevaPartida()) {
             return;
         }
 
