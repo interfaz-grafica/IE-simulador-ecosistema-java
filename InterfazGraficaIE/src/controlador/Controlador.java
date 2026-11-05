@@ -439,11 +439,15 @@ public class Controlador {
     
     /** true si agregar un lobo más superaría el tope de 5 lobos en el ecosistema. */
     public boolean superaTopeLobos() {
-        return ecosistema != null && ecosistema.getLobos().size() >= TOPE_LOBOS;
+        return ecosistema != null
+                && (ecosistema.getLobos().size() >= TOPE_LOBOS || lobosAgregados >= TOPE_LOBOS);
     }
 
     
     private String mensajeTopeLobos() {
+        if (lobosAgregados >= TOPE_LOBOS) {
+            return "(!) Ya agregaste " + TOPE_LOBOS + " lobos en esta simulación. No puedes agregar más.";
+        }
         return "(!) Límite máximo de " + TOPE_LOBOS + " lobos alcanzado. No puedes agregar más lobos.";
     }
     
