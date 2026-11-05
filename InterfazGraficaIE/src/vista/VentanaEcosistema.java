@@ -594,7 +594,13 @@ public class VentanaEcosistema
     }//GEN-LAST:event_txtCantidadConejosActionPerformed
 
     private void btnCargarPartidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarPartidaActionPerformed
-        controlador.cargarPartidaGuardada();
+        String error = controlador.cargarPartidaGuardada();
+        if (error != null) {
+            javax.swing.JOptionPane.showMessageDialog(this, error, "Retomar simulación", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        irAPantallaSimulacion();
+        actualizarVistaSimulacion();
     }//GEN-LAST:event_btnCargarPartidaActionPerformed
 
     private void btnIniciarSimulacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarSimulacionActionPerformed
