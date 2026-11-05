@@ -390,7 +390,7 @@ public class VentanaEcosistema
 
         pnlBotonesReporte.setBackground(new java.awt.Color(239, 243, 248));
         pnlBotonesReporte.setPreferredSize(new java.awt.Dimension(500, 42));
-        pnlBotonesReporte.setLayout(new java.awt.GridLayout(1, 2, 20, 0));
+        pnlBotonesReporte.setLayout(new java.awt.GridLayout(1, 1, 20, 0));
 
         btnVolverMenu.setBackground(new java.awt.Color(110, 146, 119));
         btnVolverMenu.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
@@ -615,17 +615,6 @@ public class VentanaEcosistema
         actualizarVistaSimulacion();
     }//GEN-LAST:event_btnIniciarSimulacionActionPerformed
 
-    private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
-        txtCantidadPlantas.setText("");
-        txtCantidadConejos.setText("");
-        txtCantidadLobos.setText("");
-        txtTurnosTotales.setText("");
-        cmbClimaInicial.setSelectedIndex(0);
-        lblErrorConfiguracion.setText("");
-        btnCargarPartida.setEnabled(controlador.hayPartidaGuardada());
-        mostrarCarta(CARTA_CONFIGURACION);
-    }//GEN-LAST:event_btnVolverMenuActionPerformed
-
 
     private void btnAvanzarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAvanzarTurnoActionPerformed
             String error = controlador.avanzarTurno();
@@ -691,6 +680,17 @@ public class VentanaEcosistema
         // TODO add your handling code here:
         System.exit(0);
     }//GEN-LAST:event_lblCerrarMouseClicked
+
+    private void btnVolverMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverMenuActionPerformed
+        txtCantidadPlantas.setText("");
+        txtCantidadConejos.setText("");
+        txtCantidadLobos.setText("");
+        txtTurnosTotales.setText("");
+        cmbClimaInicial.setSelectedIndex(0);
+        lblErrorConfiguracion.setText("");
+        btnCargarPartida.setEnabled(controlador.hayPartidaGuardada());
+        mostrarCarta(CARTA_CONFIGURACION);
+    }//GEN-LAST:event_btnVolverMenuActionPerformed
 
     public void actualizarVistaSimulacion() {
         // 1. Textos superiores
