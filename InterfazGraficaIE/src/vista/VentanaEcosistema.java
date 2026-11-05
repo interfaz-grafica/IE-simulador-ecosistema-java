@@ -646,6 +646,11 @@ public class VentanaEcosistema
 
             actualizarVistaSimulacion();
 
+            String avisoGuardado = controlador.getMensajeGuardado();
+            if (avisoGuardado != null) {
+                javax.swing.JOptionPane.showMessageDialog(this, avisoGuardado, "Guardado", javax.swing.JOptionPane.WARNING_MESSAGE);
+            }
+
             // Verifica si el turno que acaba de pasar provocó el fin (por límite o extinción)
             if (controlador.simulacionTerminada()) {
                 String mensajeFin = controlador.obtenerCausaFin() + "\n" + controlador.obtenerDetalleCausa();
