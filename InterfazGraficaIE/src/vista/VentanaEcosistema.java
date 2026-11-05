@@ -719,8 +719,11 @@ public class VentanaEcosistema
         for (String[] fila : filas) {
             modeloTabla.addRow(fila);
         }
+
+        // 5. Estado de la intervención (cuántos turnos faltan, o si se puede intervenir)
+        lblEstadoIntervencion.setText(controlador.obtenerEstadoIntervencion());
     }
-        
+
         public void actualizarVistaReporte() {
        // 1. Carteles de causa de fin
        lblCausaFin.setText(controlador.obtenerCausaFin());
